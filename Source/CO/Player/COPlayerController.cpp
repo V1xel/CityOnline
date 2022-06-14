@@ -3,3 +3,9 @@
 
 #include "COPlayerController.h"
 
+ACOPlayerController::ACOPlayerController()
+{
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
+}

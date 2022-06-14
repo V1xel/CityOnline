@@ -13,5 +13,8 @@ UCLASS()
 class CO_API ACOPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+protected:
+	ACOPlayerController();
 	
 };

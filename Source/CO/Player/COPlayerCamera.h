@@ -3,26 +3,43 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/DefaultPawn.h"
 #include "COPlayerCamera.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
-class CO_API ACOPlayerCamera : public APawn
+class CO_API ACOPlayerCamera : public ADefaultPawn
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
 	ACOPlayerCamera();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
+	void AddForwardMovementInput(float Value);
+	
+	void AddRightMovementInput(float Value);
+	void AddCameraYawInput(float Value);
+	void EnableRotateCamera();
+	void ZoomCamera(float Value);
+
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	USpringArmComponent* SpringArm;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UCameraComponent* Camera;
+	
+private:
+	bool EnableCameraRotation;
 };

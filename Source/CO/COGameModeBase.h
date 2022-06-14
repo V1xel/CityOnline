@@ -13,5 +13,7 @@ UCLASS()
 class CO_API ACOGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+protected:
+	ACOGameModeBase();
 };
