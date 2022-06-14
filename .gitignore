@@ -4,6 +4,7 @@ Intermediate
 Saved
 Content/MovementAnimsetPro/
 Content/PolygonCity/
+.idea/
 .vscode
 .vs
 *.VC.db
@@ -14,3 +15,4 @@ Content/PolygonCity/
 *.suo
 *.xcodeproj
 *.xcworkspace
+
