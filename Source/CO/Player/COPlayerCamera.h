@@ -25,8 +25,7 @@ public:
 	void AddCameraYawInput(float Value);
 	
 	void EnableRotateCamera();
-	void Select();
-
+	
 	void ZoomCamera(float Value);
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

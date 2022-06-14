@@ -19,7 +19,8 @@ public:
 	virtual void Select() override;
 
 	virtual void Deselect() override;
-
+	
+	virtual void MoveTo(FVector DestinationPoint) override;
 private:
 	bool IsSelected;
 };

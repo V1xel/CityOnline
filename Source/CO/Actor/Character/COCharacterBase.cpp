@@ -3,8 +3,14 @@
 
 #include "COCharacterBase.h"
 
+#include "AIController.h"
+#include "AIController/COCharacterAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
+
 ACOCharacterBase::ACOCharacterBase()
 {
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void ACOCharacterBase::Select()
@@ -15,4 +21,18 @@ void ACOCharacterBase::Select()
 void ACOCharacterBase::Deselect()
 {
 	IsSelected = false;
+}
+
+void ACOCharacterBase::MoveTo(FVector DestinationPoint)
+{
+	auto AIController = Cast<ACOCharacterAIController>(GetController());
+	if(AIController)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, DestinationPoint.ToString());
+		auto Blackboard = AIController->GetBlackboardComponent();
+		if(Blackboard)
+		{
+			AIController->GetBlackboardComponent()->SetValueAsVector("DestinationPoint", DestinationPoint);
+		}
+	}
 }

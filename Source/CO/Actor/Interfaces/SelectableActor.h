@@ -20,4 +20,6 @@ public:
 	virtual void Select();
 
 	virtual void Deselect();
+
+	virtual void MoveTo(FVector DestinationPoint);
 };

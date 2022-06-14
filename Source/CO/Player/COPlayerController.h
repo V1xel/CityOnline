@@ -17,7 +17,13 @@ class CO_API ACOPlayerController : public APlayerController
 
 protected:
 	ACOPlayerController();
-	void Select();
 
+	virtual void SetupInputComponent() override;
+	
+	void Select();
+	void SetMoveDestination();
+
+protected:
 	ISelectableActor* Selected;
+	
 };

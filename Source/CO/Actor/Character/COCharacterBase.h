@@ -7,6 +7,9 @@
 #include "GameFramework/Character.h"
 #include "COCharacterBase.generated.h"
 
+class UBehaviorTree;
+class AAIController;
+
 UCLASS()
 class CO_API ACOCharacterBase : public ACharacter, public ISelectableActor
 {
@@ -15,11 +18,15 @@ class CO_API ACOCharacterBase : public ACharacter, public ISelectableActor
 public:
 	// Sets default values for this character's properties
 	ACOCharacterBase();
-	
+
 	virtual void Select() override;
 
 	virtual void Deselect() override;
 
-private:
+	virtual void MoveTo(FVector DestinationPoint) override;
+public:
 	bool IsSelected;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UBehaviorTree* BehaviorTree;
 };

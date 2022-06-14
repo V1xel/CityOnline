@@ -17,3 +17,7 @@ void ACOBuildingActorBase::Deselect()
 {
 	IsSelected = false;
 }
+
+void ACOBuildingActorBase::MoveTo(FVector DestinationPoint)
+{
+}
