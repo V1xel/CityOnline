@@ -16,3 +16,4 @@ Content/PolygonCity/
 *.xcodeproj
 *.xcworkspace
 
+Config/HoloLens/HoloLensEngine.ini
