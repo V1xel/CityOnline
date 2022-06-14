@@ -18,18 +18,16 @@ class CO_API ACOPlayerCamera : public ADefaultPawn
 public:
 	ACOPlayerCamera();
 
-protected:
-	virtual void BeginPlay() override;
-
-public:
 	void AddForwardMovementInput(float Value);
 	
 	void AddRightMovementInput(float Value);
+	
 	void AddCameraYawInput(float Value);
+	
 	void EnableRotateCamera();
-	void ZoomCamera(float Value);
+	void Select();
 
-	virtual void Tick(float DeltaTime) override;
+	void ZoomCamera(float Value);
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

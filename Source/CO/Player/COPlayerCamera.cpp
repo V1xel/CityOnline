@@ -4,10 +4,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
-// Sets default values
 ACOPlayerCamera::ACOPlayerCamera()
 {
-	PrimaryActorTick.bCanEverTick = true;
 	bAddDefaultMovementBindings  = false;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -17,17 +15,6 @@ ACOPlayerCamera::ACOPlayerCamera()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("GameCamera"));
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
-}
-
-void ACOPlayerCamera::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void ACOPlayerCamera::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void ACOPlayerCamera::AddForwardMovementInput(float Value)
@@ -54,11 +41,6 @@ void ACOPlayerCamera::AddCameraYawInput(float Value)
 	}
 }
 
-void ACOPlayerCamera::EnableRotateCamera()
-{
-	EnableCameraRotation = !EnableCameraRotation;
-} 
-
 void ACOPlayerCamera::ZoomCamera(float Value)
 {
 	if(Value != 0)
@@ -67,7 +49,11 @@ void ACOPlayerCamera::ZoomCamera(float Value)
 	}
 } 
 
-// Called to bind functionality to input
+void ACOPlayerCamera::EnableRotateCamera()
+{
+	EnableCameraRotation = !EnableCameraRotation;
+}
+
 void ACOPlayerCamera::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

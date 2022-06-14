@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CO/Actor/Interfaces/SelectableActor.h"
 #include "GameFramework/PlayerController.h"
 #include "COPlayerController.generated.h"
 
@@ -16,5 +17,7 @@ class CO_API ACOPlayerController : public APlayerController
 
 protected:
 	ACOPlayerController();
-	
+	void Select();
+
+	ISelectableActor* Selected;
 };

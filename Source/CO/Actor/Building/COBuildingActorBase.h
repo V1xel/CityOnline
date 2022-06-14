@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CO/Actor/Interfaces/SelectableActor.h"
 #include "GameFramework/Actor.h"
 #include "COBuildingActorBase.generated.h"
 
-UCLASS()
-class CO_API ACOBuildingActorBase : public AActor
+UCLASS(Blueprintable)
+class CO_API ACOBuildingActorBase : public AActor, public ISelectableActor
 {
 	GENERATED_BODY()
 
@@ -15,11 +16,10 @@ public:
 	// Sets default values for this actor's properties
 	ACOBuildingActorBase();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	virtual void Select() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Deselect() override;
+
+private:
+	bool IsSelected;
 };
