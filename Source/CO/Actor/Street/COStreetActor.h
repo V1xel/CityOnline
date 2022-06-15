@@ -11,6 +11,14 @@ class UCOStreetBuildingComponent;
 class UCOStreetInformationComponent;
 class UCOStreetLeasingComponent;
 
+UENUM()
+enum StreetPrestige
+{
+	Low,
+	Medium,
+	High
+};
+
 UCLASS()
 class CO_API ACOStreetActor : public AActor, public ISelectableActor
 {
@@ -21,19 +29,26 @@ public:
 
 	//General
 	void GetBuildings();
+
+	//Layout
+	void GetLayoutGrid();
+
+	void CheckCellsFree();
+
+	void TryReserveCells();
 	
 	//Building
 	void StartBuildingTransaction();
-	
-	void TryReserveCells();
 
 	void SetBuildingParameters();
 
-	void CalculatePotentionalOutput();
+	void CalculatePotentialOutput();
 
 	bool CheckBuildingRequirements();
 
 	void CancelBuildingTransaction();
+
+	void FailBuildingTransaction();
 	
 	void CommitBuildingTransaction();
 

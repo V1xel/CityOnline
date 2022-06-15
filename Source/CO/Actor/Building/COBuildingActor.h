@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "CO/Actor/Interfaces/SelectableActor.h"
 #include "GameFramework/Actor.h"
-#include "COBuildingActorBase.generated.h"
+#include "COBuildingActor.generated.h"
 
 UENUM()
 enum BuildingType
@@ -14,14 +14,22 @@ enum BuildingType
 	Living     UMETA(DisplayName = "Living"),
 };
 
+UENUM()
+enum BuildingPrestige
+{
+	Low,
+	Medium,
+	High
+};
+
 UCLASS(Blueprintable)
-class CO_API ACOBuildingActorBase : public AActor, public ISelectableActor
+class CO_API ACOBuildingActor : public AActor, public ISelectableActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ACOBuildingActorBase();
+	ACOBuildingActor();
 
 	virtual void Select() override;
 

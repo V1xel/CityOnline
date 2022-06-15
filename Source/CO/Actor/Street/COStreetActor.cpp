@@ -5,7 +5,6 @@
 
 #include "Components/COStreetBuildingComponent.h"
 
-
 // Sets default values
 ACOStreetActor::ACOStreetActor()
 {
@@ -28,7 +27,7 @@ void ACOStreetActor::SetBuildingParameters()
 	BuildingComponent->SetBuildingParameters();
 }
 
-void ACOStreetActor::CalculatePotentionalOutput()
+void ACOStreetActor::CalculatePotentialOutput()
 {
 	BuildingComponent->CalculatePotentionalOutput();
 }
@@ -46,6 +45,22 @@ void ACOStreetActor::CancelBuildingTransaction()
 void ACOStreetActor::CommitBuildingTransaction()
 {
 	BuildingComponent->CommitBuildingTransaction();
+}
+
+void ACOStreetActor::GetStreetInfo()
+{
+}
+
+void ACOStreetActor::GetProfitListingByPlayer()
+{
+}
+
+void ACOStreetActor::GetEfficiencyByPlayer()
+{
+}
+
+void ACOStreetActor::GetSelloutValueByPlayer()
+{
 }
 
 void ACOStreetActor::GetBuildings()
