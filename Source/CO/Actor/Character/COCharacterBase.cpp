@@ -28,7 +28,6 @@ void ACOCharacterBase::MoveTo(FVector DestinationPoint)
 	auto AIController = Cast<ACOCharacterAIController>(GetController());
 	if(AIController)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, DestinationPoint.ToString());
 		auto Blackboard = AIController->GetBlackboardComponent();
 		if(Blackboard)
 		{

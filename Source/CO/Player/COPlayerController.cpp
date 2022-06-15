@@ -13,7 +13,6 @@ ACOPlayerController::ACOPlayerController()
 
 void ACOPlayerController::Select()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Selecting"));	
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Pawn, false, HitResult);
 	AActor* hitActor = HitResult.GetActor();
@@ -23,7 +22,6 @@ void ACOPlayerController::Select()
 		{
 			Selectable->Select();
 			Selected = Selectable;
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Selected"));	
 		}
 		else if(Selected != nullptr) {
 			Selected->Deselect();
@@ -34,13 +32,11 @@ void ACOPlayerController::Select()
 
 void ACOPlayerController::SetMoveDestination()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Moving"));	
 	FHitResult HitResult;
 	auto hit = GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
 	if(hit && Selected)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Moving 2"));	
-		Selected->MoveTo(HitResult.ImpactPoint);
+		//Do action
 	}
 }
 
@@ -48,5 +44,4 @@ void ACOPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	InputComponent->BindAction("Select", EInputEvent::IE_Released, this, &ACOPlayerController::Select);
-	InputComponent->BindAction("SetMoveDestination", EInputEvent::IE_Released, this, &ACOPlayerController::SetMoveDestination);
 }

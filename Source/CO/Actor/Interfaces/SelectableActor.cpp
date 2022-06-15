@@ -12,7 +12,3 @@ void ISelectableActor::Select()
 void ISelectableActor::Deselect()
 {
 }
-
-void ISelectableActor::MoveTo(FVector DestinationPoint)
-{
-}
