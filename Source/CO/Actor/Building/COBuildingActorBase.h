@@ -7,6 +7,13 @@
 #include "GameFramework/Actor.h"
 #include "COBuildingActorBase.generated.h"
 
+UENUM()
+enum BuildingType
+{
+	Retail     UMETA(DisplayName = "Retail"),
+	Living     UMETA(DisplayName = "Living"),
+};
+
 UCLASS(Blueprintable)
 class CO_API ACOBuildingActorBase : public AActor, public ISelectableActor
 {
@@ -19,8 +26,18 @@ public:
 	virtual void Select() override;
 
 	virtual void Deselect() override;
+
+	void GetInformation();
 	
-	virtual void MoveTo(FVector DestinationPoint) override;
+	void Sell();
+
+	void Buy();
+	
+	void Refurbish();
+	
+	void Demolish();
 private:
 	bool IsSelected;
+
+	BuildingType BuildingType;
 };

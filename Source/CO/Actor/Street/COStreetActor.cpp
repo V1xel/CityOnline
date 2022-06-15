@@ -3,6 +3,8 @@
 
 #include "COStreetActor.h"
 
+#include "Components/COStreetBuildingComponent.h"
+
 
 // Sets default values
 ACOStreetActor::ACOStreetActor()
@@ -11,16 +13,61 @@ ACOStreetActor::ACOStreetActor()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
-void ACOStreetActor::BeginPlay()
+void ACOStreetActor::StartBuildingTransaction()
 {
-	Super::BeginPlay();
-	
+	BuildingComponent->StartBuildingTransaction();
 }
 
-// Called every frame
-void ACOStreetActor::Tick(float DeltaTime)
+void ACOStreetActor::TryReserveCells()
 {
-	Super::Tick(DeltaTime);
+	BuildingComponent->TryReserveCells();
 }
 
+void ACOStreetActor::SetBuildingParameters()
+{
+	BuildingComponent->SetBuildingParameters();
+}
+
+void ACOStreetActor::CalculatePotentionalOutput()
+{
+	BuildingComponent->CalculatePotentionalOutput();
+}
+
+bool ACOStreetActor::CheckBuildingRequirements()
+{
+	BuildingComponent->CheckBuildingRequirements();
+}
+
+void ACOStreetActor::CancelBuildingTransaction()
+{
+	BuildingComponent->CancelBuildingTransaction();
+}
+
+void ACOStreetActor::CommitBuildingTransaction()
+{
+	BuildingComponent->CommitBuildingTransaction();
+}
+
+void ACOStreetActor::GetBuildings()
+{
+}
+
+void ACOStreetActor::GetRentListingByPlayer()
+{
+}
+
+void ACOStreetActor::RequestStreetLeasing(float Price)
+{
+}
+
+void ACOStreetActor::GetPriceRange()
+{
+}
+
+void ACOStreetActor::GetOwner()
+{
+}
+
+void ACOStreetActor::GetLeaseOverDate()
+{
+}

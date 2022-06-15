@@ -18,6 +18,22 @@ void ACOBuildingActorBase::Deselect()
 	IsSelected = false;
 }
 
-void ACOBuildingActorBase::MoveTo(FVector DestinationPoint)
+void ACOBuildingActorBase::GetInformation()
+{
+}
+
+void ACOBuildingActorBase::Sell()
+{
+}
+
+void ACOBuildingActorBase::Buy()
+{
+}
+
+void ACOBuildingActorBase::Refurbish()
+{
+}
+
+void ACOBuildingActorBase::Demolish()
 {
 }

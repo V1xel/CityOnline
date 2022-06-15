@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CO/Actor/Interfaces/SelectableActor.h"
 #include "GameFramework/Actor.h"
 #include "COStreetActor.generated.h"
 
@@ -11,13 +12,16 @@ class UCOStreetInformationComponent;
 class UCOStreetLeasingComponent;
 
 UCLASS()
-class CO_API ACOStreetActor : public AActor
+class CO_API ACOStreetActor : public AActor, public ISelectableActor
 {
 	GENERATED_BODY()
 
 public:
 	ACOStreetActor();
 
+	//General
+	void GetBuildings();
+	
 	//Building
 	void StartBuildingTransaction();
 	
@@ -32,11 +36,17 @@ public:
 	void CancelBuildingTransaction();
 	
 	void CommitBuildingTransaction();
-	
-	//Information
-	void GetBuildings();
 
+	//Information
+	void GetStreetInfo();
+	
 	void GetRentListingByPlayer();
+
+	void GetProfitListingByPlayer();
+
+	void GetEfficiencyByPlayer();
+
+	void GetSelloutValueByPlayer();
 
 	//Leasing
 	void RequestStreetLeasing(float Price);
@@ -52,4 +62,6 @@ protected:
 	UCOStreetInformationComponent* InformationComponent;
 
 	UCOStreetLeasingComponent* LeasingComponent;
+
+	
 };
