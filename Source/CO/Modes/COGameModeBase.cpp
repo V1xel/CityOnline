@@ -1,10 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-
 #include "COGameModeBase.h"
-#include "Player/COPlayerCamera.h"
-#include "Player/COPlayerController.h"
-#include "UserInterface/COHUD.h"
+#include "CO/Player/COPlayerCamera.h"
+#include "CO/Player/COPlayerController.h"
+#include "CO/UserInterface/COHUD.h"
 
 ACOGameModeBase::ACOGameModeBase()
 {
