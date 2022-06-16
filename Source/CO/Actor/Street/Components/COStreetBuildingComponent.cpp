@@ -14,23 +14,38 @@ UCOStreetBuildingComponent::UCOStreetBuildingComponent()
 	// ...
 }
 
-
-// Called when the game starts
 void UCOStreetBuildingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
-
-// Called every frame
-void UCOStreetBuildingComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                               FActorComponentTickFunction* ThisTickFunction)
+void UCOStreetBuildingComponent::StartBuildingTransaction()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
+
+void UCOStreetBuildingComponent::TryReserveCells()
+{
+}
+
+void UCOStreetBuildingComponent::SetBuildingParameters()
+{
+}
+
+void UCOStreetBuildingComponent::CalculatePotentionalOutput()
+{
+}
+
+bool UCOStreetBuildingComponent::CheckBuildingRequirements()
+{
+	return false;
+}
+
+void UCOStreetBuildingComponent::CancelBuildingTransaction()
+{
+}
+
+void UCOStreetBuildingComponent::CommitBuildingTransaction()
+{
+}
+
 

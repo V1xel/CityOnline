@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UObject/Object.h"
 #include "CONotificationWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CO_API UCONotificationWidget : public UUserWidget
+class CO_API UCONotificationWidget : public UObject
 {
 	GENERATED_BODY()
 };

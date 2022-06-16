@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UObject/Object.h"
 #include "COPlayerStatisticsWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CO_API UCOPlayerStatisticsWidget : public UUserWidget
+class CO_API UCOPlayerStatisticsWidget : public UObject
 {
 	GENERATED_BODY()
 };

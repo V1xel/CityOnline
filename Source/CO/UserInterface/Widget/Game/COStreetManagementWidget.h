@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UObject/Object.h"
 #include "COStreetManagementWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CO_API UCOStreetManagementWidget : public UUserWidget
+class CO_API UCOStreetManagementWidget : public UObject
 {
 	GENERATED_BODY()
 

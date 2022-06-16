@@ -35,11 +35,16 @@ void ACOStreetActor::CalculatePotentialOutput()
 bool ACOStreetActor::CheckBuildingRequirements()
 {
 	BuildingComponent->CheckBuildingRequirements();
+	return false;
 }
 
 void ACOStreetActor::CancelBuildingTransaction()
 {
 	BuildingComponent->CancelBuildingTransaction();
+}
+
+void ACOStreetActor::FailBuildingTransaction()
+{
 }
 
 void ACOStreetActor::CommitBuildingTransaction()

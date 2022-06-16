@@ -23,7 +23,7 @@ public:
 
 	virtual void Deselect() override;
 
-	virtual void MoveTo(FVector DestinationPoint) override;
+	virtual void MoveTo(FVector DestinationPoint);
 public:
 	bool IsSelected;
 
