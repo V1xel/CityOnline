@@ -17,7 +17,11 @@ class CO_API ISelectableActor
 	GENERATED_BODY()
 
 public:
-	virtual void Select();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UPARAM(DisplayName = "Select") void Select();
+	virtual void Select_Implementation();
 
-	virtual void Deselect();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UPARAM(DisplayName = "Deselect") void Deselect();
+	virtual void Deselect_Implementation();
 };

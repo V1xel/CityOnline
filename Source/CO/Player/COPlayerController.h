@@ -17,13 +17,21 @@ class CO_API ACOPlayerController : public APlayerController
 
 protected:
 	ACOPlayerController();
+	
+	void StartSelection();
+	
+	void StopSelection();
 
 	virtual void SetupInputComponent() override;
 	
-	void Select();
-	void SetMoveDestination();
+	virtual void Tick(float DeltaSeconds) override;
 
 protected:
-	ISelectableActor* Selected;
+	UPROPERTY()
+	TArray<AActor*> Selected{};
+
+	FVector HitStartedLocation;
+
+	bool IsSelecting;
 	
 };

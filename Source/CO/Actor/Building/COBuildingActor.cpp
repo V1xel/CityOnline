@@ -8,16 +8,6 @@ ACOBuildingActor::ACOBuildingActor()
 {
 }
 
-void ACOBuildingActor::Select()
-{
-	IsSelected = true;
-}
-
-void ACOBuildingActor::Deselect()
-{
-	IsSelected = false;
-}
-
 void ACOBuildingActor::GetInformation()
 {
 }

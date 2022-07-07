@@ -13,16 +13,6 @@ ACOCharacterBase::ACOCharacterBase()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
-void ACOCharacterBase::Select()
-{
-	IsSelected = true;
-}
-
-void ACOCharacterBase::Deselect()
-{
-	IsSelected = false;
-}
-
 void ACOCharacterBase::MoveTo(FVector DestinationPoint)
 {
 	auto AIController = Cast<ACOCharacterAIController>(GetController());

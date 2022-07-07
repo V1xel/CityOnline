@@ -11,17 +11,13 @@ class UBehaviorTree;
 class AAIController;
 
 UCLASS()
-class CO_API ACOCharacterBase : public ACharacter, public ISelectableActor
+class CO_API ACOCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
 	ACOCharacterBase();
-
-	virtual void Select() override;
-
-	virtual void Deselect() override;
 
 	virtual void MoveTo(FVector DestinationPoint);
 public:

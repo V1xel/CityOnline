@@ -7,7 +7,7 @@
 #include "COVehicleCharacter.generated.h"
 
 UCLASS()
-class CO_API ACOVehicleCharacter : public ACOCharacterBase
+class CO_API ACOVehicleCharacter : public ACharacter
 {
 	GENERATED_BODY()
 

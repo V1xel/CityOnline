@@ -4,11 +4,11 @@
 #include "SelectableActor.h"
 
 
-// Add default functionality here for any ISelectableActor functions that are not pure virtual.
-void ISelectableActor::Select()
+void ISelectableActor::Select_Implementation()
 {
 }
 
-void ISelectableActor::Deselect()
+void ISelectableActor::Deselect_Implementation()
 {
 }
+

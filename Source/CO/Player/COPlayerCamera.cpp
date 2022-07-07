@@ -11,8 +11,10 @@ ACOPlayerCamera::ACOPlayerCamera()
 	SpringArm->SetupAttachment(RootComponent);
 	SpringArm->SetRelativeRotation(FRotator(-60, 0, 0));
 	SpringArm->TargetArmLength = 400;
+	SpringArm->bDoCollisionTest = false;
 	bUseControllerRotationYaw = true;
-
+	SetActorEnableCollision(false);
+	
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("GameCamera"));
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 }

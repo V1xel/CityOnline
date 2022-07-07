@@ -23,17 +23,13 @@ enum BuildingPrestige
 };
 
 UCLASS(Blueprintable)
-class CO_API ACOBuildingActor : public AActor, public ISelectableActor
+class CO_API ACOBuildingActor : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
 	ACOBuildingActor();
-
-	virtual void Select() override;
-
-	virtual void Deselect() override;
 
 	void GetInformation();
 	

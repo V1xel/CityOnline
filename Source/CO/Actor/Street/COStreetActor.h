@@ -20,7 +20,7 @@ enum StreetPrestige
 };
 
 UCLASS()
-class CO_API ACOStreetActor : public AActor, public ISelectableActor
+class CO_API ACOStreetActor : public AActor
 {
 	GENERATED_BODY()
 
