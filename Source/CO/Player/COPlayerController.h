@@ -28,7 +28,7 @@ protected:
 
 protected:
 	UPROPERTY()
-	TArray<AActor*> Selected{};
+	TArray<UPrimitiveComponent*> Selected{};
 
 	FVector HitStartedLocation;
 

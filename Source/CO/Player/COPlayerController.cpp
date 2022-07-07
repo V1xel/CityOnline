@@ -34,16 +34,17 @@ void ACOPlayerController::Tick(float DeltaSeconds)
 		FHitResult HitResult;
 		GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
 		auto Size = (HitResult.Location - HitStartedLocation)/2;
-		auto Extent = FVector( FMath::Sqrt(Size.X * Size.X),  FMath::Sqrt(Size.Y * Size.Y),  FMath::Sqrt(Size.Z * Size.Z));
+		auto Extent = FVector( FMath::Sqrt(Size.X * Size.X),  FMath::Sqrt(Size.Y * Size.Y),  1);
+		auto Center = (HitResult.Location + HitStartedLocation) /2;
 		FCollisionShape MyColSphere = FCollisionShape::MakeBox(Extent);
 
 		TArray<FHitResult> OutHits;
-		bool isHit = GetWorld()->SweepMultiByChannel(OutHits, (HitResult.Location + HitStartedLocation) /2, (HitResult.Location + HitStartedLocation) /2, FQuat::Identity, ECC_WorldStatic, MyColSphere);
+		bool isHit = GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, MyColSphere);
 		if(isHit)
 		{
 			for (auto OutHit : OutHits)
 			{
-				auto hitA = OutHit.GetActor();
+				auto hitA = OutHit.GetComponent();
 				if(hitA && hitA->Implements<USelectableActor>())
 				{
 					ISelectableActor::Execute_Select(hitA);
