@@ -18,10 +18,10 @@ class CO_API ISelectableActor
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	UPARAM(DisplayName = "Select") void Select();
-	virtual void Select_Implementation();
+	UPARAM(DisplayName = "SelectActor") void SelectActor();
+	virtual void SelectActor_Implementation();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	UPARAM(DisplayName = "Deselect") void Deselect();
-	virtual void Deselect_Implementation();
+	UPARAM(DisplayName = "DeselectActor") void DeselectActor();
+	virtual void DeselectActor_Implementation();
 };

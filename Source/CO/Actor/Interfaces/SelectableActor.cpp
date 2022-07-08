@@ -4,11 +4,10 @@
 #include "SelectableActor.h"
 
 
-void ISelectableActor::Select_Implementation()
+void ISelectableActor::SelectActor_Implementation()
 {
 }
 
-void ISelectableActor::Deselect_Implementation()
+void ISelectableActor::DeselectActor_Implementation()
 {
 }
-

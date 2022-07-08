@@ -21,17 +21,24 @@ protected:
 	void StartSelection();
 	
 	void StopSelection();
+	void HandleActorSelection(FHitResult HitResult);
+	void HandleActorComponentSelection(TArray<FHitResult>& HitResults);
 
+	bool RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd, TArray<FHitResult>& OutHits);
+	
 	virtual void SetupInputComponent() override;
 	
 	virtual void Tick(float DeltaSeconds) override;
 
 protected:
 	UPROPERTY()
+	AActor* SelectedActor;
+
+	UPROPERTY()
 	TArray<UPrimitiveComponent*> Selected{};
 
-	FVector HitStartedLocation;
+	FVector SelectionStartedLocation;
 
-	bool IsSelecting;
+	bool IsSelectingWithRectangle;
 	
 };

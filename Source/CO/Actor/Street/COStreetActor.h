@@ -11,14 +11,6 @@ class UCOStreetBuildingComponent;
 class UCOStreetInformationComponent;
 class UCOStreetLeasingComponent;
 
-UENUM()
-enum StreetPrestige
-{
-	Low,
-	Medium,
-	High
-};
-
 UCLASS()
 class CO_API ACOStreetActor : public AActor
 {
