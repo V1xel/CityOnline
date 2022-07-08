@@ -2,8 +2,7 @@
 
 
 #include "COPlayerController.h"
-#include "CO/Actor/Interfaces/SelectableActor.h"
-#include "CO/Actor/Interfaces/SelectableComponent.h"
+#include "Components/COSelectionComponent.h"
 
 ACOPlayerController::ACOPlayerController()
 {
@@ -11,71 +10,23 @@ ACOPlayerController::ACOPlayerController()
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
 	PrimaryActorTick.bCanEverTick = true;
+	
+	SelectionComponent = CreateDefaultSubobject<UCOSelectionComponent>(TEXT("CameraSpringArm"));
 }
 
 void ACOPlayerController::StartSelection()
 {
-	FHitResult HitResult;
-	GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
-	HandleActorSelection(HitResult);
-
-	SelectionStartedLocation = HitResult.Location;
-	IsSelectingWithRectangle = true;
+	SelectionComponent->StartSelection();
 }
 
 void ACOPlayerController::StopSelection()
 {
-	IsSelectingWithRectangle = false;
+	SelectionComponent->StopSelection();
 }
 
-void ACOPlayerController::HandleActorSelection(FHitResult HitResult)
+void ACOPlayerController::SetComponentSelectionEnabled(bool Value)
 {
-	AActor* HitActor = HitResult.GetActor();
-	if(HitActor && HitActor != SelectedActor && HitActor->Implements<USelectableActor>())
-	{
-		ISelectableActor::Execute_SelectActor(HitActor);
-		ISelectableActor::Execute_DeselectActor(SelectedActor);
-		SelectedActor = HitActor;
-	}
-}
-
-void ACOPlayerController::HandleActorComponentSelection(TArray<FHitResult>& HitResults)
-{
-	for (auto HitResult : HitResults)
-	{
-		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
-		if(HitComponent && HitComponent->Implements<USelectableComponent>())
-		{
-			ISelectableComponent::Execute_SelectComponent(HitComponent);
-			ISelectableComponent::Execute_DeselectComponent(HitComponent);
-			SelectedActor = HitActor;
-		}
-	}
-}
-
-bool ACOPlayerController::RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd, TArray<struct FHitResult>& OutHits)
-{
-	const FVector Size = (RectangleEnd - RectangleStart) / 2;
-	const FVector Extent = FVector( FMath::Sqrt(Size.X * Size.X),  FMath::Sqrt(Size.Y * Size.Y),  1);
-	const FVector Center = (RectangleEnd + RectangleStart) / 2;
-	const FCollisionShape CollisionBox = FCollisionShape::MakeBox(Extent);
-
-	return GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
-}
-
-void ACOPlayerController::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	if(IsSelectingWithRectangle)
-	{
-		FHitResult CurrentMousePositionHitResult;
-		GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
-		
-		TArray<FHitResult> OutHits;
-		RaycastWithRectangle(SelectionStartedLocation,CurrentMousePositionHitResult.Location, OutHits);
-		HandleActorComponentSelection(OutHits);
-	}
+	SelectionComponent->SetComponentSelectionEnabled(Value);
 }
 
 void ACOPlayerController::SetupInputComponent()

@@ -12,6 +12,9 @@ ACOPlayerCamera::ACOPlayerCamera()
 	SpringArm->SetRelativeRotation(FRotator(-60, 0, 0));
 	SpringArm->TargetArmLength = 400;
 	SpringArm->bDoCollisionTest = false;
+	SpringArm->bEnableCameraLag = true;
+	SpringArm->CameraLagSpeed = 1;
+	
 	bUseControllerRotationYaw = true;
 	SetActorEnableCollision(false);
 	
