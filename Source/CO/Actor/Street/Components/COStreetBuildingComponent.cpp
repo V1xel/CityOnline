@@ -31,7 +31,7 @@ void UCOStreetBuildingComponent::SetBuildingParameters()
 {
 }
 
-void UCOStreetBuildingComponent::CalculatePotentionalOutput()
+void UCOStreetBuildingComponent::CalculatePotentialOutput()
 {
 }
 
@@ -47,5 +47,3 @@ void UCOStreetBuildingComponent::CancelBuildingTransaction()
 void UCOStreetBuildingComponent::CommitBuildingTransaction()
 {
 }
-
-

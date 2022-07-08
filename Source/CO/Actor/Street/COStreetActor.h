@@ -64,11 +64,12 @@ public:
 
 	void GetLeaseOverDate();
 protected:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UCOStreetBuildingComponent* BuildingComponent;
-
-	UCOStreetInformationComponent* InformationComponent;
-
-	UCOStreetLeasingComponent* LeasingComponent;
-
 	
+	UPROPERTY()
+	UCOStreetInformationComponent* InformationComponent;
+	
+	UPROPERTY()
+	UCOStreetLeasingComponent* LeasingComponent;
 };

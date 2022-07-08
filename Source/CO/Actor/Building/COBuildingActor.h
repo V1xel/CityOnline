@@ -3,24 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "COBuildingConfiguration.h"
 #include "CO/Actor/Interfaces/SelectableActor.h"
 #include "GameFramework/Actor.h"
 #include "COBuildingActor.generated.h"
 
-UENUM()
-enum BuildingType
-{
-	Retail     UMETA(DisplayName = "Retail"),
-	Living     UMETA(DisplayName = "Living"),
-};
-
-UENUM()
-enum BuildingPrestige
-{
-	Low,
-	Medium,
-	High
-};
 
 UCLASS(Blueprintable)
 class CO_API ACOBuildingActor : public AActor
@@ -40,8 +27,8 @@ public:
 	void Refurbish();
 	
 	void Demolish();
+	
 private:
 	bool IsSelected;
 
-	BuildingType BuildingType;
 };

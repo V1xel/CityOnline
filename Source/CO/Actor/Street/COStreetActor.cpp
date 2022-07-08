@@ -5,42 +5,41 @@
 
 #include "Components/COStreetBuildingComponent.h"
 
-// Sets default values
 ACOStreetActor::ACOStreetActor()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	BuildingComponent = CreateDefaultSubobject<UCOStreetBuildingComponent>(TEXT("BuildingComponent"));
 }
 
 void ACOStreetActor::StartBuildingTransaction()
 {
-	BuildingComponent->StartBuildingTransaction();
+	//BuildingComponent->StartBuildingTransaction();
 }
 
 void ACOStreetActor::TryReserveCells()
 {
-	BuildingComponent->TryReserveCells();
+	//BuildingComponent->TryReserveCells();
 }
 
 void ACOStreetActor::SetBuildingParameters()
 {
-	BuildingComponent->SetBuildingParameters();
+	//BuildingComponent->SetBuildingParameters();
 }
 
 void ACOStreetActor::CalculatePotentialOutput()
 {
-	BuildingComponent->CalculatePotentionalOutput();
+	//BuildingComponent->CalculatePotentialOutput();
 }
 
 bool ACOStreetActor::CheckBuildingRequirements()
 {
-	BuildingComponent->CheckBuildingRequirements();
+	//BuildingComponent->CheckBuildingRequirements();
 	return false;
 }
 
 void ACOStreetActor::CancelBuildingTransaction()
 {
-	BuildingComponent->CancelBuildingTransaction();
+	//BuildingComponent->CancelBuildingTransaction();
 }
 
 void ACOStreetActor::FailBuildingTransaction()
@@ -49,7 +48,7 @@ void ACOStreetActor::FailBuildingTransaction()
 
 void ACOStreetActor::CommitBuildingTransaction()
 {
-	BuildingComponent->CommitBuildingTransaction();
+//	BuildingComponent->CommitBuildingTransaction();
 }
 
 void ACOStreetActor::GetStreetInfo()

@@ -11,7 +11,7 @@ ACOPlayerController::ACOPlayerController()
 	bEnableMouseOverEvents = true;
 	PrimaryActorTick.bCanEverTick = true;
 	
-	SelectionComponent = CreateDefaultSubobject<UCOSelectionComponent>(TEXT("CameraSpringArm"));
+	SelectionComponent = CreateDefaultSubobject<UCOSelectionComponent>(TEXT("SelectionComponent"));
 }
 
 void ACOPlayerController::StartSelection()

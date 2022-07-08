@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CO/Actor/Building/COBuildingConfiguration.h"
 #include "Components/ActorComponent.h"
 #include "COStreetBuildingComponent.generated.h"
 
@@ -27,11 +28,18 @@ public:
 
 	void SetBuildingParameters();
 
-	void CalculatePotentionalOutput();
+	void CalculatePotentialOutput();
 
 	bool CheckBuildingRequirements();
 
 	void CancelBuildingTransaction();
 	
 	void CommitBuildingTransaction();
+
+protected:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<FCOBuildingConfiguration> BuildingConfigurations {};
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FCOBuildingConfiguration SelectedToBuild {};
 };
