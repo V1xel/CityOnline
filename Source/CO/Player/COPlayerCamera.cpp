@@ -13,7 +13,8 @@ ACOPlayerCamera::ACOPlayerCamera()
 	SpringArm->TargetArmLength = 8000;
 	SpringArm->bDoCollisionTest = false;
 	SpringArm->bEnableCameraLag = true;
-	SpringArm->CameraLagSpeed = 1;
+	SpringArm->CameraLagSpeed = 0.5f;
+	DesiredTargetArmLength = SpringArm->TargetArmLength;
 	
 	bUseControllerRotationYaw = true;
 	SetActorEnableCollision(false);
@@ -48,7 +49,7 @@ void ACOPlayerCamera::AddCameraYawInput(float Value)
 
 void ACOPlayerCamera::NavigateOnObject(AActor* object, float zoom)
 {
-	SpringArm->TargetArmLength = zoom;
+	DesiredTargetArmLength = zoom;
 	const FVector NavigatedObjectLocation = object->GetActorLocation();
 	SetActorLocation(NavigatedObjectLocation);
 }
@@ -76,4 +77,11 @@ void ACOPlayerCamera::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	InputComponent->BindAxis("ZoomCamera", this, &ACOPlayerCamera::ZoomCamera);
 	InputComponent->BindAction("EnableRotateCamera", IE_Pressed, this, &ACOPlayerCamera::EnableRotateCamera);
 	InputComponent->BindAction("EnableRotateCamera", IE_Released, this, &ACOPlayerCamera::EnableRotateCamera);
+}
+
+void ACOPlayerCamera::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	
+	SpringArm->TargetArmLength = FMath::Lerp(SpringArm->TargetArmLength, DesiredTargetArmLength, DeltaSeconds);
 }
