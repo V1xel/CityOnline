@@ -58,7 +58,7 @@ void ACOPlayerCamera::ZoomCamera(float Value)
 {
 	if(Value != 0)
 	{
-		SpringArm->TargetArmLength = SpringArm->TargetArmLength - Value;
+		DesiredTargetArmLength = DesiredTargetArmLength - Value;
 	}
 } 
 
