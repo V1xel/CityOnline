@@ -10,7 +10,7 @@ ACOPlayerCamera::ACOPlayerCamera()
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
 	SpringArm->SetRelativeRotation(FRotator(-60, 0, 0));
-	SpringArm->TargetArmLength = 400;
+	SpringArm->TargetArmLength = 8000;
 	SpringArm->bDoCollisionTest = false;
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->CameraLagSpeed = 1;
@@ -44,6 +44,13 @@ void ACOPlayerCamera::AddCameraYawInput(float Value)
 	{
 		AddControllerYawInput(Value);
 	}
+}
+
+void ACOPlayerCamera::NavigateOnObject(AActor* object, float zoom)
+{
+	SpringArm->TargetArmLength = zoom;
+	const FVector NavigatedObjectLocation = object->GetActorLocation();
+	SetActorLocation(NavigatedObjectLocation);
 }
 
 void ACOPlayerCamera::ZoomCamera(float Value)
