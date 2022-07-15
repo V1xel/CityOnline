@@ -8,7 +8,7 @@
 
 class UCOSelectionComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectionFinishedDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSelectionFinishedDelegate, const TArray<UPrimitiveComponent*>&, AllocatedComponents);
 /**
  * 
  */

@@ -41,6 +41,7 @@ protected:
 	UPROPERTY()
 	AActor* SelectedActor;
 
+public:
 	UPROPERTY()
 	TArray<UPrimitiveComponent*> SelectedComponents{};
 };
