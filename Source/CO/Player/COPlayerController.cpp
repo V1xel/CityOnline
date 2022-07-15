@@ -22,6 +22,7 @@ void ACOPlayerController::StartSelection()
 void ACOPlayerController::StopSelection()
 {
 	SelectionComponent->StopSelection();
+	OnSelectionFinished.Broadcast();
 }
 
 void ACOPlayerController::SetComponentSelectionEnabled(bool Value)

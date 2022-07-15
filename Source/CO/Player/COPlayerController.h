@@ -7,6 +7,8 @@
 #include "COPlayerController.generated.h"
 
 class UCOSelectionComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectionFinishedDelegate);
 /**
  * 
  */
@@ -29,4 +31,7 @@ protected:
 protected:
 	UPROPERTY()
 	UCOSelectionComponent* SelectionComponent;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnSelectionFinishedDelegate OnSelectionFinished;
 };
