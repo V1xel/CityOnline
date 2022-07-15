@@ -35,6 +35,12 @@ void UCOSelectionComponent::SetComponentSelectionEnabled(bool Value)
 void UCOSelectionComponent::StopSelection()
 {
 	IsSelectingWithRectangle = false;
+	for (const auto SelectedComponent : SelectedComponents)
+	{
+		ISelectableComponent::Execute_DeselectComponent(SelectedComponent);
+	}
+
+	SelectedComponents.Empty();
 }
 
 void UCOSelectionComponent::HandleActorSelection(FHitResult HitResult)
@@ -54,21 +60,55 @@ void UCOSelectionComponent::HandleActorSelection(FHitResult HitResult)
 
 void UCOSelectionComponent::HandleActorComponentSelection(TArray<FHitResult>& HitResults)
 {
-	for (const auto SelectedComponent : SelectedComponents)
-	{
-		ISelectableComponent::Execute_DeselectComponent(SelectedComponent);
-	}
-	
-	SelectedComponents.Empty();
+	TArray<UPrimitiveComponent*> DesiredSelectedComponents;
+
 	for (auto HitResult : HitResults)
 	{
 		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
 		if(HitComponent && HitComponent->Implements<USelectableComponent>())
 		{
-			ISelectableComponent::Execute_SelectComponent(HitComponent);
-			SelectedComponents.Add(HitComponent);
+			bool PendingSelect = true;
+			for (const auto SelectedComponent : SelectedComponents)
+			{
+				if(SelectedComponent == HitComponent)
+				{
+					PendingSelect = false;
+					break;
+				}
+			}
+
+			if(PendingSelect)
+			{
+				ISelectableComponent::Execute_SelectComponent(HitComponent);
+			}
+			
+			DesiredSelectedComponents.Add(HitComponent);
 		}
 	}
+
+	for (const auto SelectedComponent : SelectedComponents)
+	{
+		bool PendingDeselect = true;
+		for (auto HitResult : HitResults)
+		{
+			UPrimitiveComponent* HitComponent = HitResult.GetComponent();
+			if(HitComponent && HitComponent->Implements<USelectableComponent>())
+			{
+				if(SelectedComponent == HitComponent)
+				{
+					PendingDeselect = false;
+				}
+			}
+		}
+
+		if(PendingDeselect)
+		{
+			ISelectableComponent::Execute_DeselectComponent(SelectedComponent);
+		}
+	}
+
+	SelectedComponents.Empty();
+	SelectedComponents = DesiredSelectedComponents;
 }
 
 bool UCOSelectionComponent::RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,
