@@ -8,22 +8,15 @@ ACOBuildingActor::ACOBuildingActor()
 {
 }
 
-void ACOBuildingActor::GetInformation()
+void ACOBuildingActor::UpdateConfiguration(FCOBuildingConfiguration Configuration)
 {
 }
 
-void ACOBuildingActor::Sell()
+void ACOBuildingActor::ApplyChanges()
 {
 }
 
-void ACOBuildingActor::Buy()
+void ACOBuildingActor::RemoveActor()
 {
 }
 
-void ACOBuildingActor::Refurbish()
-{
-}
-
-void ACOBuildingActor::Demolish()
-{
-}

@@ -6,12 +6,9 @@
 #include "GameFramework/PlayerController.h"
 #include "COPlayerController.generated.h"
 
-class UCOSelectionComponent;
+class UCOActorSelectionComponent;
+class UCOCellSelectionComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSelectionFinishedDelegate, const TArray<UPrimitiveComponent*>&, AllocatedComponents);
-/**
- * 
- */
 UCLASS()
 class CO_API ACOPlayerController : public APlayerController
 {
@@ -23,15 +20,15 @@ protected:
 	void StartSelection();
 
 	void StopSelection();
-	
-	void SetComponentSelectionEnabled(bool Value);
-	
+
 	virtual void SetupInputComponent() override;
 
 protected:
 	UPROPERTY()
-	UCOSelectionComponent* SelectionComponent;
+	UCOActorSelectionComponent* ActorSelection;
+	
+	UPROPERTY()
+	UCOCellSelectionComponent* CellSelection;
 
-	UPROPERTY(BlueprintAssignable)
-	FOnSelectionFinishedDelegate OnSelectionFinished;
+
 };

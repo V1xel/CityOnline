@@ -2,7 +2,9 @@
 
 
 #include "COPlayerController.h"
-#include "Components/COSelectionComponent.h"
+
+#include "Components/COActorSelectionComponent.h"
+#include "Components/COCellSelectionComponent.h"
 
 ACOPlayerController::ACOPlayerController()
 {
@@ -11,23 +13,19 @@ ACOPlayerController::ACOPlayerController()
 	bEnableMouseOverEvents = true;
 	PrimaryActorTick.bCanEverTick = true;
 	
-	SelectionComponent = CreateDefaultSubobject<UCOSelectionComponent>(TEXT("SelectionComponent"));
+	ActorSelection = CreateDefaultSubobject<UCOActorSelectionComponent>(TEXT("ActorSelection"));
+	CellSelection = CreateDefaultSubobject<UCOCellSelectionComponent>(TEXT("CellSelection"));
 }
 
 void ACOPlayerController::StartSelection()
 {
-	SelectionComponent->StartSelection();
+	ActorSelection->TrySelectUnderCursor();
+	CellSelection->StartSelection();
 }
 
 void ACOPlayerController::StopSelection()
 {
-	OnSelectionFinished.Broadcast(TArray(SelectionComponent->SelectedComponents));
-	SelectionComponent->StopSelection();
-}
-
-void ACOPlayerController::SetComponentSelectionEnabled(bool Value)
-{
-	SelectionComponent->SetComponentSelectionEnabled(Value);
+	CellSelection->EndSelection();
 }
 
 void ACOPlayerController::SetupInputComponent()

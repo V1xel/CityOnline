@@ -8,6 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "COBuildingActor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConfigurationUpdatedDelegate, FCOBuildingConfiguration, Configuration);
 
 UCLASS(Blueprintable)
 class CO_API ACOBuildingActor : public AActor
@@ -18,17 +19,19 @@ public:
 	// Sets default values for this actor's properties
 	ACOBuildingActor();
 
-	void GetInformation();
-	
-	void Sell();
+	void UpdateConfiguration(FCOBuildingConfiguration Configuration);
 
-	void Buy();
-	
-	void Refurbish();
-	
-	void Demolish();
+	void ApplyChanges();
+
+	void RemoveActor();
 	
 private:
 	bool IsSelected;
 
+	bool IsEdited;
+
+	FCOBuildingConfiguration Configuration;
+
+	UPROPERTY()
+	FOnConfigurationUpdatedDelegate OnConfigurationUpdatedDelegate;
 };

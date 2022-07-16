@@ -3,13 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Actor/Interfaces/SelectableActor.h"
+#include "CO/Actor/Building/COBuildingConfiguration.h"
+#include "Components/COStreetCellManagementComponent.h"
 #include "GameFramework/Actor.h"
 #include "COStreetActor.generated.h"
 
 class UCOStreetBuildingComponent;
 class UCOStreetInformationComponent;
 class UCOStreetLeasingComponent;
+class ACOBuildingActor;
 
 UCLASS()
 class CO_API ACOStreetActor : public AActor
@@ -19,20 +21,7 @@ class CO_API ACOStreetActor : public AActor
 public:
 	ACOStreetActor();
 
-	//General
-	void GetBuildings();
-
-	//Layout
-	void GetLayoutGrid();
-
-	void CheckCellsFree();
-
-	void TryReserveCells();
-	
-	//Building
-	void StartBuildingTransaction();
-
-	void SetBuildingParameters();
+	ACOBuildingActor* CreateBuilding(FCOBuildingConfiguration Configuration, const TArray<UCOStreetCellComponent*>& SelectedCells);
 
 	void CalculatePotentialOutput();
 
@@ -43,26 +32,7 @@ public:
 	void FailBuildingTransaction();
 	
 	void CommitBuildingTransaction();
-
-	//Information
-	void GetStreetInfo();
 	
-	void GetRentListingByPlayer();
-
-	void GetProfitListingByPlayer();
-
-	void GetEfficiencyByPlayer();
-
-	void GetSelloutValueByPlayer();
-
-	//Leasing
-	void RequestStreetLeasing(float Price);
-
-	void GetPriceRange();
-
-	void GetOwner();
-
-	void GetLeaseOverDate();
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UCOStreetBuildingComponent* BuildingComponent;
@@ -72,4 +42,7 @@ protected:
 	
 	UPROPERTY()
 	UCOStreetLeasingComponent* LeasingComponent;
+	
+	UPROPERTY()
+	UCOStreetCellManagementComponent* CellManagementComponent;
 };
