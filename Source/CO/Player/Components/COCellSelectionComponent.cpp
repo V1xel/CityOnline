@@ -3,6 +3,7 @@
 
 #include "COCellSelectionComponent.h"
 #include "CO/Actor/Interfaces/SelectableComponent.h"
+#include "CO/Actor/Street/Components/COStreetCellComponent.h"
 #include "CO/Player/COPlayerController.h"
 
 UCOCellSelectionComponent::UCOCellSelectionComponent()
@@ -44,7 +45,7 @@ void UCOCellSelectionComponent::EndSelection()
 }
 
 bool UCOCellSelectionComponent::RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,
-	TArray<FHitResult>& OutHits) const
+                                                     TArray<FHitResult>& OutHits) const
 {
 	const FVector Size = (RectangleEnd - RectangleStart) / 2;
 	const FVector Extent = FVector( FMath::Sqrt(Size.X * Size.X),  FMath::Sqrt(Size.Y * Size.Y),  1);
@@ -114,7 +115,7 @@ void UCOCellSelectionComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	if(IsEnabled & IsSelecting)
 	{
 		FHitResult CurrentMousePositionHitResult;
-		const ACOPlayerController* PlayerController = Cast<ACOPlayerController>(GetOwner());
+		const ACOPlayerControllerBase* PlayerController = Cast<ACOPlayerControllerBase>(GetOwner());
 		PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
 		
 		TArray<FHitResult> OutHits;

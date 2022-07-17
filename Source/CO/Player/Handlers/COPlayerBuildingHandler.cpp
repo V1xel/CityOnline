@@ -2,13 +2,12 @@
 
 
 #include "COPlayerBuildingHandler.h"
-
 #include "CO/Actor/Building/COBuildingActor.h"
 #include "CO/Actor/Street/COStreetActor.h"
 #include "CO/Player/Components/COActorSelectionComponent.h"
 #include "CO/Player/Components/COCellSelectionComponent.h"
 
-void UCOPlayerBuildingHandler::StartBuildingProcess(FCOBuildingConfiguration Configuration)
+void UCOPlayerBuildingHandler::StartBuildingProcess(FCOBuildingConfiguration _Configuration)
 {
 	this->Configuration = Configuration;
 	const auto CellSelection = GetOwnerComponent<UCOCellSelectionComponent>(UCOCellSelectionComponent::StaticClass());
@@ -26,9 +25,9 @@ void UCOPlayerBuildingHandler::PreviewBuildingProcess(const TArray<UCOStreetCell
 	BuildingActor = SelectedStreet->CreateBuilding(Configuration, SelectedCells);
 }
 
-void UCOPlayerBuildingHandler::UpdateBuildingConfiguration(FCOBuildingConfiguration Configuration)
+void UCOPlayerBuildingHandler::UpdateBuildingConfiguration(FCOBuildingConfiguration _Configuration)
 {
-	BuildingActor->UpdateConfiguration(Configuration);
+	BuildingActor->UpdateConfiguration(_Configuration);
 }
 
 void UCOPlayerBuildingHandler::EndBuildingProcess(const TArray<UCOStreetCellComponent*>& SelectedCells)
@@ -39,12 +38,6 @@ void UCOPlayerBuildingHandler::EndBuildingProcess(const TArray<UCOStreetCellComp
 
 void UCOPlayerBuildingHandler::CancelBuildingProcess()
 {
+	BuildingActor->RemoveActor();
 	this->Configuration = {};
-}
-
-void UCOPlayerBuildingHandler::BeginPlay()
-{
-	Super::BeginPlay();
-
-	StartBuildingProcess();
 }

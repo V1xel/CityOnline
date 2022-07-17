@@ -28,7 +28,7 @@ protected:
 
 	bool RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,	TArray<FHitResult>& OutHits) const;
 
-	void UCOCellSelectionComponent::HandleActorComponentSelection(TArray<FHitResult>& HitResults);
+	void HandleActorComponentSelection(TArray<FHitResult>& HitResults);
 
 public:
 	UPROPERTY(BlueprintAssignable)

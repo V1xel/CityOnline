@@ -16,8 +16,3 @@ ACOBuildingActor* ACOStreetActor::CreateBuilding(FCOBuildingConfiguration Config
 {
 	return nullptr;
 }
-
-ACOBuildingActor* ACOStreetActor::UpdateBuilding(FCOBuildingConfiguration Configuration)
-{
-	return nullptr;
-}

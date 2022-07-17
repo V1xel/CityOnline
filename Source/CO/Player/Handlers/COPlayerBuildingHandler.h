@@ -8,6 +8,7 @@
 #include "COPlayerBuildingHandler.generated.h"
 
 class ACOBuildingActor;
+class UCOStreetCellComponent;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CO_API UCOPlayerBuildingHandler : public UCOActorComponentBase
@@ -15,17 +16,15 @@ class CO_API UCOPlayerBuildingHandler : public UCOActorComponentBase
 	GENERATED_BODY()
 
 public:
-	void StartBuildingProcess(FCOBuildingConfiguration Configuration);
+	void StartBuildingProcess(FCOBuildingConfiguration _Configuration);
 
-	void PreviewBuildingProcess(const TArray<UCOStreetCellComponent*>& SelectedCells);
-
-	void UpdateBuildingConfiguration(FCOBuildingConfiguration Configuration);
+	void UpdateBuildingConfiguration(FCOBuildingConfiguration _Configuration);
 
 	void EndBuildingProcess(const TArray<UCOStreetCellComponent*>& SelectedCells);
 
 	void CancelBuildingProcess();
-
-	virtual void BeginPlay() override;
+protected:
+	void PreviewBuildingProcess(const TArray<UCOStreetCellComponent*>& SelectedCells);
 
 protected:
 	UPROPERTY()

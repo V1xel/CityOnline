@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Player/COPlayerController.h"
 #include "CO/Utilities/COComponentHelper.h"
 #include "GameFramework/Actor.h"
 #include "COActorComponentBase.generated.h"
+
+class ACOPlayerController;
 
 UCLASS()
 class CO_API UCOActorComponentBase : public UActorComponent
@@ -22,8 +23,5 @@ protected:
 		return COAssertionChecker::CheckReferenceNotNull(Component, FString::Printf(TEXT("Null reference: %s"), *Class->ClassConfigName.ToString()));
 	}
 
-	ACOPlayerController* GetOwnerController() const
-	{
-		return Cast<ACOPlayerController>(GetOwner());
-	}
+	ACOPlayerController* GetOwnerController() const;
 };

@@ -11,7 +11,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConfigurationUpdatedDelegate, FCOBuildingConfiguration, Configuration);
 
 UCLASS(Blueprintable)
-class CO_API ACOBuildingActor : public AActor
+class CO_API ACOBuildingActor : public AActor, public ISelectableActor
 {
 	GENERATED_BODY()
 
@@ -19,12 +19,15 @@ public:
 	// Sets default values for this actor's properties
 	ACOBuildingActor();
 
-	void UpdateConfiguration(FCOBuildingConfiguration Configuration);
+	void UpdateConfiguration(FCOBuildingConfiguration _Configuration);
 
 	void ApplyChanges();
 
 	void RemoveActor();
-	
+
+	virtual void SelectActor_Implementation() override;
+
+	virtual void DeselectActor_Implementation() override;
 private:
 	bool IsSelected;
 

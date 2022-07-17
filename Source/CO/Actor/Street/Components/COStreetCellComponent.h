@@ -3,12 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CO/Actor/Interfaces/SelectableComponent.h"
 #include "Components/ActorComponent.h"
 #include "COStreetCellComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CO_API UCOStreetCellComponent : public UActorComponent
+class CO_API UCOStreetCellComponent : public UActorComponent, public ISelectableComponent
 {
 	GENERATED_BODY()
 
@@ -21,6 +22,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void SelectComponent_Implementation() override;
+
+	virtual void DeselectComponent_Implementation() override;
 protected:
 	bool IsOccupied;
 

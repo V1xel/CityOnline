@@ -2,12 +2,12 @@
 
 #include "COGameModeBase.h"
 #include "CO/Player/COPlayerCamera.h"
-#include "CO/Player/COPlayerController.h"
+#include "CO/Player/COPlayerControllerBase.h"
 #include "CO/UserInterface/COHUD.h"
 
 ACOGameModeBase::ACOGameModeBase()
 {
 	DefaultPawnClass = ACOPlayerCamera::StaticClass();
-	PlayerControllerClass = ACOPlayerController::StaticClass();
+	PlayerControllerClass = ACOPlayerControllerBase::StaticClass();
 	HUDClass = ACOHUD::StaticClass();
 }

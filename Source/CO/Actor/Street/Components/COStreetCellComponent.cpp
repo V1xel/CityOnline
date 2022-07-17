@@ -23,3 +23,13 @@ void UCOStreetCellComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// ...
 }
 
+void UCOStreetCellComponent::SelectComponent_Implementation()
+{
+	ISelectableComponent::SelectComponent_Implementation();
+}
+
+void UCOStreetCellComponent::DeselectComponent_Implementation()
+{
+	ISelectableComponent::DeselectComponent_Implementation();
+}
+

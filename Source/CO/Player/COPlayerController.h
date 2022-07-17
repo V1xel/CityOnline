@@ -1,34 +1,32 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
+#include "COPlayerControllerBase.h"
+#include "CO/Actor/Building/COBuildingConfiguration.h"
 #include "COPlayerController.generated.h"
 
-class UCOActorSelectionComponent;
-class UCOCellSelectionComponent;
+class UCOPlayerBuildingHandler;
+class UCOStreetCellComponent;
 
 UCLASS()
-class CO_API ACOPlayerController : public APlayerController
+class CO_API ACOPlayerController : public ACOPlayerControllerBase
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	ACOPlayerController();
-	
-	void StartSelection();
 
-	void StopSelection();
+	void StartBuildingProcess(FCOBuildingConfiguration Configuration);
 
-	virtual void SetupInputComponent() override;
+	void UpdateBuildingConfiguration(FCOBuildingConfiguration Configuration);
+
+	void EndBuildingProcess(const TArray<UCOStreetCellComponent*>& SelectedCells);
+
+	void CancelBuildingProcess();
 
 protected:
 	UPROPERTY()
-	UCOActorSelectionComponent* ActorSelection;
-	
-	UPROPERTY()
-	UCOCellSelectionComponent* CellSelection;
-
-
+	UCOPlayerBuildingHandler* BuildingHandler;
 };

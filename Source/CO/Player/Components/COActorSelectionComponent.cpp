@@ -2,8 +2,8 @@
 
 
 #include "COActorSelectionComponent.h"
-
 #include "CO/Actor/Interfaces/SelectableActor.h"
+#include "CO/Player/COPlayerController.h"
 
 void UCOActorSelectionComponent::TrySelectUnderCursor()
 {

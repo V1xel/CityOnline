@@ -2,5 +2,9 @@
 
 
 #include "COActorComponentBase.h"
+#include "CO/Player/COPlayerController.h"
 
-
+ACOPlayerController* UCOActorComponentBase::GetOwnerController() const
+{
+	return Cast<ACOPlayerController>(GetOwner());
+}

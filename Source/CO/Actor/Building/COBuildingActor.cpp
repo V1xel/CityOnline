@@ -8,8 +8,9 @@ ACOBuildingActor::ACOBuildingActor()
 {
 }
 
-void ACOBuildingActor::UpdateConfiguration(FCOBuildingConfiguration Configuration)
+void ACOBuildingActor::UpdateConfiguration(FCOBuildingConfiguration _Configuration)
 {
+	Configuration = _Configuration;
 }
 
 void ACOBuildingActor::ApplyChanges()
@@ -19,4 +20,15 @@ void ACOBuildingActor::ApplyChanges()
 void ACOBuildingActor::RemoveActor()
 {
 }
+
+void ACOBuildingActor::SelectActor_Implementation()
+{
+	ISelectableActor::SelectActor_Implementation();
+}
+
+void ACOBuildingActor::DeselectActor_Implementation()
+{
+	ISelectableActor::DeselectActor_Implementation();
+}
+
 
