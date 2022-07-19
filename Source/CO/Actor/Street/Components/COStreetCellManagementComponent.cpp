@@ -18,17 +18,17 @@ UCOStreetCellManagementComponent::UCOStreetCellManagementComponent()
 void UCOStreetCellManagementComponent::ConstructCells()
 {
 	const auto Scale = GetRelativeScale3D();
-	const auto HorizontalOffset = 100 * Coverage * Scale.X / Horizontal;
-	const auto VerticalOffset = 100 * Coverage * Scale.Y/ Vertical;
+	const auto HorizontalOffset = CoveragePercent * 100 * Scale.X / (Horizontal -1);
+	const auto VerticalOffset = CoveragePercent * 100 * Scale.Y/ (Vertical-1);
 	
 	const auto Origin = GetComponentLocation();
 	const auto Extent = Bounds.BoxExtent;
-	const auto WorldOffset = Origin - Coverage * Extent;
+	const auto WorldOffset = Origin - CoveragePercent * Extent;
 	
 	Cells.Empty();
-	for (int iHorizontal = 0; iHorizontal <= Horizontal; ++iHorizontal)
+	for (int iHorizontal = 0; iHorizontal <= Horizontal-1; ++iHorizontal)
 	{
-		for (int iVertical = 0; iVertical <= Vertical; ++iVertical)
+		for (int iVertical = 0; iVertical <= Vertical-1; ++iVertical)
 		{
 			auto CellOffset = FVector(HorizontalOffset * iHorizontal, VerticalOffset * iVertical, 1);
 			const FVector Position = CellOffset + WorldOffset;
@@ -38,6 +38,11 @@ void UCOStreetCellManagementComponent::ConstructCells()
 			Cell->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 			Cell->SetWorldScale3D(FVector(Size,Size,1));
 			Cell->SetWorldLocation(Position);
+			Cell->Horizontal = iHorizontal;
+			Cell->Vertical = iVertical;
+			Cell->IsExtreme = iHorizontal == 0 || iVertical == 0 || iHorizontal == Horizontal || iVertical == Vertical;
+			Cell->IsCorner = (iHorizontal == iVertical && iHorizontal == 0) || (iHorizontal == iVertical && iHorizontal == HorizontalOffset);
+			
 			Cells.Add(Cell);
 		}
 	}

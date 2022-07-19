@@ -37,13 +37,13 @@ protected:
 	FOnCellSelected OnCellSelected;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int Horizontal = 5; 
+	int Horizontal = 6; 
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int Vertical = 5;
+	int Vertical = 6;
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	float Coverage = 0.83f;
+	float CoveragePercent = 0.83;
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	float Size = 0.17f;
