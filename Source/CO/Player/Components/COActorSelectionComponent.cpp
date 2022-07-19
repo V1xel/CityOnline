@@ -16,9 +16,11 @@ void UCOActorSelectionComponent::TrySelectUnderCursor()
 
 void UCOActorSelectionComponent::HandleActorSelection(FHitResult HitResult)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("HandleActorSelection"));	
 	AActor* HitActor = HitResult.GetActor();
 	if(HitActor && HitActor != SelectedActor && HitActor->Implements<USelectableActor>())
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Execute_SelectActor"));	
 		ISelectableActor::Execute_SelectActor(HitActor);
 		if(SelectedActor)
 		{

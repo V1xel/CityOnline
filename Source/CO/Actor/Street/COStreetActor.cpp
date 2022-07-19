@@ -4,15 +4,34 @@
 #include "COStreetActor.h"
 
 #include "CO/Actor/Building/COBuildingActor.h"
-#include "Components/COStreetBuildingComponent.h"
 
 ACOStreetActor::ACOStreetActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	BuildingComponent = CreateDefaultSubobject<UCOStreetBuildingComponent>(TEXT("BuildingComponent"));
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	SceneComponent->SetMobility(EComponentMobility::Static);
+	SetRootComponent(SceneComponent);
+	CellManagementComponent = CreateDefaultSubobject<UCOStreetCellManagementComponent>(TEXT("CellManagementComponent"));
+	CellManagementComponent->AttachToComponent(SceneComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 ACOBuildingActor* ACOStreetActor::CreateBuilding(FCOBuildingConfiguration Configuration, const TArray<UCOStreetCellComponent*>& SelectedCells)
 {
 	return nullptr;
+}
+
+void ACOStreetActor::SelectActor_Implementation()
+{
+	ISelectableActor::SelectActor_Implementation();
+}
+
+void ACOStreetActor::DeselectActor_Implementation()
+{
+	ISelectableActor::DeselectActor_Implementation();
+}
+
+void ACOStreetActor::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	CellManagementComponent->ConstructCells();
 }

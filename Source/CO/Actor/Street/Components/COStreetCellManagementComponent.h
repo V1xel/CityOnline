@@ -4,49 +4,50 @@
 
 #include "CoreMinimal.h"
 #include "COStreetCellComponent.h"
-#include "Components/ActorComponent.h"
 #include "COStreetCellManagementComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCellSelected);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CO_API UCOStreetCellManagementComponent : public UActorComponent
+class CO_API UCOStreetCellManagementComponent : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UCOStreetCellManagementComponent();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-							   FActorComponentTickFunction* ThisTickFunction) override;
+	
 public:
+	UFUNCTION(BlueprintCallable)
 	void ConstructCells();
 
 	void SetCellsSelectable(bool Value);
 
-	void GetSelectedCells(const TArray<UCOStreetCellComponent*> Cells);
+	void GetSelectedCells(const TArray<UCOStreetCellComponent*> _Cells);
 
-    void AllocateCells(const TArray<UCOStreetCellComponent*> Cells);
+    void AllocateCells(const TArray<UCOStreetCellComponent*> _Cells);
 	
-	bool ValidateCells(const TArray<UCOStreetCellComponent*> Cells);
+	bool ValidateCells(const TArray<UCOStreetCellComponent*> _Cells);
 
-	void OccupyCells(const TArray<UCOStreetCellComponent*> Cells);
+	void OccupyCells(const TArray<UCOStreetCellComponent*> _Cells);
+
 protected:
-	int HorizontalCells;
-
-	int VerticalCells;
-
-	float CellSize;
-
-	float Coverage;
-
+	
 	bool IsSelectionValid;
 
 	FOnCellSelected OnCellSelected;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int Horizontal = 5; 
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int Vertical = 5;
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	float Coverage = 0.83f;
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	float Size = 0.17f;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	TArray<UCOStreetCellComponent*> Cells{};
 };

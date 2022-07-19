@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "CO/Actor/Interfaces/SelectableComponent.h"
-#include "Components/ActorComponent.h"
 #include "COStreetCellComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CO_API UCOStreetCellComponent : public UActorComponent, public ISelectableComponent
+class CO_API UCOStreetCellComponent : public UStaticMeshComponent, public ISelectableComponent
 {
 	GENERATED_BODY()
 
@@ -18,19 +17,26 @@ public:
 	UCOStreetCellComponent();
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
-
 	virtual void SelectComponent_Implementation() override;
 
 	virtual void DeselectComponent_Implementation() override;
-protected:
+
+public:
+	UPROPERTY(BlueprintReadOnly)
 	bool IsOccupied;
-
+	
+	UPROPERTY(BlueprintReadOnly)
 	bool IsSelected;
-
+	
+	UPROPERTY(BlueprintReadOnly)
 	bool IsExtreme;
-
+	
+	UPROPERTY(BlueprintReadOnly)
 	bool IsCorner;
+	
+	UPROPERTY(BlueprintReadOnly)
+	int Horizontal;
+	
+	UPROPERTY(BlueprintReadOnly)
+	int Vertical;
 };

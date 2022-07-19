@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CO/Actor/Building/COBuildingConfiguration.h"
+#include "CO/Actor/Interfaces/SelectableActor.h"
 #include "Components/COStreetCellManagementComponent.h"
 #include "GameFramework/Actor.h"
 #include "COStreetActor.generated.h"
@@ -14,7 +15,7 @@ class UCOStreetLeasingComponent;
 class ACOBuildingActor;
 
 UCLASS()
-class CO_API ACOStreetActor : public AActor
+class CO_API ACOStreetActor : public AActor, public ISelectableActor
 {
 	GENERATED_BODY()
 
@@ -32,17 +33,29 @@ public:
 	void FailBuildingTransaction();
 	
 	void CommitBuildingTransaction();
+
+	virtual void SelectActor_Implementation() override;
+
+	virtual void DeselectActor_Implementation() override;
+
+	virtual void OnConstruction(const FTransform& Transform) override;
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UCOStreetCellManagementComponent* CellManagementComponent{};
 	
 protected:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	UCOStreetBuildingComponent* BuildingComponent;
+	bool IsConstructed;
 	
 	UPROPERTY()
 	UCOStreetInformationComponent* InformationComponent;
 	
 	UPROPERTY()
 	UCOStreetLeasingComponent* LeasingComponent;
-	
+
 	UPROPERTY()
-	UCOStreetCellManagementComponent* CellManagementComponent;
+	USceneComponent* SceneComponent;
+	
+
+
 };

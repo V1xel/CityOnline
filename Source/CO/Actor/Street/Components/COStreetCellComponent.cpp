@@ -3,24 +3,19 @@
 
 #include "COStreetCellComponent.h"
 
-
-// Sets default values for this component's properties
 UCOStreetCellComponent::UCOStreetCellComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> PlaneAsset(TEXT("StaticMesh'/Engine/BasicShapes/Plane.Plane'"));
+	if (PlaneAsset.Succeeded()) {
+		UStaticMeshComponent::SetStaticMesh(PlaneAsset.Object);
+	}
 
-	// ...
-}
-
-// Called every frame
-void UCOStreetCellComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                           FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	static ConstructorHelpers::FObjectFinder<UMaterial> CellMaterialAsset(TEXT("Material'/Game/CityOnline/Actor/Building/BuildingCellValid.BuildingCellValid'"));
+	if (CellMaterialAsset.Succeeded()) {
+		UMeshComponent::SetMaterial(0, CellMaterialAsset.Object);
+	}
+	
+	USceneComponent::SetMobility(EComponentMobility::Static);
 }
 
 void UCOStreetCellComponent::SelectComponent_Implementation()
