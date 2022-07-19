@@ -2,30 +2,25 @@
 
 
 #include "COPlayerController.h"
+#include "Abilities/COEndBuildingAbility.h"
+#include "Abilities/COStartBuildingAbility.h"
 
-#include "Handlers/COPlayerBuildingHandler.h"
-
-ACOPlayerController::ACOPlayerController()
+void ACOPlayerController::StartBuildingProcess()
 {
-	BuildingHandler = CreateDefaultSubobject<UCOPlayerBuildingHandler>(TEXT("BuildingHandler"));
+	AbilitySystemComponent->TryActivateAbilityByClass(UCOStartBuildingAbility::StaticClass());
 }
 
-void ACOPlayerController::StartBuildingProcess(FCOBuildingConfiguration Configuration)
+void ACOPlayerController::UpdateBuildingConfiguration()
 {
-	BuildingHandler->StartBuildingProcess(Configuration);
-}
-
-void ACOPlayerController::UpdateBuildingConfiguration(FCOBuildingConfiguration Configuration)
-{
-	BuildingHandler->UpdateBuildingConfiguration(Configuration);
+//	AbilitySystemComponent->TryActivateAbilityByClass(UCOEditBuildingAbility::StaticClass());
 }
 
 void ACOPlayerController::EndBuildingProcess(const TArray<UCOStreetCellComponent*>& SelectedCells)
 {
-	BuildingHandler->EndBuildingProcess(SelectedCells);
+	AbilitySystemComponent->TryActivateAbilityByClass(UCOEndBuildingAbility::StaticClass());
 }
 
 void ACOPlayerController::CancelBuildingProcess()
 {
-	BuildingHandler->CancelBuildingProcess();
+	AbilitySystemComponent->TryActivateAbilityByClass(UCOEndBuildingAbility::StaticClass());
 }

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "COPlayerControllerBase.h"
-#include "CO/Actor/Building/COBuildingConfiguration.h"
 #include "COPlayerController.generated.h"
 
 class UCOPlayerBuildingHandler;
@@ -16,11 +16,9 @@ class CO_API ACOPlayerController : public ACOPlayerControllerBase
 	GENERATED_BODY()
 
 public:
-	ACOPlayerController();
+	void StartBuildingProcess();
 
-	void StartBuildingProcess(FCOBuildingConfiguration Configuration);
-
-	void UpdateBuildingConfiguration(FCOBuildingConfiguration Configuration);
+	void UpdateBuildingConfiguration();
 
 	void EndBuildingProcess(const TArray<UCOStreetCellComponent*>& SelectedCells);
 
@@ -29,4 +27,7 @@ public:
 protected:
 	UPROPERTY()
 	UCOPlayerBuildingHandler* BuildingHandler;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (DisplayName = "ASC"))
+	UAbilitySystemComponent* AbilitySystemComponent{};
 };

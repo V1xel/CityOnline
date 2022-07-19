@@ -43,7 +43,7 @@ protected:
 	int Vertical = 6;
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	float CoveragePercent = 0.83;
+	float Coverage = 0.83;
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	float Size = 0.17f;

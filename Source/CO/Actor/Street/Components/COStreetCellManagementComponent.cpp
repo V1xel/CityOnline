@@ -18,12 +18,12 @@ UCOStreetCellManagementComponent::UCOStreetCellManagementComponent()
 void UCOStreetCellManagementComponent::ConstructCells()
 {
 	const auto Scale = GetRelativeScale3D();
-	const auto HorizontalOffset = CoveragePercent * 100 * Scale.X / (Horizontal -1);
-	const auto VerticalOffset = CoveragePercent * 100 * Scale.Y/ (Vertical-1);
+	const auto HorizontalOffset = Coverage * 100 * Scale.X / (Horizontal -1);
+	const auto VerticalOffset = Coverage * 100 * Scale.Y/ (Vertical-1);
 	
 	const auto Origin = GetComponentLocation();
 	const auto Extent = Bounds.BoxExtent;
-	const auto WorldOffset = Origin - CoveragePercent * Extent;
+	const auto WorldOffset = Origin - Coverage * Extent;
 	
 	Cells.Empty();
 	for (int iHorizontal = 0; iHorizontal <= Horizontal-1; ++iHorizontal)
