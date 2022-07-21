@@ -4,33 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffectExecutionCalculation.h"
-#include "CO/Actor/Street/Attributes/COSelectionAttributeSet.h"
-#include "COSetSelectionAttributes.generated.h"
+#include "CO/Actor/Player/Attributes/COSelectionAttributeSet.h"
+#include "COSetSelectedActorEffect.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CO_API UCOSetSelectionAttributes : public UGameplayEffectExecutionCalculation
+class CO_API UCOSetSelectedActorEffect : public UGameplayEffectExecutionCalculation
 {
 	GENERATED_BODY()
-	struct FSelectionAttributesCapture
+	struct FSelectedActorEffectCapture
 	{
 		//we must capture all ammo attributes from UAmmoAttributeSet
-		DECLARE_ATTRIBUTE_CAPTUREDEF(SelectedCellsCount);
+		DECLARE_ATTRIBUTE_CAPTUREDEF(SelectedActor);
 
-		FSelectionAttributesCapture()
+		FSelectedActorEffectCapture()
 		{
-			DEFINE_ATTRIBUTE_CAPTUREDEF(UCOSelectionAttributeSet, SelectedCellsCount, Source, true);
+			DEFINE_ATTRIBUTE_CAPTUREDEF(UCOSelectionAttributeSet, SelectedActor, Source, true);
 		}
 	};
 
 public:
-	UCOSetSelectionAttributes();
-	
 	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecParams,
 										FGameplayEffectCustomExecutionOutput& ExecOutputs) const override;
 
 protected:
-	FSelectionAttributesCapture mCapture{};
+	FSelectedActorEffectCapture mCapture{};
 };

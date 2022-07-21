@@ -4,7 +4,7 @@
 #include "COCellSelectionComponent.h"
 #include "CO/Actor/Interfaces/SelectableComponent.h"
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
-#include "CO/Player/COPlayerController.h"
+#include "CO/Actor/Player/COPlayerController.h"
 
 UCOCellSelectionComponent::UCOCellSelectionComponent()
 {
@@ -115,7 +115,7 @@ void UCOCellSelectionComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	if(IsEnabled & IsSelecting)
 	{
 		FHitResult CurrentMousePositionHitResult;
-		const ACOPlayerControllerBase* PlayerController = Cast<ACOPlayerControllerBase>(GetOwner());
+		const ACOPlayerController* PlayerController = Cast<ACOPlayerController>(GetOwner());
 		PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
 		
 		TArray<FHitResult> OutHits;

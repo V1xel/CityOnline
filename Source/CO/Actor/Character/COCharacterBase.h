@@ -3,15 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Actor/Interfaces/SelectableActor.h"
-#include "GameFramework/Character.h"
+#include "CO/AbilitySystem/COAbilitySystemComponent.h"
+#include "GameFramework/DefaultPawn.h"
 #include "COCharacterBase.generated.h"
 
 class UBehaviorTree;
 class AAIController;
+class UCOActorSelectionComponent;
 
 UCLASS()
-class CO_API ACOCharacterBase : public ACharacter
+class CO_API ACOCharacterBase : public ADefaultPawn
 {
 	GENERATED_BODY()
 
@@ -23,6 +24,15 @@ public:
 public:
 	bool IsSelected;
 
+	virtual void PossessedBy(AController* NewController) override;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UBehaviorTree* BehaviorTree;
+	UCOActorSelectionComponent* ActorSelectionComponent{};
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UBehaviorTree* BehaviorTree{};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UCOAbilitySystemComponent* AbilitySystemComponent{};
+	
 };

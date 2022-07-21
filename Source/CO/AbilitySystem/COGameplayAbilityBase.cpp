@@ -2,11 +2,15 @@
 
 
 #include "COGameplayAbilityBase.h"
+#include "CO/Actor/Player/COPlayerCharacter.h"
+#include "CO/Actor/Player/COPlayerController.h"
 
-void UCOGameplayAbilityBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-                                             const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-                                             const FGameplayEventData* TriggerEventData)
+ACOPlayerController* UCOGameplayAbilityBase::GetController(const FGameplayAbilityActorInfo* ActorInfo)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	this->OwnerActor = ActorInfo->OwnerActor;
+	return Cast<ACOPlayerController>(ActorInfo->PlayerController);
+}
+
+ACOPlayerCharacter* UCOGameplayAbilityBase::GetOwnerActor(const FGameplayAbilityActorInfo* ActorInfo)
+{
+	return Cast<ACOPlayerCharacter>(ActorInfo->OwnerActor);
 }

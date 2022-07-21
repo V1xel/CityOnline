@@ -1,13 +1,13 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "COGameModeBase.h"
-#include "CO/Player/COPlayerCamera.h"
-#include "CO/Player/COPlayerController.h"
+#include "CO/Actor/Player/COPlayerCharacter.h"
+#include "CO/Actor/Player/COPlayerController.h"
 #include "CO/UserInterface/COHUD.h"
 
 ACOGameModeBase::ACOGameModeBase()
 {
-	DefaultPawnClass = ACOPlayerCamera::StaticClass();
+	DefaultPawnClass = ACOPlayerCharacter::StaticClass();
 	PlayerControllerClass = ACOPlayerController::StaticClass();
 	HUDClass = ACOHUD::StaticClass();
 }

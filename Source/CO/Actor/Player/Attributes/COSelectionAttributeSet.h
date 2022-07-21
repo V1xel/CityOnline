@@ -13,13 +13,13 @@ UCLASS()
 class CO_API UCOSelectionAttributeSet : public UCOAttributeSetBase
 {
 	GENERATED_BODY()
-	
+
 public:
-	GENERATE_ATTRIBUTE_ACCESSORS(UCOSelectionAttributeSet, SelectedCellsCount);
+	GENERATE_ATTRIBUTE_ACCESSORS(UCOSelectionAttributeSet, SelectedActor);
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
-	FGameplayAttributeData SelectedCellsCount{};
+	FGameplayAttributeData SelectedActor{};
 
-	friend class UCOSetSelectionAttributes;
+	friend class UCOSetSelectedActorEffect;
 };

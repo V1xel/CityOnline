@@ -1,11 +1,16 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "COPlayerCamera.h"
+
+#include "COPlayerCharacterBase.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
-ACOPlayerCamera::ACOPlayerCamera()
+
+// Sets default values
+ACOPlayerCharacterBase::ACOPlayerCharacterBase()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	bAddDefaultMovementBindings  = false;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -23,7 +28,7 @@ ACOPlayerCamera::ACOPlayerCamera()
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 }
 
-void ACOPlayerCamera::AddForwardMovementInput(float Value)
+void ACOPlayerCharacterBase::AddForwardMovementInput(float Value)
 {
 	if(Value != 0)
 	{
@@ -31,7 +36,7 @@ void ACOPlayerCamera::AddForwardMovementInput(float Value)
 	}
 }
 
-void ACOPlayerCamera::AddRightMovementInput(float Value)
+void ACOPlayerCharacterBase::AddRightMovementInput(float Value)
 {
 	if(Value != 0)
 	{
@@ -39,7 +44,7 @@ void ACOPlayerCamera::AddRightMovementInput(float Value)
 	}
 }
 
-void ACOPlayerCamera::AddCameraYawInput(float Value)
+void ACOPlayerCharacterBase::AddCameraYawInput(float Value)
 {
 	if(Value != 0 && EnableCameraRotation)
 	{
@@ -47,14 +52,14 @@ void ACOPlayerCamera::AddCameraYawInput(float Value)
 	}
 }
 
-void ACOPlayerCamera::NavigateOnObject(AActor* object, float zoom)
+void ACOPlayerCharacterBase::NavigateOnObject(AActor* object, float zoom)
 {
 	DesiredTargetArmLength = zoom;
 	const FVector NavigatedObjectLocation = object->GetActorLocation();
 	SetActorLocation(NavigatedObjectLocation);
 }
 
-void ACOPlayerCamera::ZoomCamera(float Value)
+void ACOPlayerCharacterBase::ZoomCamera(float Value)
 {
 	if(Value != 0)
 	{
@@ -62,26 +67,15 @@ void ACOPlayerCamera::ZoomCamera(float Value)
 	}
 } 
 
-void ACOPlayerCamera::EnableRotateCamera()
+void ACOPlayerCharacterBase::EnableRotateCamera()
 {
 	EnableCameraRotation = !EnableCameraRotation;
 }
 
-void ACOPlayerCamera::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ACOPlayerCharacterBase::Tick(float DeltaTime)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::Tick(DeltaTime);
 
-	InputComponent->BindAxis("MoveForward", this, &ACOPlayerCamera::AddForwardMovementInput);
-	InputComponent->BindAxis("MoveRight", this, &ACOPlayerCamera::AddRightMovementInput);
-	InputComponent->BindAxis("RotateCamera", this, &ACOPlayerCamera::AddCameraYawInput);
-	InputComponent->BindAxis("ZoomCamera", this, &ACOPlayerCamera::ZoomCamera);
-	InputComponent->BindAction("EnableRotateCamera", IE_Pressed, this, &ACOPlayerCamera::EnableRotateCamera);
-	InputComponent->BindAction("EnableRotateCamera", IE_Released, this, &ACOPlayerCamera::EnableRotateCamera);
+	SpringArm->TargetArmLength = FMath::Lerp(SpringArm->TargetArmLength, DesiredTargetArmLength, DeltaTime);
 }
 
-void ACOPlayerCamera::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-	
-	SpringArm->TargetArmLength = FMath::Lerp(SpringArm->TargetArmLength, DesiredTargetArmLength, DeltaSeconds);
-}

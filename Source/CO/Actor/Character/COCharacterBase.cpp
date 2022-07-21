@@ -5,12 +5,11 @@
 
 #include "AIController.h"
 #include "AIController/COCharacterAIController.h"
-#include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 ACOCharacterBase::ACOCharacterBase()
 {
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	AbilitySystemComponent = CreateDefaultSubobject<UCOAbilitySystemComponent>(TEXT("AbilitySystem"));
 }
 
 void ACOCharacterBase::MoveTo(FVector DestinationPoint)
@@ -24,4 +23,11 @@ void ACOCharacterBase::MoveTo(FVector DestinationPoint)
 			AIController->GetBlackboardComponent()->SetValueAsVector("DestinationPoint", DestinationPoint);
 		}
 	}
+}
+
+void ACOCharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
