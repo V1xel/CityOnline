@@ -27,6 +27,8 @@ public:
 	virtual void ExternalConfirm(bool bEndTask) override;
 
 	TArray<UCOStreetCellComponent*> GetSelectedCells() const { return TArray(SelectedCells); }
+
+	void SetDrawDebugSelection(bool Value) { DrawDebugSelection = Value; }
 protected:
 	virtual void Activate() override;
 
@@ -48,4 +50,7 @@ protected:
 	
 	UPROPERTY()
 	TArray<UCOStreetCellComponent*> SelectedCells{};
+
+	UPROPERTY()
+	bool DrawDebugSelection;
 };

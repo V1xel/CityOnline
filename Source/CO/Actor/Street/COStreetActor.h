@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CO/Actor/Building/COBuildingConfiguration.h"
-#include "CO/Actor/Interfaces/SelectableActor.h"
+#include "CO/Actor/Interfaces/COSelectableActor.h"
 #include "Components/COStreetCellManagementComponent.h"
 #include "GameFramework/Actor.h"
 #include "COStreetActor.generated.h"
@@ -15,7 +15,7 @@ class UCOStreetLeasingComponent;
 class ACOBuildingActor;
 
 UCLASS()
-class CO_API ACOStreetActor : public AActor, public ISelectableActor
+class CO_API ACOStreetActor : public AActor, public ICOSelectableActor
 {
 	GENERATED_BODY()
 

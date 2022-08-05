@@ -36,12 +36,12 @@ void ACOBuildingActor::RemoveActor()
 
 void ACOBuildingActor::SelectActor_Implementation()
 {
-	ISelectableActor::SelectActor_Implementation();
+	ICOSelectableActor::SelectActor_Implementation();
 }
 
 void ACOBuildingActor::DeselectActor_Implementation()
 {
-	ISelectableActor::DeselectActor_Implementation();
+	ICOSelectableActor::DeselectActor_Implementation();
 }
 
 

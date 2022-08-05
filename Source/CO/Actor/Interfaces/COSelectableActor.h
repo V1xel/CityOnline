@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "SelectableActor.generated.h"
+#include "COSelectableActor.generated.h"
 
 UINTERFACE(MinimalAPI, Blueprintable)
-class USelectableActor : public UInterface
+class UCOSelectableActor : public UInterface
 {
 	GENERATED_BODY()
 };
 
-class CO_API ISelectableActor
+class CO_API ICOSelectableActor
 {
 	GENERATED_BODY()
 

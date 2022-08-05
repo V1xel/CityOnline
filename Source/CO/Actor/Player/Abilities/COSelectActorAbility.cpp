@@ -3,7 +3,7 @@
 
 #include "COSelectActorAbility.h"
 
-#include "CO/Actor/Interfaces/SelectableActor.h"
+#include "CO/Actor/Interfaces/COSelectableActor.h"
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Actor/Player/COPlayerController.h"
 
@@ -19,12 +19,12 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	FHitResult HitResult;
 	PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
 	AActor* HitActor = HitResult.GetActor();
-	if(HitActor && HitActor != SelectedActor && HitActor->Implements<USelectableActor>())
+	if(HitActor && HitActor != SelectedActor && HitActor->Implements<UCOSelectableActor>())
 	{
-		ISelectableActor::Execute_SelectActor(HitActor);
+		ICOSelectableActor::Execute_SelectActor(HitActor);
 		if(SelectedActor)
 		{
-			ISelectableActor::Execute_DeselectActor(SelectedActor);
+			ICOSelectableActor::Execute_DeselectActor(SelectedActor);
 		}
 
 		Player->SetSelectedActor(HitActor);

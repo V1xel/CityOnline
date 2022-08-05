@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Actor/Interfaces/SelectableComponent.h"
+#include "Interfaces/COSelectableComponent.h"
 #include "COStreetCellComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CO_API UCOStreetCellComponent : public UStaticMeshComponent, public ISelectableComponent
+class CO_API UCOStreetCellComponent : public UStaticMeshComponent, public ICOSelectableComponent
 {
 	GENERATED_BODY()
 
@@ -39,4 +39,7 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly)
 	int Vertical;
+
+	UPROPERTY(BlueprintReadWrite)
+	UMaterialInstanceDynamic* DynamicMaterial;
 };

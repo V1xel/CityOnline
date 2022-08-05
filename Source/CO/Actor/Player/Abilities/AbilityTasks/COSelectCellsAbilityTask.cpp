@@ -36,7 +36,7 @@ void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)
 
 	for (const auto SelectedComponent : SelectedCells)
 	{
-		ISelectableComponent::Execute_DeselectComponent(SelectedComponent);
+		ICOSelectableComponent::Execute_DeselectComponent(SelectedComponent);
 	}
 }
 
@@ -46,19 +46,24 @@ bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVe
 	const FVector Size = (RectangleEnd - RectangleStart) / 2;
 	const FVector Extent = FVector( FMath::Sqrt(Size.X * Size.X),  FMath::Sqrt(Size.Y * Size.Y),  1);
 	const FCollisionShape CollisionBox = FCollisionShape::MakeBox(Extent);
-	
 	const FVector Center = (RectangleEnd + RectangleStart) / 2;
+
+	if(DrawDebugSelection)
+	{
+		DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 100);
+	}
+
 	return GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
 }
 
 void UCOSelectCellsAbilityTask::HandleActorComponentSelection(TArray<FHitResult>& HitResults)
 {
 	TArray<UCOStreetCellComponent*> DesiredSelectedComponents;
-
+	
 	for (auto HitResult : HitResults)
 	{
 		UCOStreetCellComponent* HitComponent = Cast<UCOStreetCellComponent>(HitResult.GetComponent());
-		if(HitComponent && HitComponent->Implements<USelectableComponent>())
+		if(HitComponent && HitComponent->Implements<UCOSelectableComponent>())
 		{
 			bool PendingSelect = true;
 			for (const auto SelectedComponent : SelectedCells)
@@ -71,7 +76,7 @@ void UCOSelectCellsAbilityTask::HandleActorComponentSelection(TArray<FHitResult>
 			}
 			if(PendingSelect)
 			{
-				ISelectableComponent::Execute_SelectComponent(HitComponent);
+				ICOSelectableComponent::Execute_SelectComponent(HitComponent);
 			}
 			
 			DesiredSelectedComponents.Add(HitComponent);
@@ -84,7 +89,7 @@ void UCOSelectCellsAbilityTask::HandleActorComponentSelection(TArray<FHitResult>
 		for (auto HitResult : HitResults)
 		{
 			UCOStreetCellComponent* HitComponent = Cast<UCOStreetCellComponent>(HitResult.GetComponent());
-			if(HitComponent && HitComponent->Implements<USelectableComponent>())
+			if(HitComponent && HitComponent->Implements<UCOSelectableComponent>())
 			{
 				if(SelectedComponent == HitComponent)
 				{
@@ -95,7 +100,7 @@ void UCOSelectCellsAbilityTask::HandleActorComponentSelection(TArray<FHitResult>
 
 		if(PendingDeselect)
 		{
-			ISelectableComponent::Execute_DeselectComponent(SelectedComponent);
+			ICOSelectableComponent::Execute_DeselectComponent(SelectedComponent);
 		}
 	}
 

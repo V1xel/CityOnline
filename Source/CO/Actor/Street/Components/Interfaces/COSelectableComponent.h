@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "SelectableComponent.generated.h"
+#include "COSelectableComponent.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, Blueprintable)
-class USelectableComponent : public UInterface
+class UCOSelectableComponent : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,7 +16,7 @@ class USelectableComponent : public UInterface
 /**
  * 
  */
-class CO_API ISelectableComponent
+class CO_API ICOSelectableComponent
 {
 	GENERATED_BODY()
 

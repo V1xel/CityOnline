@@ -12,7 +12,8 @@ UCOStreetCellComponent::UCOStreetCellComponent()
 
 	static ConstructorHelpers::FObjectFinder<UMaterial> CellMaterialAsset(TEXT("Material'/Game/CityOnline/Actor/Building/Material/BuildingCellValid.BuildingCellValid'"));
 	if (CellMaterialAsset.Succeeded()) {
-		UMeshComponent::SetMaterial(0, CellMaterialAsset.Object);
+		DynamicMaterial = UMaterialInstanceDynamic::Create(CellMaterialAsset.Object, this, "CellMaterial");
+		UMeshComponent::SetMaterial(0, DynamicMaterial);
 	}
 	
 	USceneComponent::SetMobility(EComponentMobility::Static);
@@ -20,11 +21,13 @@ UCOStreetCellComponent::UCOStreetCellComponent()
 
 void UCOStreetCellComponent::SelectComponent_Implementation()
 {
-	ISelectableComponent::SelectComponent_Implementation();
+	ICOSelectableComponent::SelectComponent_Implementation();
+	IsSelected = true;
 }
 
 void UCOStreetCellComponent::DeselectComponent_Implementation()
 {
-	ISelectableComponent::DeselectComponent_Implementation();
+	ICOSelectableComponent::DeselectComponent_Implementation();
+	IsSelected = false;
 }
 

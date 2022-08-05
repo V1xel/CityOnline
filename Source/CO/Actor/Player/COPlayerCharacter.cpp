@@ -2,18 +2,19 @@
 
 #include "COPlayerCharacter.h"
 #include "Abilities/COSelectActorAbility.h"
+#include "Abilities/COSelectCellsAbility.h"
 #include "CO/AbilitySystem/COAbilitySystemComponent.h"
 #include "CO/Actor/Building/Attributes/COBuildingAttributeSet.h"
 
 void ACOPlayerCharacter::StartSelection()
 {
 	AbilitySystemComponent->TryActivateAbilityByClass(SelectActorAbility);
-	//AbilitySystemComponent->TryActivateAbilityByClass(UCOSelectCellsAbility::StaticClass());
+	AbilitySystemComponent->TryActivateAbilityByClass(SelectCellsAbility);
 }
 
 void ACOPlayerCharacter::EndSelection()
 {
-	//AbilitySystemComponent->CancelAbility(UCOSelectCellsAbility::StaticClass());
+	AbilitySystemComponent->CancelAbility(SelectCellsAbility);
 }
 
 void ACOPlayerCharacter::StartBuildingProcess()
@@ -37,6 +38,7 @@ void ACOPlayerCharacter::BeginPlay()
 	if (HasAuthority())
 	{
 		AbilitySystemComponent->GiveAbility(SelectActorAbility);
+		AbilitySystemComponent->GiveAbility(SelectCellsAbility);
 	}
 	
 	Super::BeginPlay();

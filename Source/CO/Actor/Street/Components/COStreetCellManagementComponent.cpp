@@ -24,7 +24,7 @@ void UCOStreetCellManagementComponent::ConstructCells()
 	const auto Origin = GetComponentLocation();
 	const auto Extent = Bounds.BoxExtent;
 	const auto WorldOffset = Origin - Coverage * Extent;
-	
+
 	Cells.Empty();
 	for (int iHorizontal = 0; iHorizontal <= Horizontal-1; ++iHorizontal)
 	{

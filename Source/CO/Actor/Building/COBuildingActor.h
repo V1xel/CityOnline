@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "COBuildingConfiguration.h"
 #include "Attributes/COBuildingAttributeSet.h"
-#include "CO/Actor/Interfaces/SelectableActor.h"
+#include "CO/Actor/Interfaces/COSelectableActor.h"
 #include "GameFramework/Actor.h"
 #include "COBuildingActor.generated.h"
 
@@ -13,7 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConfigurationUpdatedDelegate, FCO
 class UCOAbilitySystemComponent;
 
 UCLASS(Blueprintable)
-class CO_API ACOBuildingActor : public AActor, public ISelectableActor
+class CO_API ACOBuildingActor : public AActor, public ICOSelectableActor
 {
 	GENERATED_BODY()
 

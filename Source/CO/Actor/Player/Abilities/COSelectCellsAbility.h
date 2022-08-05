@@ -37,4 +37,7 @@ protected:
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnSelectionEndedDelegate OnSelectionEnded;
+	
+	UPROPERTY(EditDefaultsOnly)
+	bool DrawDebugSelection;
 };

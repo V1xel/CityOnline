@@ -22,12 +22,12 @@ ACOBuildingActor* ACOStreetActor::CreateBuilding(FCOBuildingConfiguration Config
 
 void ACOStreetActor::SelectActor_Implementation()
 {
-	ISelectableActor::SelectActor_Implementation();
+	ICOSelectableActor::SelectActor_Implementation();
 }
 
 void ACOStreetActor::DeselectActor_Implementation()
 {
-	ISelectableActor::DeselectActor_Implementation();
+	ICOSelectableActor::DeselectActor_Implementation();
 }
 
 void ACOStreetActor::OnConstruction(const FTransform& Transform)
