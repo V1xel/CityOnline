@@ -7,6 +7,8 @@
 #include "GameFramework/Character.h"
 #include "COPlayerCharacter.generated.h"
 
+class UCOSelectActorAbility;
+class UCOSelectCellsAbility;
 class USpringArmComponent;
 class UCameraComponent;
 
@@ -16,8 +18,6 @@ class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
 	GENERATED_BODY()
 
 public:
-	ACOPlayerCharacter();
-
 	AActor* GetSelectedActor() const { return SelectedActor; }
 
 	void SetSelectedActor(AActor* Value){ SelectedActor = Value; };
@@ -34,9 +34,18 @@ public:
 
 	void CancelBuildingProcess();
 
+	virtual void BeginPlay() override;
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	UPROPERTY(EditDefaultsOnly, Category="Character Abilities", meta=(BlueprintBaseOnly))
+	TSubclassOf<UCOSelectActorAbility> SelectActorAbility{};
+
+	UPROPERTY(EditDefaultsOnly, Category="Character Abilities", meta=(BlueprintBaseOnly))
+	TSubclassOf<UCOSelectCellsAbility> SelectCellsAbility{};
 private:
 	UPROPERTY()
 	AActor* SelectedActor;
+	
 };

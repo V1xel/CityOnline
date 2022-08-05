@@ -7,7 +7,7 @@
 
 
 // Sets default values
-ACOPlayerCharacterBase::ACOPlayerCharacterBase()
+ACOPlayerCharacterBase::ACOPlayerCharacterBase() : Super()
 {
 	PrimaryActorTick.bCanEverTick = true;
 

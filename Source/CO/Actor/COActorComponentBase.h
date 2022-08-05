@@ -18,9 +18,9 @@ protected:
 	template <typename T>
 	T* GetOwnerComponent(const TSubclassOf<UActorComponent> Class) const
 	{
-		T* Component = Cast<T>(GetOwner()->GetComponentByClass(Class));
+		T* Component = CastChecked<T>(GetOwner()->GetComponentByClass(Class), ECastCheckedType::NullChecked);
 
-		return COAssertionChecker::CheckReferenceNotNull(Component, FString::Printf(TEXT("Null reference: %s"), *Class->ClassConfigName.ToString()));
+		return Component;
 	}
 
 	ACOPlayerController* GetOwnerController() const;

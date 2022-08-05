@@ -13,7 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSelectionEndedDelegate, const TAr
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class CO_API UCOSelectCellsAbility : public UCOGameplayAbilityBase
 {
 	GENERATED_BODY()

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-#include "COGameplayAbilityBase.h"
 #include "COAbilitySystemComponent.generated.h"
 
 /**
@@ -16,11 +15,7 @@ class CO_API UCOAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<TSubclassOf<UCOGameplayAbilityBase>> Abilities{};
-
-	void GiveAbility(UClass* Class);
-
-	void CancelAbility(UClass* Class);
+	void CancelAbility(const UClass* Class);
 	
+	void GiveAbility(UClass* Class);
 };

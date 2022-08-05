@@ -1,26 +1,19 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "COPlayerCharacter.h"
-
 #include "Abilities/COSelectActorAbility.h"
-#include "Abilities/COSelectCellsAbility.h"
+#include "CO/AbilitySystem/COAbilitySystemComponent.h"
 #include "CO/Actor/Building/Attributes/COBuildingAttributeSet.h"
-
-ACOPlayerCharacter::ACOPlayerCharacter()
-{
-	AbilitySystemComponent->GiveAbility(UCOSelectActorAbility::StaticClass());
-	AbilitySystemComponent->GiveAbility(UCOSelectCellsAbility::StaticClass());
-}
 
 void ACOPlayerCharacter::StartSelection()
 {
-	AbilitySystemComponent->TryActivateAbilityByClass(UCOSelectActorAbility::StaticClass());
-	AbilitySystemComponent->TryActivateAbilityByClass(UCOSelectCellsAbility::StaticClass());
+	AbilitySystemComponent->TryActivateAbilityByClass(SelectActorAbility);
+	//AbilitySystemComponent->TryActivateAbilityByClass(UCOSelectCellsAbility::StaticClass());
 }
 
 void ACOPlayerCharacter::EndSelection()
 {
-	AbilitySystemComponent->CancelAbility(UCOSelectCellsAbility::StaticClass());
+	//AbilitySystemComponent->CancelAbility(UCOSelectCellsAbility::StaticClass());
 }
 
 void ACOPlayerCharacter::StartBuildingProcess()
@@ -37,6 +30,16 @@ void ACOPlayerCharacter::EndBuildingProcess()
 
 void ACOPlayerCharacter::CancelBuildingProcess()
 {
+}
+
+void ACOPlayerCharacter::BeginPlay()
+{
+	if (HasAuthority())
+	{
+		AbilitySystemComponent->GiveAbility(SelectActorAbility);
+	}
+	
+	Super::BeginPlay();
 }
 
 void ACOPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

@@ -7,14 +7,17 @@
 
 void UCOAbilitySystemComponent::GiveAbility(UClass* Class)
 {
-	const FGameplayAbilitySpec AbilitySpec{Class, 1};
-	
-	Super::GiveAbility(AbilitySpec);
+	if(Class)
+	{
+		const FGameplayAbilitySpec AbilitySpec{Class, 1};
+
+		Super::GiveAbility(AbilitySpec);
+	}
 }
 
-void UCOAbilitySystemComponent::CancelAbility(UClass* Class)
+void UCOAbilitySystemComponent::CancelAbility(const UClass* Class)
 {
-	const auto Ability = Cast<UCOSelectCellsAbility>(Class->GetDefaultObject());
+	const auto Ability = CastChecked<UCOSelectCellsAbility>(Class->GetDefaultObject(), ECastCheckedType::NullChecked);
 
 	Super::CancelAbility(Ability);
 }

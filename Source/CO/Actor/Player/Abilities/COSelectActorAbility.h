@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class CO_API UCOSelectActorAbility : public UCOGameplayAbilityBase
 {
 	GENERATED_BODY()
@@ -22,4 +22,11 @@ protected:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 							bool bWasCancelled) override;
+
+protected:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<UGameplayEffect> ActorSelectedEffect{};
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<UGameplayEffect> ActorDeselectedEffect{};
 };

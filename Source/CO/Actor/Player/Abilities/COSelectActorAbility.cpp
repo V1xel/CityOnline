@@ -19,10 +19,8 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	FHitResult HitResult;
 	PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
 	AActor* HitActor = HitResult.GetActor();
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Try select"));	
 	if(HitActor && HitActor != SelectedActor && HitActor->Implements<USelectableActor>())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Execute_SelectActor"));	
 		ISelectableActor::Execute_SelectActor(HitActor);
 		if(SelectedActor)
 		{

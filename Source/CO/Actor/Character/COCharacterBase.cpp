@@ -6,10 +6,11 @@
 #include "AIController.h"
 #include "AIController/COCharacterAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "CO/AbilitySystem/COAbilitySystemComponent.h"
 
 ACOCharacterBase::ACOCharacterBase()
 {
-	AbilitySystemComponent = CreateDefaultSubobject<UCOAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AbilitySystemComponent = CreateDefaultSubobject<UCOAbilitySystemComponent>("AbilitySystem");
 }
 
 void ACOCharacterBase::MoveTo(FVector DestinationPoint)
@@ -25,9 +26,21 @@ void ACOCharacterBase::MoveTo(FVector DestinationPoint)
 	}
 }
 
+void ACOCharacterBase::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+}
+
 void ACOCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	AbilitySystemComponent->RefreshAbilityActorInfo();
+}
+
+UAbilitySystemComponent* ACOCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
