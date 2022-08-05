@@ -3,6 +3,7 @@
 
 #include "COSelectCellsAbility.h"
 #include "AbilityTasks/COSelectCellsAbilityTask.h"
+#include "CO/Actor/Player/COPlayerController.h"
 
 void UCOSelectCellsAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                             const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -10,9 +11,13 @@ void UCOSelectCellsAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	const auto PlayerController = GetController(ActorInfo);
-	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this,"Test", PlayerController, FCOBuildingConfiguration());
-	SelectCellsAbilityTask->ReadyForActivation();
-	SelectCellsAbilityTask->SetDrawDebugSelection(DrawDebugSelection);
+	const auto BuildingDetails = GetOptionalParameter<UCOBuildingDetails>(TriggerEventData);
+	if (BuildingDetails)
+	{
+		SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this,"Test", PlayerController, BuildingDetails);
+		SelectCellsAbilityTask->ReadyForActivation();
+		SelectCellsAbilityTask->SetDrawDebugSelection(DrawDebugSelection);
+	}
 }
 
 void UCOSelectCellsAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle,

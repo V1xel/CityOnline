@@ -25,7 +25,7 @@ void UCOStreetCellManagementComponent::ConstructCells()
 	const auto Extent = Bounds.BoxExtent;
 	const auto WorldOffset = Origin - Coverage * Extent;
 
-	Cells.Empty();
+	_Cells.Empty();
 	for (int iHorizontal = 0; iHorizontal <= Horizontal-1; ++iHorizontal)
 	{
 		for (int iVertical = 0; iVertical <= Vertical-1; ++iVertical)
@@ -43,7 +43,7 @@ void UCOStreetCellManagementComponent::ConstructCells()
 			Cell->IsExtreme = iHorizontal == 0 || iVertical == 0 || iHorizontal == Horizontal || iVertical == Vertical;
 			Cell->IsCorner = (iHorizontal == iVertical && iHorizontal == 0) || (iHorizontal == iVertical && iHorizontal == HorizontalOffset);
 			
-			Cells.Add(Cell);
+			_Cells.Add(Cell);
 		}
 	}
 }
@@ -52,19 +52,23 @@ void UCOStreetCellManagementComponent::SetCellsSelectable(bool Value)
 {
 }
 
-void UCOStreetCellManagementComponent::GetSelectedCells(const TArray<UCOStreetCellComponent*> _Cells)
+void UCOStreetCellManagementComponent::GetSelectedCells(const TArray<UCOStreetCellComponent*> Cells)
 {
 }
 
-bool UCOStreetCellManagementComponent::ValidateCells(const TArray<UCOStreetCellComponent*> _Cells)
+bool UCOStreetCellManagementComponent::ValidateCells(const TArray<UCOStreetCellComponent*> Cells)
 {
+	for (auto Cell : _Cells)
+	{
+	}
+	
 	return false;
 }
 
-void UCOStreetCellManagementComponent::AllocateCells(const TArray<UCOStreetCellComponent*> _Cells)
+void UCOStreetCellManagementComponent::AllocateCells(const TArray<UCOStreetCellComponent*> Cells)
 {
 }
 
-void UCOStreetCellManagementComponent::OccupyCells(const TArray<UCOStreetCellComponent*> _Cells)
+void UCOStreetCellManagementComponent::OccupyCells(const TArray<UCOStreetCellComponent*> Cells)
 {
 }

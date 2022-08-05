@@ -31,3 +31,12 @@ void UCOStreetCellComponent::DeselectComponent_Implementation()
 	IsSelected = false;
 }
 
+void UCOStreetCellComponent::SetValid(bool Value)
+{
+	DynamicMaterial->SetScalarParameterValue("Valid", Value);
+}
+
+void UCOStreetCellComponent::SetVisible(bool Value)
+{
+	DynamicMaterial->SetScalarParameterValue("Visible", Value);
+}

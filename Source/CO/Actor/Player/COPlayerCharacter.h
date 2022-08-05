@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "COPlayerCharacterBase.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Character.h"
 #include "COPlayerCharacter.generated.h"
 
@@ -41,6 +42,9 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, Category="Character Abilities", meta=(BlueprintBaseOnly))
 	TSubclassOf<UCOSelectActorAbility> SelectActorAbility{};
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    	FGameplayTag EventTag;
 
 	UPROPERTY(EditDefaultsOnly, Category="Character Abilities", meta=(BlueprintBaseOnly))
 	TSubclassOf<UCOSelectCellsAbility> SelectCellsAbility{};

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "COBuildingConfiguration.generated.h"
+#include "COBuildingDetails.generated.h"
 
 UENUM(BlueprintType)
 enum class EBuildingType : uint8 
@@ -21,11 +21,12 @@ enum class EBuildingPrestige : uint8
 	High		UMETA(DisplayName = "High"),
 };
 
-USTRUCT(BlueprintType)
-struct CO_API FCOBuildingConfiguration
+UCLASS()
+class CO_API UCOBuildingDetails : public UObject
 {
 	GENERATED_BODY()
 
+public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString Name;
 

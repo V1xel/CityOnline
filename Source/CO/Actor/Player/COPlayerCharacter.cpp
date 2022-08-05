@@ -1,6 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "COPlayerCharacter.h"
+#include "Abilities/COBuildingDetails.h"
 #include "Abilities/COSelectActorAbility.h"
 #include "Abilities/COSelectCellsAbility.h"
 #include "CO/AbilitySystem/COAbilitySystemComponent.h"
@@ -8,8 +9,11 @@
 
 void ACOPlayerCharacter::StartSelection()
 {
-	AbilitySystemComponent->TryActivateAbilityByClass(SelectActorAbility);
-	AbilitySystemComponent->TryActivateAbilityByClass(SelectCellsAbility);
+	FGameplayEventData Payload;
+	auto Details = NewObject<UCOBuildingDetails>(this, UCOBuildingDetails::StaticClass());
+
+	Payload.OptionalObject = Details;
+	AbilitySystemComponent->HandleGameplayEvent(EventTag, &Payload);
 }
 
 void ACOPlayerCharacter::EndSelection()

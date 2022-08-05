@@ -22,13 +22,13 @@ public:
 
 	void SetCellsSelectable(bool Value);
 
-	void GetSelectedCells(const TArray<UCOStreetCellComponent*> _Cells);
+	void GetSelectedCells(const TArray<UCOStreetCellComponent*> Cells);
 
-    void AllocateCells(const TArray<UCOStreetCellComponent*> _Cells);
+    void AllocateCells(const TArray<UCOStreetCellComponent*> Cells);
 	
-	bool ValidateCells(const TArray<UCOStreetCellComponent*> _Cells);
+	bool ValidateCells(const TArray<UCOStreetCellComponent*> Cells);
 
-	void OccupyCells(const TArray<UCOStreetCellComponent*> _Cells);
+	void OccupyCells(const TArray<UCOStreetCellComponent*> Cells);
 
 protected:
 	
@@ -49,5 +49,5 @@ protected:
 	float Size = 0.17f;
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
-	TArray<UCOStreetCellComponent*> Cells{};
+	TArray<UCOStreetCellComponent*> _Cells{};
 };

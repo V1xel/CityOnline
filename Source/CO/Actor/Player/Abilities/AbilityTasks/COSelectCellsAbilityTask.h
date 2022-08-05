@@ -9,6 +9,7 @@
 
 class UCOStreetCellComponent;
 class ACOPlayerController;
+class UCOBuildingDetails;
 
 /**
  * 
@@ -22,13 +23,13 @@ class CO_API UCOSelectCellsAbilityTask : public UAbilityTask
 public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
 	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController,
-	FCOBuildingConfiguration Configuration);
+	UCOBuildingDetails* BuildingDetails);
 	
 	virtual void ExternalConfirm(bool bEndTask) override;
 
-	TArray<UCOStreetCellComponent*> GetSelectedCells() const { return TArray(SelectedCells); }
+	TArray<UCOStreetCellComponent*> GetSelectedCells() const { return TArray(_SelectedCells); }
 
-	void SetDrawDebugSelection(bool Value) { DrawDebugSelection = Value; }
+	void SetDrawDebugSelection(bool Value) { _DrawDebugSelection = Value; }
 protected:
 	virtual void Activate() override;
 
@@ -41,16 +42,18 @@ protected:
 	void HandleActorComponentSelection(TArray<FHitResult>& HitResults);
 
 protected:
-	FCOBuildingConfiguration Configuration{};
-	
+	UPROPERTY()
+	UCOBuildingDetails* _BuildingDetails{};
+
+	UPROPERTY()
 	FVector SelectionStartedLocation{};
 	
 	UPROPERTY()
-	ACOPlayerController* PlayerController{};
+	ACOPlayerController* _PlayerController{};
 	
 	UPROPERTY()
-	TArray<UCOStreetCellComponent*> SelectedCells{};
+	TArray<UCOStreetCellComponent*> _SelectedCells{};
 
 	UPROPERTY()
-	bool DrawDebugSelection;
+	bool _DrawDebugSelection;
 };
