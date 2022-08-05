@@ -10,7 +10,7 @@ UCOStreetCellComponent::UCOStreetCellComponent()
 		UStaticMeshComponent::SetStaticMesh(PlaneAsset.Object);
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterial> CellMaterialAsset(TEXT("Material'/Game/CityOnline/Actor/Building/BuildingCellValid.BuildingCellValid'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> CellMaterialAsset(TEXT("Material'/Game/CityOnline/Actor/Building/Material/BuildingCellValid.BuildingCellValid'"));
 	if (CellMaterialAsset.Succeeded()) {
 		UMeshComponent::SetMaterial(0, CellMaterialAsset.Object);
 	}
