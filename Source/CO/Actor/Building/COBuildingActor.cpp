@@ -3,6 +3,8 @@
 
 #include "COBuildingActor.h"
 
+#include "CO/AbilitySystem/COAbilitySystemComponent.h"
+
 // Sets default values
 ACOBuildingActor::ACOBuildingActor()
 {
@@ -15,6 +17,17 @@ void ACOBuildingActor::UpdateConfiguration(FCOBuildingConfiguration _Configurati
 
 void ACOBuildingActor::ApplyChanges()
 {
+	AbilitySystemComponent->OnGameplayEffectAppliedDelegateToTarget.AddLambda([&](
+		UAbilitySystemComponent* Target,
+		const FGameplayEffectSpec& SpecApplied,
+		FActiveGameplayEffectHandle ActiveHandle)
+	{
+		for (auto Attribute : SpecApplied.ModifiedAttributes)
+		{
+			auto value = Attribute.Attribute.GetNumericValue(BuildingAttributeSet);
+		}
+		
+	});
 }
 
 void ACOBuildingActor::RemoveActor()

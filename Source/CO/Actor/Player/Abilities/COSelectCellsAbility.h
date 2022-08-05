@@ -6,6 +6,10 @@
 #include "CO/AbilitySystem/COGameplayAbilityBase.h"
 #include "COSelectCellsAbility.generated.h"
 
+class UCOSelectCellsAbilityTask;
+class UCOStreetCellComponent;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSelectionEndedDelegate, const TArray<UCOStreetCellComponent*>&, AllocatedComponents);
+
 /**
  * 
  */
@@ -25,4 +29,12 @@ protected:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 							bool bWasCancelled) override;
+
+protected:
+	UPROPERTY()
+	UCOSelectCellsAbilityTask* SelectCellsAbilityTask;
+	
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnSelectionEndedDelegate OnSelectionEnded;
 };

@@ -27,9 +27,6 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UCOActorSelectionComponent* ActorSelectionComponent{};
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UBehaviorTree* BehaviorTree{};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

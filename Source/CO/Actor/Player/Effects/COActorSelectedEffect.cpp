@@ -6,4 +6,12 @@
 UCOActorSelectedEffect::UCOActorSelectedEffect()
 {
 	DurationPolicy = EGameplayEffectDurationType::Infinite;
+
+	FGameplayAttribute Attribute;
+	Attribute.AttributeName = "Test";
+
+	FGameplayModifierInfo Info;
+	Info.Attribute = Attribute;
+	
+	Modifiers.Add(Info);
 }

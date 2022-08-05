@@ -2,19 +2,15 @@
 
 
 #include "COSelectCellsAbility.h"
-#include "CO/Actor/Player/Effects/COActorSelectedEffect.h"
+#include "AbilityTasks/COSelectCellsAbilityTask.h"
 
 void UCOSelectCellsAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                             const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                             const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	auto OwnerActor = GetOwnerActor(ActorInfo);
-	
-
-	auto Effect = Cast<UCOActorSelectedEffect>(UCOActorSelectedEffect::StaticClass()->GetDefaultObject());
-	ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo, Effect, 1);
-
+	const auto PlayerController = GetController(ActorInfo);
+	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this,"", PlayerController, FCOBuildingConfiguration());
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
 
@@ -23,7 +19,8 @@ void UCOSelectCellsAbility::CancelAbility(const FGameplayAbilitySpecHandle Handl
 	bool bReplicateCancelAbility)
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
-
+	SelectCellsAbilityTask->ExternalConfirm(true);
+	OnSelectionEnded.Broadcast(SelectCellsAbilityTask->GetSelectedCells());
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, true);
 }
 
@@ -32,4 +29,5 @@ void UCOSelectCellsAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	OnSelectionEnded.RemoveAll(this);
 }

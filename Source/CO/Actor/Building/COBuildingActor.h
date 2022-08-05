@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "COBuildingConfiguration.h"
+#include "Attributes/COBuildingAttributeSet.h"
 #include "CO/Actor/Interfaces/SelectableActor.h"
 #include "GameFramework/Actor.h"
 #include "COBuildingActor.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConfigurationUpdatedDelegate, FCOBuildingConfiguration, Configuration);
+class UCOAbilitySystemComponent;
 
 UCLASS(Blueprintable)
 class CO_API ACOBuildingActor : public AActor, public ISelectableActor
@@ -28,6 +30,13 @@ public:
 	virtual void SelectActor_Implementation() override;
 
 	virtual void DeselectActor_Implementation() override;
+	
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UCOAbilitySystemComponent* AbilitySystemComponent{};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UCOBuildingAttributeSet* BuildingAttributeSet{};
 private:
 	bool IsSelected;
 

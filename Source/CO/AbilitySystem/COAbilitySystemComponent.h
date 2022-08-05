@@ -22,4 +22,5 @@ public:
 	void GiveAbility(UClass* Class);
 
 	void CancelAbility(UClass* Class);
+	
 };

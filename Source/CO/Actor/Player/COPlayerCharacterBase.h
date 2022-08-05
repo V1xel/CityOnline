@@ -20,7 +20,10 @@ public:
 	void AddForwardMovementInput(float Value);
 	void AddRightMovementInput(float Value);
 	void AddCameraYawInput(float Value);
+
+	UFUNCTION(BlueprintCallable)
 	void NavigateOnObject(AActor* object, float zoom);
+	
 	void ZoomCamera(float Value);
 	void EnableRotateCamera();
 

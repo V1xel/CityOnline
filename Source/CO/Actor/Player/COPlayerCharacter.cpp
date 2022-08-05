@@ -4,11 +4,10 @@
 
 #include "Abilities/COSelectActorAbility.h"
 #include "Abilities/COSelectCellsAbility.h"
-#include "Components/COActorSelectionComponent.h"
+#include "CO/Actor/Building/Attributes/COBuildingAttributeSet.h"
 
 ACOPlayerCharacter::ACOPlayerCharacter()
 {
-	ActorSelectionComponent = CreateDefaultSubobject<UCOActorSelectionComponent>(TEXT("ActorSelectionComponent"));
 	AbilitySystemComponent->GiveAbility(UCOSelectActorAbility::StaticClass());
 	AbilitySystemComponent->GiveAbility(UCOSelectCellsAbility::StaticClass());
 }
