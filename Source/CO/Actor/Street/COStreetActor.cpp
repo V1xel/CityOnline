@@ -15,7 +15,7 @@ ACOStreetActor::ACOStreetActor()
 	CellManagementComponent->AttachToComponent(SceneComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
-ACOBuildingActor* ACOStreetActor::CreateBuilding(FCOBuildingConfiguration Configuration, const TArray<UCOStreetCellComponent*>& SelectedCells)
+ACOBuildingActor* ACOStreetActor::CreateBuilding(UCOBuildingDetails* Configuration, const TArray<UCOStreetCellComponent*>& SelectedCells)
 {
 	return nullptr;
 }

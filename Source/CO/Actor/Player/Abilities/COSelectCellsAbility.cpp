@@ -6,18 +6,16 @@
 #include "CO/Actor/Player/COPlayerController.h"
 
 void UCOSelectCellsAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-                                            const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                            const FGameplayAbilityActorInfo* ActorInfo,
+                                            const FGameplayAbilityActivationInfo ActivationInfo,
                                             const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	const auto PlayerController = GetController(ActorInfo);
-	const auto BuildingDetails = GetOptionalParameter<UCOBuildingDetails>(TriggerEventData);
-	if (BuildingDetails)
-	{
-		SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this,"Test", PlayerController, BuildingDetails);
-		SelectCellsAbilityTask->ReadyForActivation();
-		SelectCellsAbilityTask->SetDrawDebugSelection(DrawDebugSelection);
-	}
+	
+	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController, SelectionDTO);
+	SelectCellsAbilityTask->SetDrawDebugSelection(DrawDebugSelection);
+	SelectCellsAbilityTask->ReadyForActivation();
 }
 
 void UCOSelectCellsAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle,
@@ -26,7 +24,7 @@ void UCOSelectCellsAbility::CancelAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 	SelectCellsAbilityTask->ExternalConfirm(true);
-	OnSelectionEnded.Broadcast(SelectCellsAbilityTask->GetSelectedCells());
+	OnSelectionEnded.Broadcast(SelectionDTO,SelectCellsAbilityTask->GetSelectedCells());
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, true);
 }
 

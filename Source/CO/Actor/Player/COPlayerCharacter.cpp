@@ -1,19 +1,16 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "COPlayerCharacter.h"
-#include "Abilities/COBuildingDetails.h"
 #include "Abilities/COSelectActorAbility.h"
 #include "Abilities/COSelectCellsAbility.h"
 #include "CO/AbilitySystem/COAbilitySystemComponent.h"
+#include "CO/Actor/Building/COBuildingDetails.h"
 #include "CO/Actor/Building/Attributes/COBuildingAttributeSet.h"
 
 void ACOPlayerCharacter::StartSelection()
 {
-	FGameplayEventData Payload;
-	auto Details = NewObject<UCOBuildingDetails>(this, UCOBuildingDetails::StaticClass());
-
-	Payload.OptionalObject = Details;
-	AbilitySystemComponent->HandleGameplayEvent(EventTag, &Payload);
+	const auto Payload = FGameplayEventData();
+	AbilitySystemComponent->HandleGameplayEvent(SelectionAction, &Payload);
 }
 
 void ACOPlayerCharacter::EndSelection()
@@ -21,8 +18,11 @@ void ACOPlayerCharacter::EndSelection()
 	AbilitySystemComponent->CancelAbility(SelectCellsAbility);
 }
 
-void ACOPlayerCharacter::StartBuildingProcess()
+void ACOPlayerCharacter::StartBuildingProcess(const UCOBuildingDetails* Details) const
 {
+	auto Payload = FGameplayEventData();
+	Payload.OptionalObject = Details;
+	AbilitySystemComponent->HandleGameplayEvent(BuildingAction, &Payload);
 }
 
 void ACOPlayerCharacter::UpdateBuildingConfiguration()

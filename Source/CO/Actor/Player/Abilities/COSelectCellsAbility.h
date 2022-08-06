@@ -8,7 +8,9 @@
 
 class UCOSelectCellsAbilityTask;
 class UCOStreetCellComponent;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSelectionEndedDelegate, const TArray<UCOStreetCellComponent*>&, AllocatedComponents);
+class UCOSelectionDTO;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectionEndedDelegate, const UCOSelectionDTO*, SelectionData, const TArray<UCOStreetCellComponent*>&, AllocatedComponents);
 
 /**
  * 
@@ -33,6 +35,9 @@ protected:
 protected:
 	UPROPERTY()
 	UCOSelectCellsAbilityTask* SelectCellsAbilityTask;
+
+	UPROPERTY()
+	UCOSelectionDTO* SelectionDTO;
 	
 public:
 	UPROPERTY(BlueprintAssignable)

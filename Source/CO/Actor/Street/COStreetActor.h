@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Actor/Building/COBuildingConfiguration.h"
+#include "CO/Actor/Building/COBuildingDetails.h"
 #include "CO/Actor/Interfaces/COSelectableActor.h"
 #include "Components/COStreetCellManagementComponent.h"
 #include "GameFramework/Actor.h"
@@ -22,7 +22,7 @@ class CO_API ACOStreetActor : public AActor, public ICOSelectableActor
 public:
 	ACOStreetActor();
 
-	ACOBuildingActor* CreateBuilding(FCOBuildingConfiguration Configuration, const TArray<UCOStreetCellComponent*>& SelectedCells);
+	ACOBuildingActor* CreateBuilding(UCOBuildingDetails* Configuration, const TArray<UCOStreetCellComponent*>& SelectedCells);
 
 	void CalculatePotentialOutput();
 

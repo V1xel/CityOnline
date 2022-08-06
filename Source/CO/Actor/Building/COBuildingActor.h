@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "COBuildingConfiguration.h"
+#include "COBuildingDetails.h"
 #include "Attributes/COBuildingAttributeSet.h"
 #include "CO/Actor/Interfaces/COSelectableActor.h"
 #include "GameFramework/Actor.h"
 #include "COBuildingActor.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConfigurationUpdatedDelegate, FCOBuildingConfiguration, Configuration);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConfigurationUpdatedDelegate, UCOBuildingDetails*, Configuration);
+
 class UCOAbilitySystemComponent;
 
 UCLASS(Blueprintable)
@@ -18,10 +19,9 @@ class CO_API ACOBuildingActor : public AActor, public ICOSelectableActor
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	ACOBuildingActor();
 
-	void UpdateConfiguration(FCOBuildingConfiguration _Configuration);
+	void UpdateConfiguration(UCOBuildingDetails* Configuration);
 
 	void ApplyChanges();
 
@@ -42,7 +42,8 @@ private:
 
 	bool IsEdited;
 
-	FCOBuildingConfiguration Configuration;
+	UPROPERTY()
+	UCOBuildingDetails* _Configuration;
 
 	UPROPERTY()
 	FOnConfigurationUpdatedDelegate OnConfigurationUpdatedDelegate;

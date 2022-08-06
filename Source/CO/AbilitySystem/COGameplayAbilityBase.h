@@ -27,8 +27,4 @@ protected:
 	{
 		return Cast<T>(TriggerEventData->OptionalObject);
 	}
-
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	FGameplayTag TriggerTag;
 };

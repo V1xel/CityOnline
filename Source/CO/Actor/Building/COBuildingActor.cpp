@@ -10,9 +10,9 @@ ACOBuildingActor::ACOBuildingActor()
 {
 }
 
-void ACOBuildingActor::UpdateConfiguration(FCOBuildingConfiguration _Configuration)
+void ACOBuildingActor::UpdateConfiguration(UCOBuildingDetails* Configuration)
 {
-	Configuration = _Configuration;
+	_Configuration = Configuration;
 }
 
 void ACOBuildingActor::ApplyChanges()

@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/Tasks/AbilityTask.h"
-#include "CO/Actor/Building/COBuildingConfiguration.h"
+#include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
 #include "COSelectCellsAbilityTask.generated.h"
 
 class UCOStreetCellComponent;
 class ACOPlayerController;
 class UCOBuildingDetails;
+class UCOSelectionDTO;
 
 /**
  * 
@@ -22,8 +23,7 @@ class CO_API UCOSelectCellsAbilityTask : public UAbilityTask
 	UCOSelectCellsAbilityTask();
 public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
-	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController,
-	UCOBuildingDetails* BuildingDetails);
+	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOSelectionDTO* SelectionDTO);
 	
 	virtual void ExternalConfirm(bool bEndTask) override;
 
@@ -40,11 +40,10 @@ protected:
 	bool RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,	TArray<FHitResult>& OutHits) const;
 
 	void HandleActorComponentSelection(TArray<FHitResult>& HitResults);
+	
+	void CollectSelectionData();
 
 protected:
-	UPROPERTY()
-	UCOBuildingDetails* _BuildingDetails{};
-
 	UPROPERTY()
 	FVector SelectionStartedLocation{};
 	
@@ -53,6 +52,9 @@ protected:
 	
 	UPROPERTY()
 	TArray<UCOStreetCellComponent*> _SelectedCells{};
+
+	UPROPERTY()
+	UCOSelectionDTO* _SelectionDTO;
 
 	UPROPERTY()
 	bool _DrawDebugSelection;

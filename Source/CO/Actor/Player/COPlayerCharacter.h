@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "COPlayerCharacterBase.h"
 #include "GameplayTagContainer.h"
+#include "CO/Actor/Building/COBuildingDetails.h"
 #include "GameFramework/Character.h"
 #include "COPlayerCharacter.generated.h"
 
@@ -27,7 +28,7 @@ public:
 
 	void EndSelection();
 	
-	void StartBuildingProcess();
+	void StartBuildingProcess(const UCOBuildingDetails* Details) const;
 
 	void UpdateBuildingConfiguration();
 
@@ -43,8 +44,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Character Abilities", meta=(BlueprintBaseOnly))
 	TSubclassOf<UCOSelectActorAbility> SelectActorAbility{};
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    	FGameplayTag EventTag;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FGameplayTag SelectionAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FGameplayTag BuildingAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Character Abilities", meta=(BlueprintBaseOnly))
 	TSubclassOf<UCOSelectCellsAbility> SelectCellsAbility{};

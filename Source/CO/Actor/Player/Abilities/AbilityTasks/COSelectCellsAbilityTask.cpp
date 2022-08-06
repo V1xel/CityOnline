@@ -12,14 +12,13 @@ UCOSelectCellsAbilityTask::UCOSelectCellsAbilityTask()
 	bTickingTask = true;
 }
 
-UCOSelectCellsAbilityTask* UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController,
-	UCOBuildingDetails* BuildingDetails)
+UCOSelectCellsAbilityTask* UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOSelectionDTO* SelectionDTO)
 {
-	UCOSelectCellsAbilityTask* MyObj = NewAbilityTask<UCOSelectCellsAbilityTask>(OwningAbility, TaskInstanceName);
-	MyObj->_PlayerController = PlayerController;
-	MyObj->_BuildingDetails = BuildingDetails;
-
-	return MyObj;
+	UCOSelectCellsAbilityTask* Task = NewAbilityTask<UCOSelectCellsAbilityTask>(OwningAbility, TaskInstanceName);
+	Task->_PlayerController = PlayerController;
+	Task->_SelectionDTO = SelectionDTO;
+	
+	return Task;
 }
 
 void UCOSelectCellsAbilityTask::Activate()
@@ -108,6 +107,51 @@ void UCOSelectCellsAbilityTask::HandleActorComponentSelection(TArray<FHitResult>
 	_SelectedCells = DesiredSelectedComponents;
 }
 
+void UCOSelectCellsAbilityTask::CollectSelectionData()
+{
+	if(_SelectedCells.Num() == 0)
+		return;
+	
+	auto MinimumHorizontal = _SelectedCells[0]->Horizontal;
+	auto MaximumHorizontal = _SelectedCells[0]->Horizontal;
+	auto MinimumVertical = _SelectedCells[0]->Vertical;
+	auto MaximumVertical = _SelectedCells[0]->Vertical;
+	bool HasExtreme = false;
+	bool HasCorner = false;
+	for (auto Cell : _SelectedCells)
+	{
+		if(MinimumHorizontal > Cell->Horizontal)
+		{
+			MinimumHorizontal = Cell->Horizontal;
+		}
+		if(MaximumHorizontal < Cell->Horizontal)
+		{
+			MaximumHorizontal = Cell->Horizontal;
+		}
+		if(MinimumVertical > Cell->Vertical)
+		{
+			MinimumVertical = Cell->Vertical;
+		}
+		if(MaximumVertical < Cell->Vertical)
+		{
+			MaximumVertical = Cell->Vertical;
+		}
+		if (Cell->IsExtreme)
+		{
+			HasExtreme = true;
+		}
+		if (Cell->IsCorner)
+		{
+			HasCorner = true;
+		}
+	}
+
+	_SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal;
+	_SelectionDTO->Width = MaximumVertical - MinimumVertical;
+	_SelectionDTO->HasExtreme = HasExtreme;
+	_SelectionDTO->HasCorner = HasCorner;
+}
+
 void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 {
 	Super::TickTask(DeltaTime);
@@ -118,6 +162,7 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 	TArray<FHitResult> OutHits;
 	RaycastWithRectangle(SelectionStartedLocation,CurrentMousePositionHitResult.Location, OutHits);
 	HandleActorComponentSelection(OutHits);
+	CollectSelectionData();
 }
 
 void UCOSelectCellsAbilityTask::OnDestroy(bool AbilityIsEnding)

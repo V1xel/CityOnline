@@ -4,13 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "COStreetCellSelectionAttributeSet.generated.h"
+#include "COSelectionDTO.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CO_API UCOStreetCellSelectionAttributeSet : public UObject
+class CO_API UCOSelectionDTO : public UObject
 {
 	GENERATED_BODY()
+
+public:
+	int Length;
+
+	int Width;
+
+	bool HasCorner;
+
+	bool HasExtreme;
 };
