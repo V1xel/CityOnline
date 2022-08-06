@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "COBuilding.generated.h"
+#include "COBuildingTable.generated.h"
 
 USTRUCT()
-struct CO_API FCOBuilding : public FTableRowBase
+struct CO_API FCOBuildingTable : public FTableRowBase
 {
 	GENERATED_BODY()
 	

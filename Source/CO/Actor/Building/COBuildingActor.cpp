@@ -10,11 +10,6 @@ ACOBuildingActor::ACOBuildingActor()
 {
 }
 
-void ACOBuildingActor::UpdateConfiguration(UCOBuildingDetails* Configuration)
-{
-	_Configuration = Configuration;
-}
-
 void ACOBuildingActor::ApplyChanges()
 {
 	AbilitySystemComponent->OnGameplayEffectAppliedDelegateToTarget.AddLambda([&](

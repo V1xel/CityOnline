@@ -4,7 +4,6 @@
 #include "Abilities/COSelectActorAbility.h"
 #include "Abilities/COSelectCellsAbility.h"
 #include "CO/AbilitySystem/COAbilitySystemComponent.h"
-#include "CO/Actor/Building/COBuildingDetails.h"
 #include "CO/Actor/Building/Attributes/COBuildingAttributeSet.h"
 
 void ACOPlayerCharacter::StartSelection()
@@ -18,10 +17,10 @@ void ACOPlayerCharacter::EndSelection()
 	AbilitySystemComponent->CancelAbility(SelectCellsAbility);
 }
 
-void ACOPlayerCharacter::StartBuildingProcess(const UCOBuildingDetails* Details) const
+void ACOPlayerCharacter::StartBuildingProcess() const
 {
 	auto Payload = FGameplayEventData();
-	Payload.OptionalObject = Details;
+	//Payload.OptionalObject = Details;
 	AbilitySystemComponent->HandleGameplayEvent(BuildingAction, &Payload);
 }
 

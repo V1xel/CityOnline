@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "COPlayerCharacterBase.h"
 #include "GameplayTagContainer.h"
-#include "CO/Actor/Building/COBuildingDetails.h"
 #include "GameFramework/Character.h"
 #include "COPlayerCharacter.generated.h"
 
@@ -28,7 +27,7 @@ public:
 
 	void EndSelection();
 	
-	void StartBuildingProcess(const UCOBuildingDetails* Details) const;
+	void StartBuildingProcess() const;
 
 	void UpdateBuildingConfiguration();
 

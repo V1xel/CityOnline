@@ -4,7 +4,6 @@
 #include "COSelectCellsAbilityTask.h"
 #include "CO/Actor/Street/Components/Interfaces/COSelectableComponent.h"
 #include "CO/Actor/Player/COPlayerController.h"
-#include "CO/Actor/Building/COBuildingDetails.h"
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
 
 UCOSelectCellsAbilityTask::UCOSelectCellsAbilityTask()
