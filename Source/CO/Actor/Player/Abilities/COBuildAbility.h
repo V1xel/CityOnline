@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class CO_API UCOBuildAbility : public UCOGameplayAbilityBase
 {
 	GENERATED_BODY()

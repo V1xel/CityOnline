@@ -2,18 +2,17 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "UObject/Object.h"
+#include "Blueprint/UserWidget.h"
 #include "COStreetManagementWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CO_API UCOStreetManagementWidget : public UObject
+class CO_API UCOStreetManagementWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	
+protected:
+	virtual void NativeConstruct() override;
 };

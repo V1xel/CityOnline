@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Utilities/COComponentHelper.h"
 #include "GameFramework/Actor.h"
 #include "COActorComponentBase.generated.h"
 

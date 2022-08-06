@@ -2,3 +2,9 @@
 
 
 #include "COStreetManagementWidget.h"
+
+
+void UCOStreetManagementWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
