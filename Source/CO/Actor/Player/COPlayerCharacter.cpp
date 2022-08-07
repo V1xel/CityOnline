@@ -4,7 +4,26 @@
 #include "Abilities/COSelectActorAbility.h"
 #include "Abilities/COSelectCellsAbility.h"
 #include "CO/AbilitySystem/COAbilitySystemComponent.h"
+#include "CO/Actor/Building/COBuildingActor.h"
+#include "CO/Actor/Street/COStreetActor.h"
 #include "CO/Actor/Building/Attributes/COBuildingAttributeSet.h"
+
+void ACOPlayerCharacter::SetSelectedActor(AActor* Value)
+{
+	SelectedActor = Value;
+
+	const auto Street = Cast<ACOStreetActor>(Value);
+	if (Street)
+	{
+		OnStreetSelected.Broadcast(Street);
+	}
+
+	const auto Building = Cast<ACOBuildingActor>(Value);
+	if (Building)
+	{
+		OnBuildingSelected.Broadcast(Building);
+	}
+}
 
 void ACOPlayerCharacter::StartSelection()
 {

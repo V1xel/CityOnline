@@ -54,7 +54,4 @@ protected:
 
 	UPROPERTY()
 	USceneComponent* SceneComponent;
-	
-
-
 };

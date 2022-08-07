@@ -13,8 +13,11 @@ class UCOSelectActorAbility;
 class UCOSelectCellsAbility;
 class USpringArmComponent;
 class UCameraComponent;
+class ACOStreetActor;
+class ACOBuildingActor;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSelectedDelegate, const AActor*, Actor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStreetSelectedDelegate, const ACOStreetActor*, Street);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingSelectedDelegate, const ACOBuildingActor*, Building);
 
 UCLASS()
 class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
@@ -24,11 +27,7 @@ class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
 public:
 	AActor* GetSelectedActor() const { return SelectedActor; }
 
-	void SetSelectedActor(AActor* Value)
-	{
-		SelectedActor = Value;
-		OnActorSelected.Broadcast(SelectedActor);
-	};
+	void SetSelectedActor(AActor* Value);;
 	
 	void StartSelection();
 
@@ -48,7 +47,10 @@ public:
 
 public:
 	UPROPERTY(BlueprintAssignable)
-	FOnActorSelectedDelegate OnActorSelected{};
+	FOnStreetSelectedDelegate OnStreetSelected{};
+
+	UPROPERTY(BlueprintAssignable)
+	FOnBuildingSelectedDelegate OnBuildingSelected{};
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Character Abilities")
 	FGameplayTag SelectionAction;
