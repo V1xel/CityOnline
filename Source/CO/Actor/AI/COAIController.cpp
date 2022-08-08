@@ -1,11 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "COCharacterAIController.h"
+#include "COAIController.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 
 // Sets default values
-ACOCharacterAIController::ACOCharacterAIController()
+ACOAIController::ACOAIController()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	/*AIPerception = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerception"));
@@ -25,7 +25,7 @@ ACOCharacterAIController::ACOCharacterAIController()
 }
 
 // Called when the game starts or when spawned
-void ACOCharacterAIController::BeginPlay()
+void ACOAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -36,12 +36,12 @@ void ACOCharacterAIController::BeginPlay()
 }
 
 // Called every frame
-void ACOCharacterAIController::Tick(float DeltaTime)
+void ACOAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-TArray<AActor*> ACOCharacterAIController::GetPerceivedActors(TSubclassOf<UAISense> SenseToUse)
+TArray<AActor*> ACOAIController::GetPerceivedActors(TSubclassOf<UAISense> SenseToUse)
 {
 	TArray<AActor*> ActorsSensed;
 	//AIPerception->GetPerceivedActors(SenseToUse, ActorsSensed);

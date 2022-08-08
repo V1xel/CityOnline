@@ -4,7 +4,7 @@
 #include "COCharacterBase.h"
 
 #include "AIController.h"
-#include "AIController/COCharacterAIController.h"
+#include "CO/Actor/AI/COAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "CO/AbilitySystem/COAbilitySystemComponent.h"
 
@@ -15,7 +15,7 @@ ACOCharacterBase::ACOCharacterBase()
 
 void ACOCharacterBase::MoveTo(FVector DestinationPoint)
 {
-	auto AIController = Cast<ACOCharacterAIController>(GetController());
+	auto AIController = Cast<ACOAIController>(GetController());
 	if(AIController)
 	{
 		auto Blackboard = AIController->GetBlackboardComponent();

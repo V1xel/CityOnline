@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "CO/Actor/Interfaces/COSelectableActor.h"
+#include "CO/Actor/Player/COPlayerCharacter.h"
+#include "CO/Database/Enums/COStreetPrestige.h"
 #include "Components/COStreetCellManagementComponent.h"
 #include "GameFramework/Actor.h"
 #include "COStreetActor.generated.h"
@@ -54,4 +56,13 @@ protected:
 
 	UPROPERTY()
 	USceneComponent* SceneComponent;
+	
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	FString _Name;
+	
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	ECOStreetPrestige _Prestige;
+	
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	ACOPlayerCharacter* _Tenant;
 };

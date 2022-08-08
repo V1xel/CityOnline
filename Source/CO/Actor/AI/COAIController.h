@@ -5,18 +5,18 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "BehaviorTree/BehaviorTree.h"
-#include "COCharacterAIController.generated.h"
+#include "COAIController.generated.h"
 
 class UAISenseConfig_Sight;
 class UAISense;
 
 UCLASS()
-class CO_API ACOCharacterAIController : public AAIController
+class CO_API ACOAIController : public AAIController
 {
 	GENERATED_BODY()
 
 public:
-	ACOCharacterAIController();
+	ACOAIController();
 
 	virtual void BeginPlay() override;
 	
