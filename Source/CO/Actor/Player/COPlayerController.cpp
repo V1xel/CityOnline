@@ -4,6 +4,7 @@
 #include "COPlayerController.h"
 #include "CO/Actor/Street/COStreetActor.h"
 #include "CO/Actor/Building/COBuildingActor.h"
+#include "GameplayTags.h"
 
 ACOPlayerController::ACOPlayerController()
 {
@@ -29,4 +30,19 @@ void ACOPlayerController::SetSelectedActor(AActor* Value)
 		OnBuildingSelected.Broadcast(Building);
 		return;
 	}
+}
+
+ACOStreetActor* ACOPlayerController::TryGetSelectedStreet()
+{
+	return Cast<ACOStreetActor>(SelectedActor);
+}
+
+ACOBuildingActor* ACOPlayerController::TryGetSelectedBuilding()
+{
+	return Cast<ACOBuildingActor>(SelectedActor);
+}
+
+FGameplayTag ACOPlayerController::GetTagFromString(FString TagName)
+{
+	return UGameplayTagsManager::Get().RequestGameplayTag(FName(TagName));
 }

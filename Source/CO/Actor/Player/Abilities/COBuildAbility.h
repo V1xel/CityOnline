@@ -14,10 +14,17 @@ class CO_API UCOBuildAbility : public UCOGameplayAbilityBase
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-						 const FGameplayAbilityActivationInfo ActivationInfo,
-						 const FGameplayEventData* TriggerEventData) override;
+							const FGameplayAbilityActivationInfo ActivationInfo,
+							const FGameplayEventData* TriggerEventData) override;
+
+	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags,
+		OUT FGameplayTagContainer* OptionalRelevantTags) const;
+
+
+	virtual bool ShouldAbilityRespondToEvent(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayEventData* Payload) const;
 
 	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;

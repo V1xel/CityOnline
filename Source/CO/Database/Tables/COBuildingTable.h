@@ -11,6 +11,9 @@ struct CO_API FCOBuildingTable : public FTableRowBase
 	
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FGameplayTag Tag;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int MinWidth;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

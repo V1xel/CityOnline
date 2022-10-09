@@ -9,7 +9,7 @@
 /**
  * !TODO May replace DTO With Payload in future. UCOBuildPayload
  */
-UCLASS()
+UCLASS(Blueprintable)
 class CO_API UCOBuildDTO : public UObject
 {
 	GENERATED_BODY()
