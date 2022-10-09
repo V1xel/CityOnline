@@ -10,7 +10,7 @@ public class CO : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
-			"NetCore", "GameplayAbilities", "GameplayTags", "GameplayTasks", "Core", "CoreUObject", "Engine", "InputCore", "UMG"
+			"GameplayAbilities", "GameplayTags", "GameplayTasks", "Core", "CoreUObject", "Engine", "InputCore", "UMG"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
