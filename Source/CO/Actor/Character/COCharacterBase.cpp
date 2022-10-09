@@ -13,19 +13,6 @@ ACOCharacterBase::ACOCharacterBase()
 	AbilitySystemComponent = CreateDefaultSubobject<UCOAbilitySystemComponent>("AbilitySystem");
 }
 
-void ACOCharacterBase::MoveTo(FVector DestinationPoint)
-{
-	auto AIController = Cast<ACOAIController>(GetController());
-	if(AIController)
-	{
-		auto Blackboard = AIController->GetBlackboardComponent();
-		if(Blackboard)
-		{
-			AIController->GetBlackboardComponent()->SetValueAsVector("DestinationPoint", DestinationPoint);
-		}
-	}
-}
-
 void ACOCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();

@@ -3,71 +3,45 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "COPlayerCharacterBase.h"
-#include "GameplayTagContainer.h"
-#include "Abilities/COBuildAbility.h"
-#include "GameFramework/Character.h"
+#include "CO/Actor/Character/COCharacterBase.h"
 #include "COPlayerCharacter.generated.h"
 
-class UCOSelectActorAbility;
-class UCOSelectCellsAbility;
 class USpringArmComponent;
 class UCameraComponent;
-class ACOStreetActor;
-class ACOBuildingActor;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStreetSelectedDelegate, const ACOStreetActor*, Street);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingSelectedDelegate, const ACOBuildingActor*, Building);
 
 UCLASS()
-class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
+class CO_API ACOPlayerCharacter : public ACOCharacterBase
 {
 	GENERATED_BODY()
 
 public:
-	AActor* GetSelectedActor() const { return SelectedActor; }
+	// Sets default values for this actor's properties
+	ACOPlayerCharacter();
+	void AddForwardMovementInput(float Value);
+	void AddRightMovementInput(float Value);
+	void AddCameraYawInput(float Value);
 
-	void SetSelectedActor(AActor* Value);;
-	
-	void StartSelection();
+	UFUNCTION(BlueprintCallable)
+		void NavigateOnObject(AActor* object, float zoom);
 
-	void EndSelection();
-	
-	void StartBuildingProcess() const;
-
-	void UpdateBuildingConfiguration();
-
-	void EndBuildingProcess();
-
-	void CancelBuildingProcess();
-
-	virtual void BeginPlay() override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void ZoomCamera(float Value);
+	void EnableRotateCamera();
 
 public:
-	UPROPERTY(BlueprintAssignable)
-	FOnStreetSelectedDelegate OnStreetSelected{};
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(BlueprintAssignable)
-	FOnBuildingSelectedDelegate OnBuildingSelected{};
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Character Abilities")
-	FGameplayTag SelectionAction;
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		USpringArmComponent* SpringArm;
 
-	UPROPERTY(EditDefaultsOnly, Category="Character Abilities", meta=(BlueprintBaseOnly))
-	TSubclassOf<UCOSelectActorAbility> SelectActorAbility{};
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UCameraComponent* Camera;
 
-	UPROPERTY(EditDefaultsOnly, Category="Character Abilities", meta=(BlueprintBaseOnly))
-	TSubclassOf<UCOSelectCellsAbility> SelectCellsAbility{};
+	float DesiredTargetArmLength;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Character Abilities")
-	FGameplayTag BuildingAction;
+	float ArmLengthScalingSpeed = 10;
 
-	UPROPERTY(EditDefaultsOnly, Category="Character Abilities", meta=(BlueprintBaseOnly))
-	TSubclassOf<UCOBuildAbility> BuildAbility{};
 private:
-	UPROPERTY()
-	AActor* SelectedActor;
-	
+	bool EnableCameraRotation;
 };

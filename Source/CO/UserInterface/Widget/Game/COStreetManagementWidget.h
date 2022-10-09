@@ -17,9 +17,6 @@ class CO_API UCOStreetManagementWidget : public UUserWidget
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void GetStreetInformation(ACOStreetActor* Street);
-	
-	UFUNCTION(BlueprintCallable)
 	void Build();
 	
 protected:

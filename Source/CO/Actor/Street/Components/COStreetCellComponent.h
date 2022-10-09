@@ -20,7 +20,9 @@ public:
 	virtual void SelectComponent_Implementation() override;
 
 	virtual void DeselectComponent_Implementation() override;
+
 	void SetValid(bool Value);
+
 	void SetVisible(bool Value);
 
 public:

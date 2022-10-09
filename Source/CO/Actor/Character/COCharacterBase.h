@@ -18,10 +18,7 @@ class CO_API ACOCharacterBase : public ADefaultPawn, public IAbilitySystemInterf
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	ACOCharacterBase();
-
-	virtual void MoveTo(FVector DestinationPoint);
 public:
 	bool IsSelected;
 
@@ -31,6 +28,6 @@ public:
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	UPROPERTY()
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UCOAbilitySystemComponent* AbilitySystemComponent{};
 };

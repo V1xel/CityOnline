@@ -13,9 +13,8 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
                                             const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	const ACOPlayerController* PlayerController = GetController(ActorInfo);
-	const auto Player = GetOwnerActor(ActorInfo);
-	const auto SelectedActor = Player->GetSelectedActor();
+	ACOPlayerController* PlayerController = GetController(ActorInfo);
+	const auto SelectedActor = PlayerController->GetSelectedActor();
 	
 	FHitResult HitResult;
 	PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
@@ -28,7 +27,7 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 			ICOSelectableActor::Execute_DeselectActor(SelectedActor);
 		}
 
-		Player->SetSelectedActor(HitActor);
+		PlayerController->SetSelectedActor(HitActor);
 	}
 	
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
