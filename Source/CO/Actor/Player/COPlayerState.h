@@ -13,5 +13,10 @@ UCLASS()
 class CO_API ACOPlayerState : public APlayerState
 {
 	GENERATED_BODY()
+
+
+public:
+	UPROPERTY()
+	int MoneyAmount;
 	
 };

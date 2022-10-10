@@ -18,9 +18,9 @@ class CO_API UCOGameplayAbilityBase : public UGameplayAbility
 	GENERATED_BODY()
 
 protected:
-	ACOPlayerController* GetController(const FGameplayAbilityActorInfo* ActorInfo);
+	ACOPlayerController* GetController(const FGameplayAbilityActorInfo* ActorInfo) const;
 	
-	ACOPlayerCharacter* GetOwnerActor(const FGameplayAbilityActorInfo* ActorInfo);
+	ACOPlayerCharacter* GetOwnerActor(const FGameplayAbilityActorInfo* ActorInfo) const;
 	
 	template <typename T>
 	T* GetOptionalParameter(const FGameplayEventData* TriggerEventData)

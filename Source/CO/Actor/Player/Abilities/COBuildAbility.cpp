@@ -2,31 +2,38 @@
 
 
 #include "COBuildAbility.h"
+#include "CO/Actor/Player/COPlayerController.h"
+#include "CO/Actor/Street/COStreetActor.h"
+#include <CO/Actor/Player/COPlayerState.h>
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("ActivateAbility"));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "ActivateAbility");
 }
 
 bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "CanActivateAbility");
 	if (!Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags))
 	{
 		return false;
 	}
 
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("CanActivateAbility"));
-	return false;
-}
+	auto Controller = GetController(ActorInfo);
+	auto Street = Controller->TryGetSelectedStreet();
+	if (!Street) 
+	{
+		return false;
+	}
 
+	FString Left, Right;
+	TargetTags->First().GetTagName().ToString().Split(FString("."), nullptr, &Right);
+	FCOBuildingTable* Building = BuildingsTable->FindRow<FCOBuildingTable>(FName(Right), "");
 
-bool UCOBuildAbility::ShouldAbilityRespondToEvent(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayEventData* Payload) const
-{
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, Payload->TargetTags.First().GetTagName().ToString());
-
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, Right);
 	return true;
 }
 

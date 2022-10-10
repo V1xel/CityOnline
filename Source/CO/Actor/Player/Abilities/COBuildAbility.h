@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CO/AbilitySystem/COGameplayAbilityBase.h"
+#include "CO/Database/Tables/COBuildingTable.h"
 #include "COBuildAbility.generated.h"
 
 /**
@@ -24,12 +25,15 @@ public:
 		OUT FGameplayTagContainer* OptionalRelevantTags) const;
 
 
-	virtual bool ShouldAbilityRespondToEvent(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayEventData* Payload) const;
-
 	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 	
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 							bool bWasCancelled) override;
+
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDataTable* BuildingsTable{};
 };

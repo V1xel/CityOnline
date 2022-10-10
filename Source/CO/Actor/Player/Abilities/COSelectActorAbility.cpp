@@ -6,6 +6,7 @@
 #include "CO/Actor/Interfaces/COSelectableActor.h"
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Actor/Player/COPlayerController.h"
+#include "CO/AbilitySystem/COAbilitySystemComponent.h"
 
 void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                             const FGameplayAbilityActorInfo* ActorInfo,
@@ -21,6 +22,15 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	AActor* HitActor = HitResult.GetActor();
 	if(HitActor && HitActor != SelectedActor && HitActor->Implements<UCOSelectableActor>())
 	{
+		auto AbilitySystem = Cast<UAbilitySystemComponent>(HitActor->GetComponentByClass(UAbilitySystemComponent::StaticClass()));
+		for (auto Tag : TargetBlockedTags)
+		{
+			if (AbilitySystem->HasMatchingGameplayTag(Tag)) 
+			{
+				return;
+			}
+		}
+
 		ICOSelectableActor::Execute_SelectActor(HitActor);
 		if(SelectedActor)
 		{
