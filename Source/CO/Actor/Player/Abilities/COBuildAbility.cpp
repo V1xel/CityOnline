@@ -16,9 +16,9 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "CanActivateAbility");
 	if (!Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags))
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Build can not be activated");
 		return false;
 	}
 
