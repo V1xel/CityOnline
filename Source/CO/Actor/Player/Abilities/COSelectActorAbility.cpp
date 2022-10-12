@@ -23,13 +23,11 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	if(HitActor && HitActor != SelectedActor && HitActor->Implements<UCOSelectableActor>())
 	{
 		auto AbilitySystem = Cast<UAbilitySystemComponent>(HitActor->GetComponentByClass(UAbilitySystemComponent::StaticClass()));
-		for (auto Tag : TargetBlockedTags)
-		{
-			if (AbilitySystem->HasMatchingGameplayTag(Tag)) 
-			{
-				return;
-			}
-		}
+		static FGameplayTagContainer TargetTags;
+		TargetTags.Reset();
+		AbilitySystem->GetOwnedGameplayTags(TargetTags);
+		if (TargetTags.HasAny(TargetBlockedTags))
+			return;
 
 		ICOSelectableActor::Execute_SelectActor(HitActor);
 		if(SelectedActor)
@@ -41,6 +39,11 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	}
 	
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+}
+
+bool UCOSelectActorAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
+{
+	return true;
 }
 
 void UCOSelectActorAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
