@@ -8,7 +8,7 @@ USTRUCT()
 struct CO_API FCOBuildingTable : public FTableRowBase
 {
 	GENERATED_BODY()
-	
+
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FGameplayTag Tag;

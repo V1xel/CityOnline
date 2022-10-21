@@ -11,6 +11,7 @@
 ACOCharacterBase::ACOCharacterBase()
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UCOAbilitySystemComponent>("AbilitySystem");
+	AttributeSetBase = CreateDefaultSubobject<UCOPlayerAttributeSet>(TEXT("AttributeSetBase"));
 }
 
 void ACOCharacterBase::BeginPlay()

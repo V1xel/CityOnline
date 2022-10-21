@@ -10,15 +10,25 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "ActivateAbility");
+	FString Left, Right;
+	auto SourceTags = TriggerEventData->InstigatorTags;
+	SourceTags.First().GetTagName().ToString().Split(FString("."), nullptr, &Right);
+
+
+	BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(FName(Right), "");
+
+
+	if (CommitAbility(Handle, ActorInfo, ActivationInfo))
+	{
+		//	Build
+	}
 }
 
 bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
 	if (!Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Build can not be activated");
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Build can not be activated. Seems to be Tag validation.");
 		return false;
 	}
 
@@ -26,14 +36,10 @@ bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 	auto Street = Controller->TryGetSelectedStreet();
 	if (!Street) 
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Build can not be activated. There is no street target.");
 		return false;
 	}
 
-	FString Left, Right;
-	TargetTags->First().GetTagName().ToString().Split(FString("."), nullptr, &Right);
-	FCOBuildingTable* Building = BuildingsTable->FindRow<FCOBuildingTable>(FName(Right), "");
-
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, Right);
 	return true;
 }
 

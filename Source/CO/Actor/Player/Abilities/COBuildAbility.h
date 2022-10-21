@@ -36,4 +36,10 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingsTable{};
+
+
+protected: 
+	FCOBuildingTable* BuildingSpecialization;
+
+
 };

@@ -57,5 +57,5 @@ protected:
 	UCOSelectionDTO* _SelectionDTO;
 
 	UPROPERTY()
-	bool _DrawDebugSelection;
+	bool _DrawDebugSelection = true;
 };

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/DefaultPawn.h"
 #include "AbilitySystemInterface.h"
+#include "CO/Actor/Player/Attributes/COPlayerAttributeSet.h"
 #include "COCharacterBase.generated.h"
 
 class UBehaviorTree;
@@ -30,4 +31,7 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UCOAbilitySystemComponent* AbilitySystemComponent{};
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UCOPlayerAttributeSet* AttributeSetBase{};
 };
