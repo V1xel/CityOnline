@@ -4,7 +4,8 @@
 #include "COBuildAbility.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Actor/Street/COStreetActor.h"
-#include <CO/Actor/Player/COPlayerState.h>
+#include "CO/Actor/Player/COPlayerState.h"
+#include "CO/Extensions/GameplayTagContainerExtension.h"
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -12,11 +13,9 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	FString Left, Right;
 	auto SourceTags = TriggerEventData->InstigatorTags;
-	SourceTags.First().GetTagName().ToString().Split(FString("."), nullptr, &Right);
-
-
-	BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(FName(Right), "");
-
+	auto BuildingName = UGameplayTagContainerExtension::GetTagSecondElement(SourceTags.First());
+	auto Table = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
+	BuildingSpecialization = Table;
 
 	if (CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
@@ -53,4 +52,9 @@ void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const 
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
+FCOBuildingTable UCOBuildAbility::GetBuildingSpecialization() const
+{
+	return BuildingSpecialization;
 }

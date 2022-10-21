@@ -2,12 +2,19 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "CO/Extensions/GameplayTagContainerExtension.h"
 #include "COBuildingTable.generated.h"
 
 USTRUCT()
 struct CO_API FCOBuildingTable : public FTableRowBase
 {
 	GENERATED_BODY()
+
+public:
+	FString GetName() 
+	{
+		return UGameplayTagContainerExtension::GetTagThirdElement(Tag);
+	}
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

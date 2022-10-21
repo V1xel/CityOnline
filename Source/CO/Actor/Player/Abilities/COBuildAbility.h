@@ -33,13 +33,13 @@ public:
 							bool bWasCancelled) override;
 
 
-public:
+	FCOBuildingTable GetBuildingSpecialization() const;
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingsTable{};
 
-
-protected: 
-	FCOBuildingTable* BuildingSpecialization;
-
+	UPROPERTY()
+	FCOBuildingTable BuildingSpecialization;
 
 };
