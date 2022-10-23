@@ -24,7 +24,6 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 		SelectCellsAbilityTask->ReadyForActivation();
 
 		FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOAllocateAbility::OnAllocationCanceled);
-
 		ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateCancel().GetSingleTagContainer(), AllocationCanceledDelegate);
 		AllocateCanceledHandle = AllocationCanceledDelegate.GetHandle();
 	}

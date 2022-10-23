@@ -11,6 +11,8 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConfigurationUpdatedDelegate);
 
 class UCOAbilitySystemComponent;
+class UCOConstructionDTO;
+class UCOBuildingAsset;
 
 UCLASS(Blueprintable)
 class CO_API ACOBuildingActor : public AActor, public ICOSelectableActor
@@ -24,6 +26,8 @@ public:
 
 	void RemoveActor();
 
+	void ComposeBuilding();
+
 	virtual void SelectActor_Implementation() override;
 
 	virtual void DeselectActor_Implementation() override;
@@ -34,6 +38,14 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCOBuildingAttributeSet* BuildingAttributeSet{};
+
+	UPROPERTY()
+	UCOBuildingAsset* BuildingAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCOConstructionDTO* Configuration;
+
+	int Floor;
 private:
 	bool IsSelected;
 

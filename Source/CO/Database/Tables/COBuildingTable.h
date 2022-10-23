@@ -4,6 +4,7 @@
 #include "Engine/DataTable.h"
 #include "CO/Extensions/GameplayTagExtension.h"
 #include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
+#include "CO/Actor/Player/Abilities/DTO/COBuildDTO.h"
 #include "COBuildingTable.generated.h"
 
 USTRUCT()
@@ -24,6 +25,19 @@ public:
 		auto HasValidFlour = SelectionDTO->Flours <= MaxFlours && SelectionDTO->Flours >= MinFlours;
 
 		return HasValidWidth && HasValidLength && HasValidFlour;
+	}
+
+	UCOBuildDTO* ToDTO() {
+		auto DTO = NewObject<UCOBuildDTO>();
+		DTO->Name = GetName();
+		DTO->MinWidth = MinWidth;
+		DTO->MaxWidth = MaxWidth;
+		DTO->MinLength = MinLength;
+		DTO->MaxLength = MaxLength;
+		DTO->MinFlours = MinFlours;
+		DTO->MaxFlours = MaxFlours;
+		
+		return DTO;
 	}
 
 public:

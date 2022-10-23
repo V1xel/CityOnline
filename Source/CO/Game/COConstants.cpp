@@ -1,6 +1,21 @@
 #include "COConstants.h"
 #include "GameplayTagContainer.h"
 
+FGameplayTag UCOGameplayTags::Build()
+{
+	return FGameplayTag().RequestGameplayTag("Action.Build");
+}
+
+FGameplayTag UCOGameplayTags::BuildCancel()
+{
+	return FGameplayTag().RequestGameplayTag("Action.Build.Cancel");
+}
+
+FGameplayTag UCOGameplayTags::BuildFinished()
+{
+	return FGameplayTag().RequestGameplayTag("Action.Build.Finished");
+}
+
 FGameplayTag UCOGameplayTags::Allocate()
 {
 	return FGameplayTag().RequestGameplayTag("Action.Allocate");
@@ -24,6 +39,11 @@ FGameplayTag UCOGameplayTags::Construct()
 FGameplayTag UCOGameplayTags::ConstructCancel()
 {
 	return FGameplayTag().RequestGameplayTag("Action.Construct.Cancel");
+}
+
+FGameplayTag UCOGameplayTags::ConstructConfigurate()
+{
+	return FGameplayTag().RequestGameplayTag("Action.Construct.Configurate");
 }
 
 FGameplayTag UCOGameplayTags::ConstructFinished()

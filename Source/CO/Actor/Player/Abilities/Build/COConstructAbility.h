@@ -6,6 +6,12 @@
 #include "CO/AbilitySystem/COGameplayAbilityBase.h"
 #include "COConstructAbility.generated.h"
 
+class ACOBuildingActor;
+class UCORootAsset;
+class UCOSelectionDTO;
+class UCOBuildDTO;
+class UCOConstructionDTO;
+
 /**
  * 
  */
@@ -19,11 +25,6 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
 
-	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags,
-		OUT FGameplayTagContainer* OptionalRelevantTags) const;
-
-
 	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 
@@ -31,4 +32,12 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 		bool bWasCancelled) override;
 
+	void OnConstructConfigurate(FGameplayTag Tag, const FGameplayEventData* EventData);
+
+	UCOBuildingAsset* FindBestAsset(const UCOSelectionDTO* SelectionDTO,const UCOBuildDTO* BuildDTO);
+public:
+	ACOBuildingActor* Construction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCORootAsset* RootAsset;
 };

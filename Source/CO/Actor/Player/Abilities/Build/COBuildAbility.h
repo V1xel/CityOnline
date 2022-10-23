@@ -7,6 +7,7 @@
 #include "CO/Database/Tables/COBuildingTable.h"
 #include "COBuildAbility.generated.h"
 
+class UCOBuildDTO;
 class UCOSelectionDTO;
 class UCOSelectCellsAbilityTask;
 
@@ -38,23 +39,10 @@ public:
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag BuildingTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingsTable{};
-
-	UPROPERTY()
-	UCOSelectCellsAbilityTask* SelectCellsAbilityTask;
-
-	UPROPERTY()
-	UCOSelectionDTO* SelectionDTO;
-
-	UPROPERTY()
-	FCOBuildingTable BuildingSpecialization;
-
-	UPROPERTY(EditDefaultsOnly)
-	bool DrawDebugSelection;
-
-	UPROPERTY()
-	bool BuildSpecializationProvided;
-
 private:
 	FGameplayAbilitySpecHandle _Handle;
 

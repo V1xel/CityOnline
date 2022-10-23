@@ -18,6 +18,11 @@ class CO_API UCOGameplayTags : public UObject
 	
 
 public:
+	static FGameplayTag Build();
+
+	static FGameplayTag BuildCancel();
+
+	static FGameplayTag BuildFinished();
 
 	static FGameplayTag Allocate();
 
@@ -28,6 +33,8 @@ public:
 	static FGameplayTag Construct();
 
 	static FGameplayTag ConstructCancel();
+
+	static FGameplayTag ConstructConfigurate();
 
 	static FGameplayTag ConstructFinished();
 };

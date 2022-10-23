@@ -19,14 +19,26 @@ public:
 	FString Name;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int Floors;
-	
+	int MinWidth;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool HasCorner;
-	
+	int MaxWidth;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FVector FrontDirection;
-	
+	int MinLength;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FVector Location;
+	int MaxLength;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int MinFlours;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int MaxFlours;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool IsLiving;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool IsStore;
 };
