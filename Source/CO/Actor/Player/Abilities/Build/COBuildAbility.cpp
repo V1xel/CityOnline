@@ -6,7 +6,7 @@
 #include "CO/Actor/Street/COStreetActor.h"
 #include "CO/Actor/Player/COPlayerState.h"
 #include "CO/Extensions/GameplayTagExtension.h"
-#include "AbilityTasks/COSelectCellsAbilityTask.h"
+#include "CO/Actor/Player/Abilities/AbilityTasks/COSelectCellsAbilityTask.h"
 #include "CO/Game/COConstants.h"
 #include "CO/Extensions/GameplayTagExtension.h"
 
@@ -21,7 +21,7 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	auto SourceTags = TriggerEventData->InstigatorTags;
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, SourceTags.First().GetTagName().ToString());
 
-	if (UCOGameplayTags::GetAllocate().MatchesTagExact(TriggerEventData->EventTag)) {
+	if (UCOGameplayTags::Allocate().MatchesTagExact(TriggerEventData->EventTag)) {
 		auto BuildingName = UGameplayTagExtension::GetTagSecondElement(SourceTags.First());
 		BuildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
 	}
@@ -30,7 +30,7 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "OnAllocationFinished");
-	SendGameplayEvent(UCOGameplayTags::GetAllocateFinished(), FGameplayEventData());
+	SendGameplayEvent(UCOGameplayTags::Construct(), FGameplayEventData());
 	
 }
 

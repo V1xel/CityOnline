@@ -4,7 +4,7 @@
 #include "CO/Actor/Player/Abilities/Calculation/COBuildCostCalculation.h"
 #include "CO/Database/Tables/COBuildingTable.h"
 #include "CO/Actor/Player/Attributes/COPlayerAttributeSet.h"
-#include "CO/Actor/Player/Abilities/COBuildAbility.h"
+#include "CO/Actor/Player/Abilities/Build/COBuildAbility.h"
 
 void UCOBuildCostCalculation::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {

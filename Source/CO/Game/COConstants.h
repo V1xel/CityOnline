@@ -19,15 +19,15 @@ class CO_API UCOGameplayTags : public UObject
 
 public:
 
-	static FGameplayTag GetAllocate();
+	static FGameplayTag Allocate();
 
-	static FGameplayTag GetAllocateCancel();
+	static FGameplayTag AllocateCancel();
 
-	static FGameplayTag GetAllocateFinished();
+	static FGameplayTag AllocateFinished();
 
-	static FGameplayTag GetConstruct();
+	static FGameplayTag Construct();
 
-	static FGameplayTag GetConstructCancel();
+	static FGameplayTag ConstructCancel();
 
-	static FGameplayTag GetConstructFinished();
+	static FGameplayTag ConstructFinished();
 };

@@ -12,7 +12,7 @@ class UCOSelectCellsAbilityTask;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class CO_API UCOAllocateAbility : public UCOGameplayAbilityBase
 {
 	GENERATED_BODY()

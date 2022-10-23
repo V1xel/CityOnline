@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "CO/AbilitySystem/COGameplayAbilityBase.h"
 #include "CO/Database/Tables/COBuildingTable.h"
-#include "AbilityTasks/COSelectCellsAbilityTask.h"
 #include "COBuildAbility.generated.h"
 
 class UCOSelectionDTO;
+class UCOSelectCellsAbilityTask;
 
 /**
  * 
