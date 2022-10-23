@@ -9,47 +9,36 @@
 UCOSelectCellsAbilityTask::UCOSelectCellsAbilityTask()
 {
 	bTickingTask = true;
+	_SelectionDTO = NewObject<UCOSelectionDTO>();
+	_DrawDebugSelection = true;
 }
 
-UCOSelectCellsAbilityTask* UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOSelectionDTO* SelectionDTO)
+UCOSelectCellsAbilityTask* UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController)
 {
 	UCOSelectCellsAbilityTask* Task = NewAbilityTask<UCOSelectCellsAbilityTask>(OwningAbility, TaskInstanceName);
 	Task->_PlayerController = PlayerController;
-	Task->_SelectionDTO = SelectionDTO;
 	
 	return Task;
 }
 
-void UCOSelectCellsAbilityTask::Activate()
+void UCOSelectCellsAbilityTask::SetMousePositionAsFirstPoint() 
 {
-	Super::Activate();
 	FHitResult HitResult;
 	_PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
 	SelectionStartedLocation = HitResult.Location;
 }
 
-void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)
-{
-	Super::ExternalConfirm(bEndTask);
-
-	for (const auto SelectedComponent : _SelectedCells)
-	{
-		ICOSelectableComponent::Execute_DeselectComponent(SelectedComponent);
-	}
-}
-
 bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,
-                                                     TArray<FHitResult>& OutHits) const
+	TArray<FHitResult>& OutHits) const
 {
 	const FVector Size = (RectangleEnd - RectangleStart) / 2;
-	const FVector Extent = FVector( FMath::Sqrt(Size.X * Size.X),  FMath::Sqrt(Size.Y * Size.Y),  1);
+	const FVector Extent = FVector(FMath::Sqrt(Size.X * Size.X), FMath::Sqrt(Size.Y * Size.Y), 1);
 	const FCollisionShape CollisionBox = FCollisionShape::MakeBox(Extent);
 	const FVector Center = (RectangleEnd + RectangleStart) / 2;
 
-	if(_DrawDebugSelection)
-	{
-		DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 100);
-	}
+
+	DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 100);
+
 
 	return GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
 }
@@ -157,11 +146,21 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 
 	FHitResult CurrentMousePositionHitResult;
 	_PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
-		
+
 	TArray<FHitResult> OutHits;
-	RaycastWithRectangle(SelectionStartedLocation,CurrentMousePositionHitResult.Location, OutHits);
+	RaycastWithRectangle(SelectionStartedLocation, CurrentMousePositionHitResult.Location, OutHits);
 	HandleActorComponentSelection(OutHits);
 	CollectSelectionData();
+}
+
+void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)
+{
+	Super::ExternalConfirm(bEndTask);
+
+	for (const auto SelectedComponent : _SelectedCells)
+	{
+		ICOSelectableComponent::Execute_DeselectComponent(SelectedComponent);
+	}
 }
 
 void UCOSelectCellsAbilityTask::OnDestroy(bool AbilityIsEnding)

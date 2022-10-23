@@ -2,18 +2,16 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "GameplayTagContainerExtension.generated.h"
+#include "GameplayTagExtension.generated.h"
 
-struct FGameplayTagContainer;
 struct FGameplayTag;
+struct FGameplayTagContainer;
 
 /**
  * 
  */
 UCLASS()
-class CO_API UGameplayTagContainerExtension : public UObject
+class CO_API UGameplayTagExtension : public UObject
 {
 	GENERATED_BODY()
 
@@ -24,4 +22,10 @@ public:
 	static FString GetTagSecondElement(FGameplayTag Tag);
 
 	static FString GetTagThirdElement(FGameplayTag Tag);
+
+	static bool MatchesTag(FGameplayTag Tag, FString Element);
+
+	static bool MatchesTagExact(FGameplayTag Tag, FString Element);
+
+	static FGameplayTagContainer CreateContainer(FString Tag);
 };

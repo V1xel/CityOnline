@@ -23,16 +23,16 @@ class CO_API UCOSelectCellsAbilityTask : public UAbilityTask
 	UCOSelectCellsAbilityTask();
 public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
-	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOSelectionDTO* SelectionDTO);
+	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController);
 	
 	virtual void ExternalConfirm(bool bEndTask) override;
 
-	TArray<UCOStreetCellComponent*> GetSelectedCells() const { return TArray(_SelectedCells); }
+	UCOSelectionDTO* GetSelectionResult() const { return _SelectionDTO; }
 
 	void SetDrawDebugSelection(bool Value) { _DrawDebugSelection = Value; }
-protected:
-	virtual void Activate() override;
 
+	void SetMousePositionAsFirstPoint();
+protected:
 	virtual void TickTask(float DeltaTime) override;
 
 	virtual void OnDestroy(bool AbilityIsEnding) override;
@@ -40,7 +40,7 @@ protected:
 	bool RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,	TArray<FHitResult>& OutHits) const;
 
 	void HandleActorComponentSelection(TArray<FHitResult>& HitResults);
-	
+
 	void CollectSelectionData();
 
 protected:
@@ -57,5 +57,5 @@ protected:
 	UCOSelectionDTO* _SelectionDTO;
 
 	UPROPERTY()
-	bool _DrawDebugSelection = true;
+	bool _DrawDebugSelection;
 };

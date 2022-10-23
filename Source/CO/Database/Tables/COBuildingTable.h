@@ -2,7 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "CO/Extensions/GameplayTagContainerExtension.h"
+#include "CO/Extensions/GameplayTagExtension.h"
+#include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
 #include "COBuildingTable.generated.h"
 
 USTRUCT()
@@ -13,7 +14,16 @@ struct CO_API FCOBuildingTable : public FTableRowBase
 public:
 	FString GetName() 
 	{
-		return UGameplayTagContainerExtension::GetTagThirdElement(Tag);
+		return UGameplayTagExtension::GetTagThirdElement(Tag);
+	}
+
+	bool Validate(UCOSelectionDTO* SelectionDTO)
+	{
+		auto HasValidWidth = SelectionDTO->Width <= MaxWidth && SelectionDTO->Width >= MinWidth;
+		auto HasValidLength = SelectionDTO->Length <= MaxLength && SelectionDTO->Length >= MinLength;
+		auto HasValidFlour = SelectionDTO->Flours <= MaxFlours && SelectionDTO->Flours >= MinFlours;
+
+		return HasValidWidth && HasValidLength && HasValidFlour;
 	}
 
 public:

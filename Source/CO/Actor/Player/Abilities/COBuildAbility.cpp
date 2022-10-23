@@ -5,22 +5,33 @@
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Actor/Street/COStreetActor.h"
 #include "CO/Actor/Player/COPlayerState.h"
-#include "CO/Extensions/GameplayTagContainerExtension.h"
+#include "CO/Extensions/GameplayTagExtension.h"
+#include "AbilityTasks/COSelectCellsAbilityTask.h"
+#include "CO/Game/COConstants.h"
+#include "CO/Extensions/GameplayTagExtension.h"
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
-	FString Left, Right;
-	auto SourceTags = TriggerEventData->InstigatorTags;
-	auto BuildingName = UGameplayTagContainerExtension::GetTagSecondElement(SourceTags.First());
-	auto Table = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
-	BuildingSpecialization = Table;
+	_Handle = Handle;
+	_ActorInfo = ActorInfo;
+	_ActivationInfo = ActivationInfo;
 
-	if (CommitAbility(Handle, ActorInfo, ActivationInfo))
-	{
-		//	Build
+	auto SourceTags = TriggerEventData->InstigatorTags;
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, SourceTags.First().GetTagName().ToString());
+
+	if (UCOGameplayTags::GetAllocate().MatchesTagExact(TriggerEventData->EventTag)) {
+		auto BuildingName = UGameplayTagExtension::GetTagSecondElement(SourceTags.First());
+		BuildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
 	}
+}
+
+void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "OnAllocationFinished");
+	SendGameplayEvent(UCOGameplayTags::GetAllocateFinished(), FGameplayEventData());
+	
 }
 
 bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
@@ -46,15 +57,11 @@ void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, con
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
+
 }
 
 void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-}
-
-FCOBuildingTable UCOBuildAbility::GetBuildingSpecialization() const
-{
-	return BuildingSpecialization;
 }

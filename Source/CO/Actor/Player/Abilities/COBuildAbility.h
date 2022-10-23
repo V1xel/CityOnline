@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "CO/AbilitySystem/COGameplayAbilityBase.h"
 #include "CO/Database/Tables/COBuildingTable.h"
+#include "AbilityTasks/COSelectCellsAbilityTask.h"
 #include "COBuildAbility.generated.h"
+
+class UCOSelectionDTO;
 
 /**
  * 
@@ -32,14 +35,30 @@ public:
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 							bool bWasCancelled) override;
 
-
-	FCOBuildingTable GetBuildingSpecialization() const;
-
+	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingsTable{};
 
 	UPROPERTY()
+	UCOSelectCellsAbilityTask* SelectCellsAbilityTask;
+
+	UPROPERTY()
+	UCOSelectionDTO* SelectionDTO;
+
+	UPROPERTY()
 	FCOBuildingTable BuildingSpecialization;
 
+	UPROPERTY(EditDefaultsOnly)
+	bool DrawDebugSelection;
+
+	UPROPERTY()
+	bool BuildSpecializationProvided;
+
+private:
+	FGameplayAbilitySpecHandle _Handle;
+
+	const FGameplayAbilityActorInfo* _ActorInfo;
+
+	FGameplayAbilityActivationInfo _ActivationInfo;
 };

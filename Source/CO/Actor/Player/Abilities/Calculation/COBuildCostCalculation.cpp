@@ -12,9 +12,9 @@ void UCOBuildCostCalculation::Execute_Implementation(const FGameplayEffectCustom
 
 	const UCOBuildAbility* Ability = Cast<UCOBuildAbility>(Spec.GetContext().GetAbilityInstance_NotReplicated());
 
-	auto Specialization = Ability->GetBuildingSpecialization();
+	//auto Specialization = Ability->GetBuildingSpecialization();
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, Specialization.GetName());
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, Specialization.GetName());
 
 	OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(UCOPlayerAttributeSet::GetMoneyAttribute(), EGameplayModOp::Additive, 1));
 }

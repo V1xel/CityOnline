@@ -19,6 +19,8 @@ public:
 
 	int Width;
 
+	int Flours;
+
 	bool HasCorner;
 
 	bool HasExtreme;
