@@ -15,16 +15,7 @@ struct CO_API FCOBuildingTable : public FTableRowBase
 public:
 	FString GetName() 
 	{
-		return UGameplayTagExtension::GetTagThirdElement(Tag);
-	}
-
-	bool Validate(UCOSelectionDTO* SelectionDTO)
-	{
-		auto HasValidWidth = SelectionDTO->Width <= MaxWidth && SelectionDTO->Width >= MinWidth;
-		auto HasValidLength = SelectionDTO->Length <= MaxLength && SelectionDTO->Length >= MinLength;
-		auto HasValidFlour = SelectionDTO->Flours <= MaxFlours && SelectionDTO->Flours >= MinFlours;
-
-		return HasValidWidth && HasValidLength && HasValidFlour;
+		return UGameplayTagExtension::GetTagSecondElement(Tag);
 	}
 
 	UCOBuildDTO* ToDTO() {

@@ -8,6 +8,7 @@
 
 class ACOBuildingActor;
 class UCORootAsset;
+class UCOBuildingAsset;
 class UCOSelectionDTO;
 class UCOBuildDTO;
 class UCOConstructionDTO;

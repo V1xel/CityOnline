@@ -43,7 +43,7 @@ public:
 	UCOBuildingAsset* BuildingAsset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UCOConstructionDTO* Configuration;
+	const UCOConstructionDTO* Configuration;
 
 	int Floor;
 private:
