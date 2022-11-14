@@ -4,12 +4,15 @@
 #include "UObject/Object.h"
 #include "COConstructionDTO.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class CO_API UCOConstructionDTO : public UObject
 {
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsLivingAndNotShop;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Floors = 2;
 };

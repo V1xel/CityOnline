@@ -31,9 +31,11 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 void UCOAllocateAbility::OnAllocationCanceled(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	SelectCellsAbilityTask->GetSelectionResult();
+	UCOSelectionDTO* SelectionDTO = SelectCellsAbilityTask->GetSelectionResult();
 	SelectCellsAbilityTask->ExternalConfirm(true);
-	SendGameplayEvent(UCOGameplayTags::AllocateFinished(), FGameplayEventData());
+	auto Data = FGameplayEventData();
+	Data.OptionalObject = SelectionDTO;
+	SendGameplayEvent(UCOGameplayTags::AllocateFinished(), Data);
 	EndAbility(_Handle, _ActorInfo, _ActivationInfo, false, false);
 }
 

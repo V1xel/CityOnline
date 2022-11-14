@@ -26,6 +26,7 @@ public:
 
 	void RemoveActor();
 
+	UFUNCTION(BlueprintCallable)
 	void ComposeBuilding();
 
 	virtual void SelectActor_Implementation() override;
@@ -39,14 +40,19 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCOBuildingAttributeSet* BuildingAttributeSet{};
 
-	UPROPERTY()
-	UCOBuildingAsset* BuildingAsset;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCOBuildingAsset* BuildingAsset {};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	const UCOConstructionDTO* Configuration;
+	TSubclassOf<UCOConstructionDTO> OverrideConfiguration {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	const UCOConstructionDTO* Configuration{};
 
 	int Floor;
 private:
+
+	TArray<UStaticMeshComponent*> Meshes{};
 	bool IsSelected;
 
 	bool IsEdited;

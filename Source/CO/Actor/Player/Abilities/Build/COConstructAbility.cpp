@@ -19,10 +19,12 @@ void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	auto SelectionDTO = Cast<UCOSelectionDTO>(TriggerEventData->OptionalObject);
 	auto BuildDTO = Cast<UCOBuildDTO>(TriggerEventData->OptionalObject2);
 
-	Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(ACOBuildingActor::StaticClass(), FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
-	Construction->BuildingAsset = FindBestAsset(SelectionDTO, BuildDTO);
-	Construction->Floor = 1;
-	Construction->FinishSpawning(FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
+	if (SelectionDTO && BuildDTO) {
+		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(ACOBuildingActor::StaticClass(), FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
+		Construction->BuildingAsset = FindBestAsset(SelectionDTO, BuildDTO);
+		Construction->Floor = 1;
+		Construction->FinishSpawning(FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
+	}
 }
 
 UCOBuildingAsset* UCOConstructAbility::FindBestAsset(const UCOSelectionDTO* SelectionDTO, const UCOBuildDTO* BuildDTO)
@@ -69,6 +71,8 @@ void UCOConstructAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, co
 
 void UCOConstructAbility::OnConstructConfigurate(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	Construction->Configuration = Cast<UCOConstructionDTO>(EventData->OptionalObject);
-	Construction->ApplyChanges();
+	if (Construction && EventData && EventData->OptionalObject) {
+		Construction->Configuration = Cast<UCOConstructionDTO>(EventData->OptionalObject);
+		Construction->ApplyChanges();
+	}
 }
