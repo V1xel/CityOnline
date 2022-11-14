@@ -41,7 +41,7 @@ void ACOBuildingActor::ComposeBuilding()
 	for (size_t i = 0; i <= floors; i++)
 	{
 		auto Mesh = Cast<UStaticMeshComponent>(AddComponentByClass(UStaticMeshComponent::StaticClass(), false, FTransform::Identity, false));
-		if (Mesh) 
+		if (Mesh)
 		{
 			Meshes.Add(Mesh);
 			if (i == 0) {
@@ -51,12 +51,12 @@ void ACOBuildingActor::ComposeBuilding()
 				Mesh->SetStaticMesh(BuildingAsset->MiddleFloor);
 				Mesh->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * i));
 			}
-			if (i == floors) {
-				Mesh->SetStaticMesh(BuildingAsset->Roof);
-				Mesh->SetRelativeLocation(FVector(0,0, BuildingAsset->FloorHeight*i));
-			}
 		}
 	}
+
+	auto Roof = Cast<UStaticMeshComponent>(AddComponentByClass(UStaticMeshComponent::StaticClass(), false, FTransform::Identity, false));
+	Roof->SetStaticMesh(BuildingAsset->Roof);
+	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * floors));
 }
 
 void ACOBuildingActor::SelectActor_Implementation()
