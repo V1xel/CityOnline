@@ -17,6 +17,7 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 	if (UCOGameplayTags::Allocate().MatchesTagExact(TriggerEventData->EventTag) && !SelectCellsAbilityTask)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Allocate Activated!"));
 		const auto PlayerController = GetController(ActorInfo);
 		SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController);
 		SelectCellsAbilityTask->SetDrawDebugSelection(true); 
@@ -44,4 +45,5 @@ void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, con
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateCancel().GetSingleTagContainer(), AllocateCanceledHandle);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Allocate Ended!"));
 }

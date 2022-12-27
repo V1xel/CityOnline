@@ -32,8 +32,9 @@ void ACOBuildingActor::RemoveActor()
 
 void ACOBuildingActor::ComposeBuilding()
 {
-	auto Test = OverrideConfiguration.GetDefaultObject();
-	auto floors = Test->Floors;
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("ComposeBuilding!"));
+//	auto Test = OverrideConfiguration.GetDefaultObject();
+	auto floors = 4;
 	for (auto Mesh : Meshes)
 	{
 		Mesh->DestroyComponent();
@@ -49,14 +50,14 @@ void ACOBuildingActor::ComposeBuilding()
 			}
 			else if (i <= floors) {
 				Mesh->SetStaticMesh(BuildingAsset->MiddleFloor);
-				Mesh->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * i));
+				Mesh->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (i - 1)));
 			}
 		}
 	}
 
 	auto Roof = Cast<UStaticMeshComponent>(AddComponentByClass(UStaticMeshComponent::StaticClass(), false, FTransform::Identity, false));
 	Roof->SetStaticMesh(BuildingAsset->Roof);
-	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * floors));
+	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (floors - 1)));
 }
 
 void ACOBuildingActor::SelectActor_Implementation()

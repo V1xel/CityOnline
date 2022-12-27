@@ -38,10 +38,10 @@ void UCOStreetCellManagementComponent::ConstructCells()
 			Cell->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 			Cell->SetWorldScale3D(FVector(Size,Size,1));
 			Cell->SetWorldLocation(Position);
-			Cell->Horizontal = iHorizontal;
-			Cell->Vertical = iVertical;
-			Cell->IsExtreme = iHorizontal == 0 || iVertical == 0 || iHorizontal == Horizontal || iVertical == Vertical;
-			Cell->IsCorner = (iHorizontal == iVertical && iHorizontal == 0) || (iHorizontal == iVertical && iHorizontal == HorizontalOffset);
+			Cell->Horizontal = iHorizontal + 1;
+			Cell->Vertical = iVertical + 1;
+			Cell->IsExtreme = iHorizontal == 0 || iVertical == 0 || iHorizontal == (Horizontal-1) || iVertical == (Vertical-1);
+			Cell->IsCorner = ((iHorizontal == iVertical) && Cell->IsExtreme) || (iHorizontal == Horizontal - 1 && iVertical == 0) || (iVertical == Vertical - 1 && iHorizontal == 0);;
 			
 			_Cells.Add(Cell);
 		}

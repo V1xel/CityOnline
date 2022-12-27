@@ -13,23 +13,25 @@
 
 void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	FGameplayEventTagMulticastDelegate::FDelegate ConstructConfigurateDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOConstructAbility::OnConstructConfigurate);
-	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), ConstructConfigurateDelegate);
+	//FGameplayEventTagMulticastDelegate::FDelegate ConstructConfigurateDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOConstructAbility::OnConstructConfigurate);
+	//ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), ConstructConfigurateDelegate);
 
 	auto SelectionDTO = Cast<UCOSelectionDTO>(TriggerEventData->OptionalObject);
 	auto BuildDTO = Cast<UCOBuildDTO>(TriggerEventData->OptionalObject2);
 
 	if (SelectionDTO && BuildDTO) {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Construct Started!"));
 		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(ACOBuildingActor::StaticClass(), FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
 		Construction->BuildingAsset = FindBestAsset(SelectionDTO, BuildDTO);
 		Construction->Floor = 1;
 		Construction->FinishSpawning(FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
+		Construction->ComposeBuilding();
 	}
 }
 
 UCOBuildingAsset* UCOConstructAbility::FindBestAsset(const UCOSelectionDTO* SelectionDTO, const UCOBuildDTO* BuildDTO)
 {
-	int matchCount = 0;
+	int matchCount = -1;
 	UCOBuildingAsset* BestAsset = nullptr;
 	for (UCOBuildingAsset* Asset : RootAsset->BuildingsAssets)
 	{

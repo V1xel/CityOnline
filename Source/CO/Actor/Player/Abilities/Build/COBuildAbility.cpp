@@ -18,6 +18,7 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	_ActorInfo = ActorInfo;
 	_ActivationInfo = ActivationInfo;
 	BuildingTag = TriggerEventData->InstigatorTags.First();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Build Started!"));
 
 	FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), AllocationCanceledDelegate);
@@ -33,6 +34,8 @@ void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEven
 	BuildEventData.OptionalObject2 = BuildingSpecialization.ToDTO();
 	
 	SendGameplayEvent(UCOGameplayTags::Construct(), BuildEventData);
+
+	EndAbility(_Handle, _ActorInfo, _ActivationInfo, false, false);
 }
 
 bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
@@ -65,4 +68,5 @@ void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const 
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Build Ended!"));
 }

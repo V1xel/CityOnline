@@ -32,7 +32,7 @@ bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVe
 	TArray<FHitResult>& OutHits) const
 {
 	const FVector Size = (RectangleEnd - RectangleStart) / 2;
-	const FVector Extent = FVector(FMath::Sqrt(Size.X * Size.X), FMath::Sqrt(Size.Y * Size.Y), 1);
+	const FVector Extent = FVector(FMath::Sqrt(Size.X * Size.X), FMath::Sqrt(Size.Y * Size.Y), 10);
 	const FCollisionShape CollisionBox = FCollisionShape::MakeBox(Extent);
 	const FVector Center = (RectangleEnd + RectangleStart) / 2;
 
@@ -138,6 +138,11 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	_SelectionDTO->Width = MaximumVertical - MinimumVertical;
 	_SelectionDTO->HasExtreme = HasExtreme;
 	_SelectionDTO->HasCorner = HasCorner;
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(_SelectionDTO->Length));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(_SelectionDTO->Width));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, HasExtreme ? "TRUE" : "FALSE");
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, HasCorner ? "TRUE" : "FALSE");
 }
 
 void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)

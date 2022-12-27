@@ -21,6 +21,7 @@ public:
 
 	virtual void DeselectComponent_Implementation() override;
 
+	UFUNCTION(BlueprintCallable)
 	void SetValid(bool Value);
 
 	void SetVisible(bool Value);
