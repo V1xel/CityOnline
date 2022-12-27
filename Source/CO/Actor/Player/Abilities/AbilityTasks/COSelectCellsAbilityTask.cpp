@@ -37,7 +37,7 @@ bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVe
 	const FVector Center = (RectangleEnd + RectangleStart) / 2;
 
 
-	DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 100);
+	DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 10);
 
 
 	return GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
@@ -106,6 +106,10 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	auto MaximumVertical = _SelectedCells[0]->Vertical;
 	bool HasExtreme = false;
 	bool HasCorner = false;
+
+	FVector ExtremeCenter;
+	int ExtremeCellsCount = 0;
+	FVector Center;
 	for (auto Cell : _SelectedCells)
 	{
 		if(MinimumHorizontal > Cell->Horizontal)
@@ -127,11 +131,14 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		if (Cell->IsExtreme)
 		{
 			HasExtreme = true;
+			ExtremeCenter = ExtremeCenter + Cell->GetComponentLocation();
+			ExtremeCellsCount++;
 		}
 		if (Cell->IsCorner)
 		{
 			HasCorner = true;
 		}
+		Center = Center + Cell->GetComponentLocation();
 	}
 
 	_SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal;
@@ -139,10 +146,13 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	_SelectionDTO->HasExtreme = HasExtreme;
 	_SelectionDTO->HasCorner = HasCorner;
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(_SelectionDTO->Length));
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(_SelectionDTO->Width));
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, HasExtreme ? "TRUE" : "FALSE");
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, HasCorner ? "TRUE" : "FALSE");
+	Center = Center / _SelectedCells.Num();
+	ExtremeCenter = ExtremeCenter / ExtremeCellsCount;
+	auto Rotation = (Center - ExtremeCenter);
+	DrawDebugDirectionalArrow(GetWorld(), Center, ExtremeCenter, 2000, FColor::Red, false, -1, 0, 50);
+
+	_SelectionDTO->Center = Center;
+	_SelectionDTO->Rotation = Rotation.ToOrientationRotator();
 }
 
 void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
