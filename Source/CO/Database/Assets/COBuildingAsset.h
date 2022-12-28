@@ -15,6 +15,9 @@ class CO_API UCOBuildingAsset : public UDataAsset
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FRotator RotationOffset;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int Width;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

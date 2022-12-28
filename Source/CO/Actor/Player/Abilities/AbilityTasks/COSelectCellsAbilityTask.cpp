@@ -112,6 +112,7 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	FVector Center;
 	for (auto Cell : _SelectedCells)
 	{
+		DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 20, FColor::Yellow, false, -1, 0, 20);
 		if(MinimumHorizontal > Cell->Horizontal)
 		{
 			MinimumHorizontal = Cell->Horizontal;
@@ -130,6 +131,7 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		}
 		if (Cell->IsExtreme)
 		{
+			DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 40, FColor::Blue, false, -1, 0, 20);
 			HasExtreme = true;
 			ExtremeCenter = ExtremeCenter + Cell->GetComponentLocation();
 			ExtremeCellsCount++;
@@ -141,18 +143,19 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		Center = Center + Cell->GetComponentLocation();
 	}
 
-	_SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal;
-	_SelectionDTO->Width = MaximumVertical - MinimumVertical;
+	_SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal + 1;
+	_SelectionDTO->Width = MaximumVertical - MinimumVertical + 1;
 	_SelectionDTO->HasExtreme = HasExtreme;
 	_SelectionDTO->HasCorner = HasCorner;
 
 	Center = Center / _SelectedCells.Num();
 	ExtremeCenter = ExtremeCenter / ExtremeCellsCount;
 	auto Rotation = (Center - ExtremeCenter);
+
 	DrawDebugDirectionalArrow(GetWorld(), Center, ExtremeCenter, 2000, FColor::Red, false, -1, 0, 50);
 
 	_SelectionDTO->Center = Center;
-	_SelectionDTO->Rotation = Rotation.ToOrientationRotator();
+	_SelectionDTO->Rotation = Rotation.GetSafeNormal2D().ToOrientationRotator();
 }
 
 void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)

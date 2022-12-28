@@ -26,7 +26,7 @@ void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 		Construction->Floor = 1;
 		Construction->ComposeBuilding();
 		Construction->FinishSpawning(FTransform());
-		Construction->SetActorLocationAndRotation(SelectionDTO->Center, SelectionDTO->Rotation);
+		Construction->SetActorLocationAndRotation(SelectionDTO->Center, SelectionDTO->Rotation + Construction->BuildingAsset->RotationOffset);
 	}
 }
 
@@ -46,11 +46,11 @@ UCOBuildingAsset* UCOConstructAbility::FindBestAsset(const UCOSelectionDTO* Sele
 		{
 			currentCount++;
 		}
-		if (Asset->Width == SelectionDTO->Width)
+		if (Asset->Width == SelectionDTO->Width || Asset->Width == SelectionDTO->Length)
 		{
 			currentCount++;
 		}
-		if (Asset->Length == SelectionDTO->Length)
+		if (Asset->Length == SelectionDTO->Length || Asset->Length == SelectionDTO->Width)
 		{
 			currentCount++;
 		}

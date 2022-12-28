@@ -45,6 +45,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int Vertical;
 
+	UPROPERTY(BlueprintReadOnly)
+	FVector Normal;
+
 	UPROPERTY(BlueprintReadWrite)
 	UMaterialInstanceDynamic* DynamicMaterial;
 };
