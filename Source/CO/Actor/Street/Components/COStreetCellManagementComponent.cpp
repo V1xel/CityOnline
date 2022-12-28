@@ -17,6 +17,7 @@ UCOStreetCellManagementComponent::UCOStreetCellManagementComponent()
 
 void UCOStreetCellManagementComponent::ConstructCells()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("ConstructCells!"));
 	const auto Scale = GetRelativeScale3D();
 	const auto HorizontalOffset = Coverage * 100 * Scale.X / (Horizontal -1);
 	const auto VerticalOffset = Coverage * 100 * Scale.Y/ (Vertical-1);
@@ -38,7 +39,6 @@ void UCOStreetCellManagementComponent::ConstructCells()
 			Cell->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 			Cell->SetWorldScale3D(FVector(Size,Size,1));
 			Cell->SetWorldLocation(Position);
-			Cell->Normal = Origin - Position;
 			Cell->Horizontal = iHorizontal + 1;
 			Cell->Vertical = iVertical + 1;
 			Cell->IsExtreme = iHorizontal == 0 || iVertical == 0 || iHorizontal == (Horizontal-1) || iVertical == (Vertical-1);

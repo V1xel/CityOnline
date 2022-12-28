@@ -19,9 +19,9 @@ public:
 
 	int Width;
 
-	bool HasCorner;
+	bool HasCorner = false;
 
-	bool HasExtreme;
+	bool HasExtreme = false;
 
 	FVector Center;
 
