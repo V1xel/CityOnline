@@ -17,8 +17,6 @@ class CO_API UCOAllocateAbility : public UCOGameplayAbilityBase
 {
 	GENERATED_BODY()
 
-
-public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;

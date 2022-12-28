@@ -6,14 +6,15 @@
 #include "CO/Actor/Interfaces/COSelectableActor.h"
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Database/Enums/COStreetPrestige.h"
-#include "Components/COStreetCellManagementComponent.h"
 #include "GameFramework/Actor.h"
 #include "COStreetActor.generated.h"
+
 
 class UCOStreetBuildingComponent;
 class UCOStreetInformationComponent;
 class UCOStreetLeasingComponent;
 class ACOBuildingActor;
+class UCOStreetCellComponent;
 
 UCLASS()
 class CO_API ACOStreetActor : public AActor, public ICOSelectableActor
@@ -22,8 +23,6 @@ class CO_API ACOStreetActor : public AActor, public ICOSelectableActor
 
 public:
 	ACOStreetActor();
-
-	ACOBuildingActor* CreateBuilding(const TArray<UCOStreetCellComponent*>& SelectedCells);
 
 	void CalculatePotentialOutput();
 
@@ -38,12 +37,9 @@ public:
 	virtual void SelectActor_Implementation() override;
 
 	virtual void DeselectActor_Implementation() override;
-
-	virtual void OnConstruction(const FTransform& Transform) override;
-
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	UCOStreetCellManagementComponent* CellManagementComponent{};
+	UPROPERTY()
+	TArray<UCOStreetCellComponent*> Cells{};
 	
 protected:
 	bool IsConstructed;

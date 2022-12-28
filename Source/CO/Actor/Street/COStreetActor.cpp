@@ -11,13 +11,6 @@ ACOStreetActor::ACOStreetActor()
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	SceneComponent->SetMobility(EComponentMobility::Static);
 	SetRootComponent(SceneComponent);
-	CellManagementComponent = CreateDefaultSubobject<UCOStreetCellManagementComponent>(TEXT("CellManagementComponent"));
-	CellManagementComponent->AttachToComponent(SceneComponent, FAttachmentTransformRules::KeepRelativeTransform);
-}
-
-ACOBuildingActor* ACOStreetActor::CreateBuilding(const TArray<UCOStreetCellComponent*>& SelectedCells)
-{
-	return nullptr;
 }
 
 void ACOStreetActor::SelectActor_Implementation()
@@ -28,10 +21,4 @@ void ACOStreetActor::SelectActor_Implementation()
 void ACOStreetActor::DeselectActor_Implementation()
 {
 	ICOSelectableActor::DeselectActor_Implementation();
-}
-
-void ACOStreetActor::OnConstruction(const FTransform& Transform)
-{
-	Super::OnConstruction(Transform);
-	//CellManagementComponent->ConstructCells();
 }
