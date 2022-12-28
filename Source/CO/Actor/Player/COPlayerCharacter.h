@@ -17,14 +17,23 @@ class CO_API ACOPlayerCharacter : public ACOCharacterBase
 public:
 	// Sets default values for this actor's properties
 	ACOPlayerCharacter();
+
+	UFUNCTION(BlueprintCallable)
 	void AddForwardMovementInput(float Value);
+
+	UFUNCTION(BlueprintCallable)
 	void AddRightMovementInput(float Value);
+
+	UFUNCTION(BlueprintCallable)
 	void AddCameraYawInput(float Value);
 
 	UFUNCTION(BlueprintCallable)
-		void NavigateOnObject(AActor* object, float zoom);
+	void NavigateOnObject(AActor* object, float zoom);
 
+	UFUNCTION(BlueprintCallable)
 	void ZoomCamera(float Value);
+
+	UFUNCTION(BlueprintCallable)
 	void EnableRotateCamera();
 
 public:
