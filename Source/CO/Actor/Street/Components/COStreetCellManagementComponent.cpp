@@ -34,16 +34,11 @@ void UCOStreetCellManagementComponent::ConstructCells()
 			auto CellOffset = FVector(HorizontalOffset * iHorizontal, VerticalOffset * iVertical, 1);
 			const FVector Position = CellOffset + WorldOffset;
 
-			auto Cell = NewObject<UCOStreetCellComponent>(this, UCOStreetCellComponent::StaticClass(), *FString::Printf(TEXT("Cell-%d::%d"), iHorizontal, iVertical));
-			Cell->RegisterComponent();
-			Cell->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
-			Cell->SetWorldScale3D(FVector(Size,Size,1));
-			Cell->SetWorldLocation(Position);
+			auto Cell = Cast<UCOStreetCellComponent>(GetOwner()->AddComponentByClass(UCOStreetCellComponent::StaticClass(), true, FTransform(FRotator::ZeroRotator, Position,FVector(Size, Size, 1)), false));
 			Cell->Horizontal = iHorizontal + 1;
 			Cell->Vertical = iVertical + 1;
 			Cell->IsExtreme = iHorizontal == 0 || iVertical == 0 || iHorizontal == (Horizontal-1) || iVertical == (Vertical-1);
 			Cell->IsCorner = ((iHorizontal == iVertical) && Cell->IsExtreme) || (iHorizontal == Horizontal - 1 && iVertical == 0) || (iVertical == Vertical - 1 && iHorizontal == 0);
-
 			
 			_Cells.Add(Cell);
 		}
