@@ -33,5 +33,5 @@ void ACOStreetActor::DeselectActor_Implementation()
 void ACOStreetActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-	CellManagementComponent->ConstructCells();
+	//CellManagementComponent->ConstructCells();
 }
