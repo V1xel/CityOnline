@@ -19,16 +19,9 @@ UCOStreetCellComponent::UCOStreetCellComponent()
 	USceneComponent::SetMobility(EComponentMobility::Static);
 }
 
-void UCOStreetCellComponent::SelectComponent_Implementation()
+void UCOStreetCellComponent::SetSelected(bool Value)
 {
-	ICOSelectableComponent::SelectComponent_Implementation();
-	IsSelected = true;
-}
-
-void UCOStreetCellComponent::DeselectComponent_Implementation()
-{
-	ICOSelectableComponent::DeselectComponent_Implementation();
-	IsSelected = false;
+	IsSelected = Value;
 }
 
 void UCOStreetCellComponent::SetValid(bool Value)

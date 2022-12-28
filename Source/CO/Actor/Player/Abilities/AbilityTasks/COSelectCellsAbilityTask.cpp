@@ -2,7 +2,6 @@
 
 
 #include "COSelectCellsAbilityTask.h"
-#include "CO/Actor/Street/Components/Interfaces/COSelectableComponent.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
 
@@ -50,7 +49,7 @@ void UCOSelectCellsAbilityTask::HandleActorComponentSelection(TArray<FHitResult>
 	for (auto HitResult : HitResults)
 	{
 		UCOStreetCellComponent* HitComponent = Cast<UCOStreetCellComponent>(HitResult.GetComponent());
-		if(HitComponent && HitComponent->Implements<UCOSelectableComponent>())
+		if(HitComponent)
 		{
 			bool PendingSelect = true;
 			for (const auto SelectedComponent : _SelectedCells)
@@ -63,31 +62,28 @@ void UCOSelectCellsAbilityTask::HandleActorComponentSelection(TArray<FHitResult>
 			}
 			if(PendingSelect)
 			{
-				ICOSelectableComponent::Execute_SelectComponent(HitComponent);
+				HitComponent->SetSelected(true);
 			}
 			
 			DesiredSelectedComponents.Add(HitComponent);
 		}
 	}
 
-	for (const auto SelectedComponent : _SelectedCells)
+	for (const auto CellComponent : _SelectedCells)
 	{
 		bool PendingDeselect = true;
 		for (auto HitResult : HitResults)
 		{
 			UCOStreetCellComponent* HitComponent = Cast<UCOStreetCellComponent>(HitResult.GetComponent());
-			if(HitComponent && HitComponent->Implements<UCOSelectableComponent>())
+			if(HitComponent && CellComponent == HitComponent)
 			{
-				if(SelectedComponent == HitComponent)
-				{
-					PendingDeselect = false;
-				}
+				PendingDeselect = false;
 			}
 		}
 
 		if(PendingDeselect)
 		{
-			ICOSelectableComponent::Execute_DeselectComponent(SelectedComponent);
+			CellComponent->SetSelected(false);
 		}
 	}
 
@@ -151,9 +147,11 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	const double dot = FVector::DotProduct(SelectionNormalCorrect, FVector::ForwardVector);
 	const FVector FinalNormal = dot * dot > 0.5 ? FVector::ForwardVector : FVector::RightVector;
 	const double dot2 = FVector::DotProduct(SelectionNormalCorrect, FinalNormal);
-	const FVector FinalFinalNormal = dot2 < 0 ? FinalNormal : FinalNormal * -1;
+	const FVector FinalFinalNormal = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
 
-	DrawDebugDirectionalArrow(GetWorld(), FinalFinalNormal, FinalFinalNormal * 1000, 2000, FColor::Red, false, -1, 0, 50);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(dot));
+
+	DrawDebugDirectionalArrow(GetWorld(), -FinalFinalNormal, -FinalFinalNormal * 1000, 2000, FColor::Red, false, -1, 0, 50);
 
 	_SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
 	_SelectionDTO->Center = SelectionCenterCorrect;
@@ -182,7 +180,7 @@ void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)
 
 	for (const auto SelectedComponent : _SelectedCells)
 	{
-		ICOSelectableComponent::Execute_DeselectComponent(SelectedComponent);
+		SelectedComponent->SetSelected(false);
 	}
 }
 

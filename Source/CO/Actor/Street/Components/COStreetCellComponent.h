@@ -3,12 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interfaces/COSelectableComponent.h"
 #include "COStreetCellComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CO_API UCOStreetCellComponent : public UStaticMeshComponent, public ICOSelectableComponent
+class CO_API UCOStreetCellComponent : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 
@@ -17,13 +16,13 @@ public:
 	UCOStreetCellComponent();
 
 public:
-	virtual void SelectComponent_Implementation() override;
-
-	virtual void DeselectComponent_Implementation() override;
+	UFUNCTION(BlueprintCallable)
+	void SetSelected(bool Value);
 
 	UFUNCTION(BlueprintCallable)
 	void SetValid(bool Value);
 
+	UFUNCTION(BlueprintCallable)
 	void SetVisible(bool Value);
 
 public:
