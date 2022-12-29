@@ -22,6 +22,12 @@ UCOStreetCellComponent::UCOStreetCellComponent()
 void UCOStreetCellComponent::SetSelected(bool Value)
 {
 	IsSelected = Value;
+	SetVisible(IsSelected);
+}
+
+void UCOStreetCellComponent::SetOccupied(bool Value)
+{
+	IsOccupied = Value;
 }
 
 void UCOStreetCellComponent::SetValid(bool Value)

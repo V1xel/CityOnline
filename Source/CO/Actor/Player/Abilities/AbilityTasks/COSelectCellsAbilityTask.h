@@ -35,6 +35,8 @@ public:
 protected:
 	virtual void TickTask(float DeltaTime) override;
 
+	void Validate();
+
 	virtual void OnDestroy(bool AbilityIsEnding) override;
 
 	bool RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,	TArray<FHitResult>& OutHits) const;

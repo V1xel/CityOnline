@@ -17,26 +17,32 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	_Handle = Handle;
 	_ActorInfo = ActorInfo;
 	_ActivationInfo = ActivationInfo;
-	BuildingTag = TriggerEventData->InstigatorTags.First();
+	auto buildingTag = TriggerEventData->InstigatorTags.First();
+	auto buildingName = UGameplayTagExtension::GetTagSecondElement(buildingTag);
+	auto buildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(buildingName), "");
+	_BuildDTO = buildingSpecialization.ToDTO();
 
 	FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), AllocationCanceledDelegate);
 
-	_AllocationEffectHandle = ActorInfo->AbilitySystemComponent->ApplyGameplayEffectToSelf(EnableCellAllocationEffect.GetDefaultObject(), 0, FGameplayEffectContextHandle());
+	auto effect = EnableCellAllocationEffect.GetDefaultObject();
+	auto effectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
+	effectContext.AddSourceObject(_BuildDTO);
+	auto effectSpec = FGameplayEffectSpecHandle(new FGameplayEffectSpec(effect, effectContext));
+
+	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpec);
 }
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Build OnAllocationFinished!"));
 	FGameplayEventData BuildEventData = FGameplayEventData();
 	BuildEventData.OptionalObject = EventData->OptionalObject;
 
 	_ActorInfo->AbilitySystemComponent->RemoveActiveGameplayEffect(_AllocationEffectHandle);
-	auto BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, BuildingName);
-	//auto BuildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
-	//BuildEventData.OptionalObject2 = BuildingSpecialization.ToDTO();
+	BuildEventData.OptionalObject2 = _BuildDTO;
 	
-	//SendGameplayEvent(UCOGameplayTags::Construct(), BuildEventData);
+	SendGameplayEvent(UCOGameplayTags::Construct(), BuildEventData);
 
 	EndAbility(_Handle, _ActorInfo, _ActivationInfo, false, false);
 }
@@ -64,12 +70,10 @@ void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, con
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
-
 }
 
 void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Build Ended!"));
 }

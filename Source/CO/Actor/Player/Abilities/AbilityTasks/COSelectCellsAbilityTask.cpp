@@ -178,6 +178,26 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 	RaycastWithRectangle(SelectionStartedLocation, CurrentMousePositionHitResult.Location, OutHits);
 	HandleActorComponentSelection(OutHits);
 	CollectSelectionData();
+	Validate();
+}
+
+void UCOSelectCellsAbilityTask::Validate() 
+{
+	bool valid = true;
+
+	if (!_SelectionDTO->HasExtreme) {
+		valid = false;
+	}
+
+	for (auto Cell :  _SelectedCells)
+	{
+		if (Cell->IsOccupied) {
+			Cell->SetValid(false);
+		}
+		else {
+			Cell->SetValid(valid);
+		}
+	}
 }
 
 void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)

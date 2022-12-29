@@ -16,13 +16,17 @@ public:
 	UCOStreetCellComponent();
 
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
+	void SetOccupied(bool Value);
+
+	UFUNCTION()
 	void SetSelected(bool Value);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void SetValid(bool Value);
 
-	UFUNCTION(BlueprintCallable)
+private:
+	UFUNCTION()
 	void SetVisible(bool Value);
 
 public:

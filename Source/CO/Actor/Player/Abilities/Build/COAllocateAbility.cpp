@@ -6,6 +6,7 @@
 #include "CO/Extensions/GameplayTagExtension.h"
 #include "CO/Game/COConstants.h"
 #include "AbilitySystemComponent.h"
+#include "COBuildAbility.h"
 
 void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -16,6 +17,16 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	_Handle = Handle;
 	_ActorInfo = ActorInfo;
 	_ActivationInfo = ActivationInfo;
+
+	auto context = GetGrantedByEffectContext();
+	auto dto = Cast<UCOBuildDTO>(context.GetSourceObject());
+
+	if (dto) {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Black, dto->Name);
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Black, "dto is null");
+	}
 
 	const auto PlayerController = GetController(ActorInfo);
 	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController);

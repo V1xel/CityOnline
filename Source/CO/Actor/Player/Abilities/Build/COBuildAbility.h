@@ -38,17 +38,18 @@ public:
 
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
 
+public:
+
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> EnableCellAllocationEffect{};
 
-	
+	UPROPERTY(EditAnywhere)
+	UDataTable* BuildingsTable {};
 
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FGameplayTag BuildingTag;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UDataTable* BuildingsTable{};
 private:
+	UPROPERTY()
+	UCOBuildDTO* _BuildDTO;
+
 	FGameplayAbilitySpecHandle _Handle;
 
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
