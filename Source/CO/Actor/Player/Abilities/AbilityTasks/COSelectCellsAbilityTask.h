@@ -63,4 +63,7 @@ protected:
 
 	UPROPERTY()
 	bool _DrawDebugSelection;
+
+	UPROPERTY()
+	bool _TurnOffValidation;
 };
