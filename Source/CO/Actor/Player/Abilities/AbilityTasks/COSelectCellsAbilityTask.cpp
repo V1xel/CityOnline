@@ -149,8 +149,6 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	const double dot2 = FVector::DotProduct(SelectionNormalCorrect, FinalNormal);
 	const FVector FinalFinalNormal = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(dot));
-
 	DrawDebugDirectionalArrow(GetWorld(), -FinalFinalNormal, -FinalFinalNormal * 1000, 2000, FColor::Red, false, -1, 0, 50);
 
 	_SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
@@ -165,6 +163,7 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 {
 	Super::TickTask(DeltaTime);
 
+	
 	FHitResult CurrentMousePositionHitResult;
 	_PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
 
@@ -176,12 +175,12 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 
 void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)
 {
-	Super::ExternalConfirm(bEndTask);
-
 	for (const auto SelectedComponent : _SelectedCells)
 	{
 		SelectedComponent->SetSelected(false);
 	}
+
+	Super::ExternalConfirm(bEndTask);
 }
 
 void UCOSelectCellsAbilityTask::OnDestroy(bool AbilityIsEnding)

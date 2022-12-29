@@ -23,12 +23,12 @@ FGameplayTag UCOGameplayTags::Allocate()
 
 FGameplayTag UCOGameplayTags::AllocateCancel()
 {
-	return FGameplayTag().RequestGameplayTag("Action.Allocate.Cancel");
+	return FGameplayTag().RequestGameplayTag("Cancel.Action.Allocate");
 }
 
 FGameplayTag UCOGameplayTags::AllocateFinished()
 {
-	return FGameplayTag().RequestGameplayTag("Action.Allocate.Finished");
+	return FGameplayTag().RequestGameplayTag("Finished.Action.Allocate");
 }
 
 FGameplayTag UCOGameplayTags::Construct()

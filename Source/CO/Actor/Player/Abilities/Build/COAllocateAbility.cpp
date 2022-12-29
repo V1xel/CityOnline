@@ -15,19 +15,16 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	_ActorInfo = ActorInfo;
 	_ActivationInfo = ActivationInfo;
 
-	if (UCOGameplayTags::Allocate().MatchesTagExact(TriggerEventData->EventTag) && !SelectCellsAbilityTask)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Allocate Activated!"));
-		const auto PlayerController = GetController(ActorInfo);
-		SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController);
-		SelectCellsAbilityTask->SetDrawDebugSelection(true); 
-		SelectCellsAbilityTask->SetMousePositionAsFirstPoint();
-		SelectCellsAbilityTask->ReadyForActivation();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Allocate Activated!"));
+	const auto PlayerController = GetController(ActorInfo);
+	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController);
+	SelectCellsAbilityTask->SetDrawDebugSelection(true);
+	SelectCellsAbilityTask->SetMousePositionAsFirstPoint();
+	SelectCellsAbilityTask->ReadyForActivation();
 
-		FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOAllocateAbility::OnAllocationCanceled);
-		ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateCancel().GetSingleTagContainer(), AllocationCanceledDelegate);
-		AllocateCanceledHandle = AllocationCanceledDelegate.GetHandle();
-	}
+	FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOAllocateAbility::OnAllocationCanceled);
+	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateCancel().GetSingleTagContainer(), AllocationCanceledDelegate);
+	AllocateCanceledHandle = AllocationCanceledDelegate.GetHandle();
 }
 
 void UCOAllocateAbility::OnAllocationCanceled(FGameplayTag Tag, const FGameplayEventData* EventData)
