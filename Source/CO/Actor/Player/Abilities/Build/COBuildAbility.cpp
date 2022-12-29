@@ -35,7 +35,7 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Build OnAllocationFinished!"));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, _BuildDTO->Name);
 	FGameplayEventData BuildEventData = FGameplayEventData();
 	BuildEventData.OptionalObject = EventData->OptionalObject;
 

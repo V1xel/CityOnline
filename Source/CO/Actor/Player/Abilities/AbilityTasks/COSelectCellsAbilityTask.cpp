@@ -4,6 +4,7 @@
 #include "COSelectCellsAbilityTask.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
+#include <CO/Actor/Player/Abilities/Build/COBuildAbility.h>
 
 UCOSelectCellsAbilityTask::UCOSelectCellsAbilityTask()
 {
@@ -12,10 +13,11 @@ UCOSelectCellsAbilityTask::UCOSelectCellsAbilityTask()
 	_DrawDebugSelection = true;
 }
 
-UCOSelectCellsAbilityTask* UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController)
+UCOSelectCellsAbilityTask* UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOBuildDTO* BuildDTO)
 {
 	UCOSelectCellsAbilityTask* Task = NewAbilityTask<UCOSelectCellsAbilityTask>(OwningAbility, TaskInstanceName);
 	Task->_PlayerController = PlayerController;
+	Task->_BuildDTO = BuildDTO;
 	
 	return Task;
 }
@@ -178,15 +180,35 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 	RaycastWithRectangle(SelectionStartedLocation, CurrentMousePositionHitResult.Location, OutHits);
 	HandleActorComponentSelection(OutHits);
 	CollectSelectionData();
-	Validate();
+	ValidateSelectionData();
 }
 
-void UCOSelectCellsAbilityTask::Validate() 
+void UCOSelectCellsAbilityTask::ValidateSelectionData() 
 {
 	bool valid = true;
 
 	if (!_SelectionDTO->HasExtreme) {
 		valid = false;
+	}
+
+	if (_SelectionDTO->Length > _BuildDTO->MaxLength ||
+		_SelectionDTO->Width > _BuildDTO->MaxWidth)
+	{
+		if (_SelectionDTO->Width > _BuildDTO->MaxLength ||
+			_SelectionDTO->Length > _BuildDTO->MaxWidth)
+		{
+			valid = false;
+		}
+	}
+
+	if (_SelectionDTO->Length < _BuildDTO->MinLength ||
+		_SelectionDTO->Width < _BuildDTO->MinWidth)
+	{
+		if (_SelectionDTO->Width < _BuildDTO->MinLength ||
+			_SelectionDTO->Length < _BuildDTO->MinWidth)
+		{
+			valid = false;
+		}
 	}
 
 	for (auto Cell :  _SelectedCells)

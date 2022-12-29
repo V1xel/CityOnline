@@ -23,7 +23,7 @@ class CO_API UCOSelectCellsAbilityTask : public UAbilityTask
 	UCOSelectCellsAbilityTask();
 public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
-	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController);
+	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOBuildDTO* BuildDTO);
 	
 	virtual void ExternalConfirm(bool bEndTask) override;
 
@@ -35,8 +35,6 @@ public:
 protected:
 	virtual void TickTask(float DeltaTime) override;
 
-	void Validate();
-
 	virtual void OnDestroy(bool AbilityIsEnding) override;
 
 	bool RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,	TArray<FHitResult>& OutHits) const;
@@ -44,6 +42,8 @@ protected:
 	void HandleActorComponentSelection(TArray<FHitResult>& HitResults);
 
 	void CollectSelectionData();
+
+	void ValidateSelectionData();
 
 protected:
 	UPROPERTY()
@@ -57,6 +57,9 @@ protected:
 
 	UPROPERTY()
 	UCOSelectionDTO* _SelectionDTO;
+
+	UPROPERTY()
+	UCOBuildDTO* _BuildDTO;
 
 	UPROPERTY()
 	bool _DrawDebugSelection;

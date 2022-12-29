@@ -20,16 +20,8 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 	auto context = GetGrantedByEffectContext();
 	auto dto = Cast<UCOBuildDTO>(context.GetSourceObject());
-
-	if (dto) {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Black, dto->Name);
-	}
-	else {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Black, "dto is null");
-	}
-
 	const auto PlayerController = GetController(ActorInfo);
-	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController);
+	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController, dto);
 	SelectCellsAbilityTask->SetDrawDebugSelection(DebugAllocation);
 	SelectCellsAbilityTask->SetMousePositionAsFirstPoint();
 	SelectCellsAbilityTask->ReadyForActivation();
