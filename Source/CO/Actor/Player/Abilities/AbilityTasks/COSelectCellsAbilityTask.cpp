@@ -104,6 +104,7 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	auto MaximumVertical = _SelectedCells[0]->Vertical;
 	bool HasExtreme = false;
 	bool HasCorner = false;
+	int ExtremeCount = 0;
 
 	FVector SelectionCenter;
 	FVector SelectionNormal;
@@ -130,6 +131,7 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		}
 		if (Cell->IsExtreme)
 		{
+			ExtremeCount++;
 			if (_DrawDebugSelection) {
 				DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 40, FColor::Blue, false, -1, 0, 20);
 			}
@@ -151,11 +153,16 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	if (_DrawDebugSelection) {
 		DrawDebugDirectionalArrow(GetWorld(), SelectionNormalSafe, SelectionCenterCorrect, 2000, FColor::Green, false, -1, 0, 50);
 	}
-
-	const double dot = FVector::DotProduct(SelectionNormalCorrect, FVector::ForwardVector);
-	const FVector FinalNormal = dot * dot > 0.5 ? FVector::ForwardVector : FVector::RightVector;
-	const double dot2 = FVector::DotProduct(SelectionNormalCorrect, FinalNormal);
-	const FVector FinalFinalNormal = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
+	FVector FinalFinalNormal;
+	if (ExtremeCount == 3) {
+		FinalFinalNormal = -SelectionNormalCorrect;
+	}
+	else {
+		const double dot = FVector::DotProduct(SelectionNormalCorrect, FVector::ForwardVector);
+		const FVector FinalNormal = dot * dot > 0.5 ? FVector::ForwardVector : FVector::RightVector;
+		const double dot2 = FVector::DotProduct(SelectionNormalCorrect, FinalNormal);
+		FinalFinalNormal = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
+	}
 
 	if (_DrawDebugSelection) {
 		DrawDebugDirectionalArrow(GetWorld(), -FinalFinalNormal, -FinalFinalNormal * 1000, 2000, FColor::Red, false, -1, 0, 50);
@@ -186,6 +193,10 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 void UCOSelectCellsAbilityTask::ValidateSelectionData() 
 {
 	bool valid = true;
+
+	if (!_BuildDTO && _DrawDebugSelection) {
+		return;
+	}
 
 	if (!_SelectionDTO->HasExtreme) {
 		valid = false;
