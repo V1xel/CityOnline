@@ -220,6 +220,8 @@ void UCOSelectCellsAbilityTask::ValidateSelectionData()
 			Cell->SetValid(valid);
 		}
 	}
+
+	_SelectionDTO->IsValid = valid;
 }
 
 void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)
