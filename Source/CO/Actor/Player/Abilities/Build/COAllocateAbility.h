@@ -16,7 +16,7 @@ UCLASS(Abstract, Blueprintable)
 class CO_API UCOAllocateAbility : public UCOGameplayAbilityBase
 {
 	GENERATED_BODY()
-
+public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
@@ -26,11 +26,17 @@ class CO_API UCOAllocateAbility : public UCOGameplayAbilityBase
 
 	void OnAllocationCanceled(FGameplayTag Tag, const FGameplayEventData* EventData);
 
+
+public:
+	UPROPERTY(EditAnywhere)
+	bool DebugAllocation;
+
 protected:
 	UPROPERTY()
 	UCOSelectCellsAbilityTask* SelectCellsAbilityTask;
 
 	FDelegateHandle AllocateCanceledHandle;
+
 
 private:
 	FGameplayAbilitySpecHandle _Handle;

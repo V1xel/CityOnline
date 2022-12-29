@@ -19,7 +19,7 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 	const auto PlayerController = GetController(ActorInfo);
 	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController);
-	SelectCellsAbilityTask->SetDrawDebugSelection(true);
+	SelectCellsAbilityTask->SetDrawDebugSelection(DebugAllocation);
 	SelectCellsAbilityTask->SetMousePositionAsFirstPoint();
 	SelectCellsAbilityTask->ReadyForActivation();
 

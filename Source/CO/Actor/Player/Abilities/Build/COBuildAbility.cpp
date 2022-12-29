@@ -18,10 +18,11 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	_ActorInfo = ActorInfo;
 	_ActivationInfo = ActivationInfo;
 	BuildingTag = TriggerEventData->InstigatorTags.First();
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Build Started!"));
 
 	FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), AllocationCanceledDelegate);
+
+	_AllocationEffectHandle = ActorInfo->AbilitySystemComponent->ApplyGameplayEffectToSelf(EnableCellAllocationEffect.GetDefaultObject(), 0, FGameplayEffectContextHandle());
 }
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
@@ -29,11 +30,13 @@ void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEven
 	FGameplayEventData BuildEventData = FGameplayEventData();
 	BuildEventData.OptionalObject = EventData->OptionalObject;
 
+	_ActorInfo->AbilitySystemComponent->RemoveActiveGameplayEffect(_AllocationEffectHandle);
 	auto BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
-	auto BuildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
-	BuildEventData.OptionalObject2 = BuildingSpecialization.ToDTO();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, BuildingName);
+	//auto BuildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
+	//BuildEventData.OptionalObject2 = BuildingSpecialization.ToDTO();
 	
-	SendGameplayEvent(UCOGameplayTags::Construct(), BuildEventData);
+	//SendGameplayEvent(UCOGameplayTags::Construct(), BuildEventData);
 
 	EndAbility(_Handle, _ActorInfo, _ActivationInfo, false, false);
 }

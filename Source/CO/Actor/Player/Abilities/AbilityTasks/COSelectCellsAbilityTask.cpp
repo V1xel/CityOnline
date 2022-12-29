@@ -35,9 +35,9 @@ bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVe
 	const FCollisionShape CollisionBox = FCollisionShape::MakeBox(Extent);
 	const FVector Center = (RectangleEnd + RectangleStart) / 2;
 
-
-	DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 10);
-
+	if (_DrawDebugSelection) {
+		DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 10);
+	}
 
 	return GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
 }
@@ -107,7 +107,9 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	FVector SelectionNormal;
 	for (auto Cell : _SelectedCells)
 	{
-		DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 20, FColor::Yellow, false, -1, 0, 20);
+		if (_DrawDebugSelection) {
+			DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 20, FColor::Yellow, false, -1, 0, 20);
+		}
 		if(MinimumHorizontal > Cell->Horizontal)
 		{
 			MinimumHorizontal = Cell->Horizontal;
@@ -126,7 +128,9 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		}
 		if (Cell->IsExtreme)
 		{
-			DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 40, FColor::Blue, false, -1, 0, 20);
+			if (_DrawDebugSelection) {
+				DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 40, FColor::Blue, false, -1, 0, 20);
+			}
 			SelectionNormal = SelectionNormal - Cell->GetComponentLocation();
 			HasExtreme = true;
 		}
@@ -142,14 +146,18 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	const FVector SelectionNormalSafe = SelectionNormal.GetSafeNormal2D();
 	const FVector SelectionNormalCorrect = (SelectionCenterCorrect - SelectionNormalSafe).GetSafeNormal2D();
 
-	DrawDebugDirectionalArrow(GetWorld(), SelectionNormalSafe, SelectionCenterCorrect, 2000, FColor::Green, false, -1, 0, 50);
+	if (_DrawDebugSelection) {
+		DrawDebugDirectionalArrow(GetWorld(), SelectionNormalSafe, SelectionCenterCorrect, 2000, FColor::Green, false, -1, 0, 50);
+	}
 
 	const double dot = FVector::DotProduct(SelectionNormalCorrect, FVector::ForwardVector);
 	const FVector FinalNormal = dot * dot > 0.5 ? FVector::ForwardVector : FVector::RightVector;
 	const double dot2 = FVector::DotProduct(SelectionNormalCorrect, FinalNormal);
 	const FVector FinalFinalNormal = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
 
-	DrawDebugDirectionalArrow(GetWorld(), -FinalFinalNormal, -FinalFinalNormal * 1000, 2000, FColor::Red, false, -1, 0, 50);
+	if (_DrawDebugSelection) {
+		DrawDebugDirectionalArrow(GetWorld(), -FinalFinalNormal, -FinalFinalNormal * 1000, 2000, FColor::Red, false, -1, 0, 50);
+	}
 
 	_SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
 	_SelectionDTO->Center = SelectionCenterCorrect;
@@ -163,7 +171,6 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 {
 	Super::TickTask(DeltaTime);
 
-	
 	FHitResult CurrentMousePositionHitResult;
 	_PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
 

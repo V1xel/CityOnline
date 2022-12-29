@@ -37,6 +37,11 @@ public:
 							bool bWasCancelled) override;
 
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
+
+	TSubclassOf<UGameplayEffect> EnableCellAllocationEffect{};
+
+	
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGameplayTag BuildingTag;
@@ -45,6 +50,8 @@ protected:
 	UDataTable* BuildingsTable{};
 private:
 	FGameplayAbilitySpecHandle _Handle;
+
+	FActiveGameplayEffectHandle _AllocationEffectHandle;
 
 	const FGameplayAbilityActorInfo* _ActorInfo;
 
