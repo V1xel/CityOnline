@@ -9,14 +9,16 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class CO_API UCOSelectionDTO : public UObject
 {
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(BlueprintReadOnly)
 	int Length;
 
+	UPROPERTY(BlueprintReadOnly)
 	int Width;
 
 	bool HasCorner = false;
