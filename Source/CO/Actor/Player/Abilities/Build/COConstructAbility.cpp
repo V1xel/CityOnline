@@ -21,7 +21,7 @@ void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 
 	if (SelectionDTO && BuildDTO) {
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Construct Started!"));
-		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(ACOBuildingActor::StaticClass(), FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
+		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActor, FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
 		Construction->BuildingAsset = FindBestAsset(SelectionDTO, BuildDTO);
 		Construction->Floor = 1;
 		Construction->ComposeBuilding();

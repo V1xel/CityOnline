@@ -8,6 +8,7 @@
 #include "COAllocateAbility.generated.h"
 
 class UCOSelectCellsAbilityTask;
+class UCOSelectionDTO;
 
 /**
  * 
@@ -26,6 +27,7 @@ public:
 
 	void OnAllocationCanceled(FGameplayTag Tag, const FGameplayEventData* EventData);
 
+	void NotifyAllocationUpdated(UCOSelectionDTO* SelectionDTO);
 
 public:
 	UPROPERTY(EditAnywhere)

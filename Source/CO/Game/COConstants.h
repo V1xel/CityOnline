@@ -30,6 +30,8 @@ public:
 
 	static FGameplayTag AllocateFinished();
 
+	static FGameplayTag UpdatedAllocation();
+
 	static FGameplayTag Construct();
 
 	static FGameplayTag ConstructCancel();

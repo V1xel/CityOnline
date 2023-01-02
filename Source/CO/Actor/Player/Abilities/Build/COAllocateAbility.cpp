@@ -44,6 +44,13 @@ void UCOAllocateAbility::OnAllocationCanceled(FGameplayTag Tag, const FGameplayE
 	EndAbility(_Handle, _ActorInfo, _ActivationInfo, false, false);
 }
 
+void UCOAllocateAbility::NotifyAllocationUpdated(UCOSelectionDTO* SelectionDTO)
+{
+	auto Data = FGameplayEventData();
+	Data.OptionalObject = SelectionDTO;
+	SendGameplayEvent(UCOGameplayTags::UpdatedAllocation(), Data);
+}
+
 void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {

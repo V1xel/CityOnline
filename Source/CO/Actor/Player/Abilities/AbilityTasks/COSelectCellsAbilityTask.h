@@ -11,6 +11,7 @@ class UCOStreetCellComponent;
 class ACOPlayerController;
 class UCOBuildingDetails;
 class UCOSelectionDTO;
+class UCOAllocateAbility;
 
 /**
  * 
@@ -23,7 +24,7 @@ class CO_API UCOSelectCellsAbilityTask : public UAbilityTask
 	UCOSelectCellsAbilityTask();
 public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
-	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOBuildDTO* BuildDTO);
+	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UCOAllocateAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOBuildDTO* BuildDTO);
 	
 	virtual void ExternalConfirm(bool bEndTask) override;
 
@@ -45,6 +46,8 @@ protected:
 
 	void ValidateSelectionData();
 
+	void NotifyAllocationUpdated();
+
 protected:
 	UPROPERTY()
 	FVector SelectionStartedLocation{};
@@ -60,6 +63,9 @@ protected:
 
 	UPROPERTY()
 	UCOBuildDTO* _BuildDTO;
+
+	UPROPERTY()
+	TWeakObjectPtr<UCOAllocateAbility> _OwningAbility;
 
 	UPROPERTY()
 	bool _DrawDebugSelection;

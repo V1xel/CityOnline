@@ -4,7 +4,9 @@
 #include "COSelectCellsAbilityTask.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
-#include <CO/Actor/Player/Abilities/Build/COBuildAbility.h>
+#include "CO/Actor/Player/Abilities/Build/COBuildAbility.h"
+#include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
+#include <CO/Game/COConstants.h>
 
 UCOSelectCellsAbilityTask::UCOSelectCellsAbilityTask()
 {
@@ -13,9 +15,10 @@ UCOSelectCellsAbilityTask::UCOSelectCellsAbilityTask()
 	_DrawDebugSelection = true;
 }
 
-UCOSelectCellsAbilityTask* UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(UGameplayAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOBuildDTO* BuildDTO)
+UCOSelectCellsAbilityTask* UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(UCOAllocateAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOBuildDTO* BuildDTO)
 {
-	UCOSelectCellsAbilityTask* Task = NewAbilityTask<UCOSelectCellsAbilityTask>(OwningAbility, TaskInstanceName);
+	UCOSelectCellsAbilityTask* Task = NewAbilityTask<UCOSelectCellsAbilityTask>(Cast<UGameplayAbility>(OwningAbility), TaskInstanceName);
+	Task->_OwningAbility = OwningAbility;
 	Task->_PlayerController = PlayerController;
 	Task->_BuildDTO = BuildDTO;
 	
@@ -188,6 +191,7 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 	HandleActorComponentSelection(OutHits);
 	CollectSelectionData();
 	ValidateSelectionData();
+	NotifyAllocationUpdated();
 }
 
 void UCOSelectCellsAbilityTask::ValidateSelectionData() 
@@ -233,6 +237,14 @@ void UCOSelectCellsAbilityTask::ValidateSelectionData()
 	}
 
 	_SelectionDTO->IsValid = valid;
+}
+
+void UCOSelectCellsAbilityTask::NotifyAllocationUpdated()
+{
+	auto ability = _OwningAbility.Get();
+	if (ability != nullptr) {
+		ability->NotifyAllocationUpdated(_SelectionDTO);
+	}
 }
 
 void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)

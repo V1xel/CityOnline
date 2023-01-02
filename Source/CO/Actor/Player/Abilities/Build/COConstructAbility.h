@@ -41,4 +41,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCORootAsset* RootAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ACOBuildingActor> BuildingActor;
 };

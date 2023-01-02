@@ -31,6 +31,11 @@ FGameplayTag UCOGameplayTags::AllocateFinished()
 	return FGameplayTag().RequestGameplayTag("Finished.Action.Allocate");
 }
 
+FGameplayTag UCOGameplayTags::UpdatedAllocation()
+{
+	return FGameplayTag().RequestGameplayTag("Updated.Allocation");
+}
+
 FGameplayTag UCOGameplayTags::Construct()
 {
 	return FGameplayTag().RequestGameplayTag("Action.Construct");
@@ -50,3 +55,5 @@ FGameplayTag UCOGameplayTags::ConstructFinished()
 {
 	return FGameplayTag().RequestGameplayTag("Action.Construct.Finished");
 }
+
+
