@@ -23,7 +23,6 @@ void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	if (SelectionDTO && BuildDTO) {
 		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActor, FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
 		Construction->BuildingAsset = FindBestAsset(SelectionDTO, BuildDTO);
-		Construction->Floor = 1;
 		Construction->ComposeBuilding();
 		Construction->FinishSpawning(FTransform());
 		Construction->SetActorLocationAndRotation(SelectionDTO->Center, SelectionDTO->Rotation + Construction->BuildingAsset->RotationOffset);

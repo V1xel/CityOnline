@@ -28,16 +28,15 @@ void ACOBuildingActor::ApplyChanges()
 
 void ACOBuildingActor::RemoveActor()
 {
+	Meshes.Empty();
+	Destroy();
 }
 
 void ACOBuildingActor::ComposeBuilding()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("ComposeBuilding!"));
-	auto floors = 4;
-	for (auto Mesh : Meshes)
-	{
-		Mesh->DestroyComponent();
-	}
+	auto floors = Configuration->Floors;
+	Meshes.Empty();
 	for (size_t i = 0; i <= floors; i++)
 	{
 		auto Mesh = Cast<UStaticMeshComponent>(AddComponentByClass(UStaticMeshComponent::StaticClass(), false, FTransform::Identity, false));
