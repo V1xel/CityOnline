@@ -37,6 +37,9 @@ public:
 
 	UCOBuildingAsset* FindBestAsset(const UCOSelectionDTO* SelectionDTO,const UCOBuildDTO* BuildDTO);
 public:
+	UPROPERTY()
+	UCOSelectionDTO* SelectionDTOT;
+
 	ACOBuildingActor* Construction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -13,29 +13,26 @@ ACOBuildingActor::ACOBuildingActor()
 
 void ACOBuildingActor::ApplyChanges()
 {
-	AbilitySystemComponent->OnGameplayEffectAppliedDelegateToTarget.AddLambda([&](
-		UAbilitySystemComponent* Target,
-		const FGameplayEffectSpec& SpecApplied,
-		FActiveGameplayEffectHandle ActiveHandle)
-	{
-		for (auto Attribute : SpecApplied.ModifiedAttributes)
-		{
-			auto value = Attribute.Attribute.GetNumericValue(BuildingAttributeSet);
-		}
-		
-	});
+	RemoveActor();
+	ComposeBuilding();
 }
 
 void ACOBuildingActor::RemoveActor()
 {
-	Meshes.Empty();
-	Destroy();
+	for (auto mesh : Meshes)
+	{
+		mesh->DestroyComponent();
+	}
 }
 
 void ACOBuildingActor::ComposeBuilding()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("ComposeBuilding!"));
-	auto floors = Configuration->Floors;
+	int floors = 2;
+	if (Configuration) {
+		floors = Configuration->Floors;
+	}
+	
 	Meshes.Empty();
 	for (size_t i = 0; i <= floors; i++)
 	{
@@ -56,6 +53,7 @@ void ACOBuildingActor::ComposeBuilding()
 	auto Roof = Cast<UStaticMeshComponent>(AddComponentByClass(UStaticMeshComponent::StaticClass(), false, FTransform::Identity, false));
 	Roof->SetStaticMesh(BuildingAsset->Roof);
 	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (floors - 1)));
+	Meshes.Add(Roof);
 }
 
 void ACOBuildingActor::SelectActor_Implementation()

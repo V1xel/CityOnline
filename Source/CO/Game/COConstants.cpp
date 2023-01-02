@@ -41,6 +41,11 @@ FGameplayTag UCOGameplayTags::UpdatedAllocation()
 	return FGameplayTag().RequestGameplayTag("Updated.Allocation");
 }
 
+FGameplayTag UCOGameplayTags::UpdatedConfiguration()
+{
+	return FGameplayTag().RequestGameplayTag("Updated.Configuration");
+}
+
 FGameplayTag UCOGameplayTags::Construct()
 {
 	return FGameplayTag().RequestGameplayTag("Action.Construct");

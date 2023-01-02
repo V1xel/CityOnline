@@ -15,4 +15,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Floors = 2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Quality;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Style = 2;
 };

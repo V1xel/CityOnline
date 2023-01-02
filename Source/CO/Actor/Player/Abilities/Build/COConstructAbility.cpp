@@ -13,19 +13,19 @@
 
 void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	//FGameplayEventTagMulticastDelegate::FDelegate ConstructConfigurateDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOConstructAbility::OnConstructConfigurate);
-	//ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), ConstructConfigurateDelegate);
+	FGameplayEventTagMulticastDelegate::FDelegate ConstructConfigurateDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOConstructAbility::OnConstructConfigurate);
+	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::UpdatedConfiguration().GetSingleTagContainer(), ConstructConfigurateDelegate);
 
-	auto SelectionDTO = Cast<UCOSelectionDTO>(TriggerEventData->OptionalObject);
+	SelectionDTOT = Cast<UCOSelectionDTO>(TriggerEventData->OptionalObject);
 	auto BuildDTO = Cast<UCOBuildDTO>(TriggerEventData->OptionalObject2);
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Construct ActivateAbility!"));
 
-	if (SelectionDTO && BuildDTO) {
-		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActor, FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
-		Construction->BuildingAsset = FindBestAsset(SelectionDTO, BuildDTO);
+	if (SelectionDTOT && BuildDTO) {
+		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActor, FTransform(SelectionDTOT->Rotation, SelectionDTOT->Center));
+		Construction->BuildingAsset = FindBestAsset(SelectionDTOT, BuildDTO);
 		Construction->ComposeBuilding();
 		Construction->FinishSpawning(FTransform());
-		Construction->SetActorLocationAndRotation(SelectionDTO->Center, SelectionDTO->Rotation + Construction->BuildingAsset->RotationOffset);
+		Construction->SetActorLocationAndRotation(SelectionDTOT->Center, SelectionDTOT->Rotation + Construction->BuildingAsset->RotationOffset);
 
 		auto Data = FGameplayEventData();
 		Data.OptionalObject = Construction;
@@ -79,6 +79,7 @@ void UCOConstructAbility::OnConstructConfigurate(FGameplayTag Tag, const FGamepl
 {
 	if (Construction && EventData && EventData->OptionalObject) {
 		Construction->Configuration = Cast<UCOConstructionDTO>(EventData->OptionalObject);
-		//Construction->ApplyChanges();
+		Construction->ApplyChanges();
+		Construction->SetActorLocationAndRotation(SelectionDTOT->Center, SelectionDTOT->Rotation + Construction->BuildingAsset->RotationOffset);
 	}
 }

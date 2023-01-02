@@ -34,6 +34,8 @@ public:
 
 	static FGameplayTag UpdatedAllocation();
 
+	static FGameplayTag UpdatedConfiguration();
+
 	static FGameplayTag Construct();
 
 	static FGameplayTag ConstructCancel();
