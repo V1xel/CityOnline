@@ -17,9 +17,7 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	ACOPlayerController* PlayerController = GetController(ActorInfo);
 	const auto SelectedActor = PlayerController->GetSelectedActor();
 	
-	FHitResult HitResult;
-	PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
-	AActor* HitActor = HitResult.GetActor();
+	AActor* HitActor = Cast<AActor>(TriggerEventData->OptionalObject);
 	if(HitActor && HitActor != SelectedActor && HitActor->Implements<UCOSelectableActor>())
 	{
 		auto AbilitySystem = Cast<UAbilitySystemComponent>(HitActor->GetComponentByClass(UAbilitySystemComponent::StaticClass()));

@@ -18,6 +18,8 @@ class CO_API UCOGameplayTags : public UObject
 	
 
 public:
+	static FGameplayTag Select();
+
 	static FGameplayTag Build();
 
 	static FGameplayTag BuildCancel();

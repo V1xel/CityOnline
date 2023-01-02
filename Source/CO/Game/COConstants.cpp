@@ -1,6 +1,11 @@
 #include "COConstants.h"
 #include "GameplayTagContainer.h"
 
+FGameplayTag UCOGameplayTags::Select()
+{
+	return FGameplayTag().RequestGameplayTag("Action.Select");
+}
+
 FGameplayTag UCOGameplayTags::Build()
 {
 	return FGameplayTag().RequestGameplayTag("Action.Build");

@@ -27,6 +27,10 @@ void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 		Construction->ComposeBuilding();
 		Construction->FinishSpawning(FTransform());
 		Construction->SetActorLocationAndRotation(SelectionDTO->Center, SelectionDTO->Rotation + Construction->BuildingAsset->RotationOffset);
+
+		auto Data = FGameplayEventData();
+		Data.OptionalObject = Construction;
+		SendGameplayEvent(UCOGameplayTags::Select(), Data);
 	}
 }
 
