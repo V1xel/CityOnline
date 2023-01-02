@@ -18,9 +18,9 @@ void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 
 	auto SelectionDTO = Cast<UCOSelectionDTO>(TriggerEventData->OptionalObject);
 	auto BuildDTO = Cast<UCOBuildDTO>(TriggerEventData->OptionalObject2);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Construct ActivateAbility!"));
 
 	if (SelectionDTO && BuildDTO) {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Construct Started!"));
 		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActor, FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
 		Construction->BuildingAsset = FindBestAsset(SelectionDTO, BuildDTO);
 		Construction->Floor = 1;
@@ -80,6 +80,6 @@ void UCOConstructAbility::OnConstructConfigurate(FGameplayTag Tag, const FGamepl
 {
 	if (Construction && EventData && EventData->OptionalObject) {
 		Construction->Configuration = Cast<UCOConstructionDTO>(EventData->OptionalObject);
-		Construction->ApplyChanges();
+		//Construction->ApplyChanges();
 	}
 }

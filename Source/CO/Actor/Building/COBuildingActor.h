@@ -26,7 +26,7 @@ public:
 
 	void RemoveActor();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void ComposeBuilding();
 
 	virtual void SelectActor_Implementation() override;

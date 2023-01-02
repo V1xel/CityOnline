@@ -33,7 +33,6 @@ void ACOBuildingActor::RemoveActor()
 void ACOBuildingActor::ComposeBuilding()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("ComposeBuilding!"));
-//	auto Test = OverrideConfiguration.GetDefaultObject();
 	auto floors = 4;
 	for (auto Mesh : Meshes)
 	{
