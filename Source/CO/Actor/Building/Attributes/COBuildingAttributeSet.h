@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/AbilitySystem/COAttributeSetBase.h"
+#include "CO/Core/AbilitySystem/COAttributeSetBase.h"
 #include "COBuildingAttributeSet.generated.h"
 
 /**

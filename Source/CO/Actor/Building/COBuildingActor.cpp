@@ -3,7 +3,7 @@
 
 #include "COBuildingActor.h"
 #include "CO/Database/Assets/COBuildingAsset.h"
-#include "CO/AbilitySystem/COAbilitySystemComponent.h"
+#include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 #include "CO/Actor/Player/Abilities/DTO/COConstructionDTO.h"
 
 // Sets default values

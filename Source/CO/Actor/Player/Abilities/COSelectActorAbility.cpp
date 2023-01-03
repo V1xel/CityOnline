@@ -6,7 +6,7 @@
 #include "CO/Actor/Interfaces/COSelectableActor.h"
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Actor/Player/COPlayerController.h"
-#include "CO/AbilitySystem/COAbilitySystemComponent.h"
+#include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 
 void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                             const FGameplayAbilityActorInfo* ActorInfo,

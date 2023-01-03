@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/AbilitySystem/COGameplayAbilityBase.h"
+#include "CO/Core/AbilitySystem/COGameplayAbilityBase.h"
 #include "CO/Database/Tables/COBuildingTable.h"
 #include "COBuildAbility.generated.h"
 

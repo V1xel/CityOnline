@@ -7,7 +7,7 @@
 #include "CO/Actor/Player/COPlayerState.h"
 #include "CO/Extensions/GameplayTagExtension.h"
 #include "CO/Actor/Player/Abilities/AbilityTasks/COSelectCellsAbilityTask.h"
-#include "CO/Game/COConstants.h"
+#include "CO/Core/COConstants.h"
 #include "CO/Extensions/GameplayTagExtension.h"
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

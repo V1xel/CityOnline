@@ -4,9 +4,8 @@
 #include "COCharacterBase.h"
 
 #include "AIController.h"
-#include "CO/Actor/AI/COAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "CO/AbilitySystem/COAbilitySystemComponent.h"
+#include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 
 ACOCharacterBase::ACOCharacterBase()
 {
@@ -18,14 +17,12 @@ void ACOCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
 
 void ACOCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	AbilitySystemComponent->RefreshAbilityActorInfo();
 }
 
 UAbilitySystemComponent* ACOCharacterBase::GetAbilitySystemComponent() const

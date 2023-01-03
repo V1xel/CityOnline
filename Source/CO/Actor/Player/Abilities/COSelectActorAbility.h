@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/AbilitySystem/COGameplayAbilityBase.h"
+#include "CO/Core/AbilitySystem/COGameplayAbilityBase.h"
 #include "COSelectActorAbility.generated.h"
 
 /**

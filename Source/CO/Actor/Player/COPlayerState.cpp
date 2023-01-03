@@ -2,7 +2,7 @@
 
 
 #include "CO/Actor/Player/COPlayerState.h"
-#include "CO/AbilitySystem/COAbilitySystemComponent.h"
+#include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 
 ACOPlayerState::ACOPlayerState()
 {

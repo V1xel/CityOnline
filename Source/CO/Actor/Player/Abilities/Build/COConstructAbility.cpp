@@ -7,7 +7,7 @@
 #include "CO/Actor/Building/COBuildingActor.h"
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Database/Assets/CORootAsset.h"
-#include "CO/Game/COConstants.h"
+#include "CO/Core/COConstants.h"
 #include "COConstructAbility.h"
 #include "Kismet/GameplayStatics.h"
 
