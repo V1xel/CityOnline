@@ -7,6 +7,10 @@
 
 ACOPlayerController* UCOGameplayAbilityBase::GetController(const FGameplayAbilityActorInfo* ActorInfo) const
 {
+	if (ActorInfo->PlayerController == nullptr) {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("ActorInfo->PlayerController is null. Possibly InitAbilityActorInfo was not called."));
+	}
+
 	return Cast<ACOPlayerController>(ActorInfo->PlayerController);
 }
 

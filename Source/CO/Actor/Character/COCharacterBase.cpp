@@ -17,12 +17,14 @@ void ACOCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
 
 void ACOCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	AbilitySystemComponent->RefreshAbilityActorInfo();
 }
 
 UAbilitySystemComponent* ACOCharacterBase::GetAbilitySystemComponent() const
