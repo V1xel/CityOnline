@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Core/Actor/Character/COCharacterBase.h"
+#include "CO/Core/Actor/Player/COPlayerCharacterBase.h"
 #include "COPlayerCharacter.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
 
 UCLASS()
-class CO_API ACOPlayerCharacter : public ACOCharacterBase
+class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
 {
 	GENERATED_BODY()
 

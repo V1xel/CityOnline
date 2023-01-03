@@ -43,4 +43,8 @@ public:
 	static FGameplayTag ConstructConfigurate();
 
 	static FGameplayTag ConstructFinished();
+
+	static FGameplayTag ActorSelected();
+
+	static FGameplayTag ActorDeselected();
 };

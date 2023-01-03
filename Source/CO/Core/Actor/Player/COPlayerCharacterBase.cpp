@@ -7,27 +7,27 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 
-ACOCharacterBase::ACOCharacterBase()
+ACOPlayerCharacterBase::ACOPlayerCharacterBase()
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UCOAbilitySystemComponent>("AbilitySystem");
 	AttributeSetBase = CreateDefaultSubobject<UCOPlayerAttributeSet>(TEXT("AttributeSetBase"));
 }
 
-void ACOCharacterBase::BeginPlay()
+void ACOPlayerCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
 
-void ACOCharacterBase::PossessedBy(AController* NewController)
+void ACOPlayerCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
 	AbilitySystemComponent->RefreshAbilityActorInfo();
 }
 
-UAbilitySystemComponent* ACOCharacterBase::GetAbilitySystemComponent() const
+UAbilitySystemComponent* ACOPlayerCharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }

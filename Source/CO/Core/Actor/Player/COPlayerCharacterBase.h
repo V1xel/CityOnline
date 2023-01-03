@@ -14,12 +14,12 @@ class UCOAbilitySystemComponent;
 class UCOActorSelectionComponent;
 
 UCLASS()
-class CO_API ACOCharacterBase : public ADefaultPawn, public IAbilitySystemInterface
+class CO_API ACOPlayerCharacterBase : public ADefaultPawn, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
-	ACOCharacterBase();
+	ACOPlayerCharacterBase();
 public:
 	bool IsSelected;
 

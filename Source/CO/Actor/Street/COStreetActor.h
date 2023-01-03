@@ -17,7 +17,7 @@ class ACOBuildingActor;
 class UCOStreetCellComponent;
 
 UCLASS()
-class CO_API ACOStreetActor : public AActor, public ICOSelectableActor
+class CO_API ACOStreetActor : public AActor
 {
 	GENERATED_BODY()
 

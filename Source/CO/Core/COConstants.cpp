@@ -66,4 +66,12 @@ FGameplayTag UCOGameplayTags::ConstructFinished()
 	return FGameplayTag().RequestGameplayTag("Action.Construct.Finished");
 }
 
+FGameplayTag UCOGameplayTags::ActorSelected()
+{
+	return FGameplayTag().RequestGameplayTag("Actor.Selected");
+}
 
+FGameplayTag UCOGameplayTags::ActorDeselected()
+{
+	return FGameplayTag().RequestGameplayTag("Actor.Deselected");
+}

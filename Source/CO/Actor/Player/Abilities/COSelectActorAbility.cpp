@@ -7,6 +7,7 @@
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
+#include <CO/Core/COConstants.h>
 
 void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                             const FGameplayAbilityActorInfo* ActorInfo,
@@ -18,7 +19,7 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	const auto SelectedActor = PlayerController->GetSelectedActor();
 	
 	AActor* HitActor = Cast<AActor>(TriggerEventData->OptionalObject);
-	if(HitActor && HitActor != SelectedActor && HitActor->Implements<UCOSelectableActor>())
+	if(HitActor && HitActor != SelectedActor)
 	{
 		auto AbilitySystem = Cast<UAbilitySystemComponent>(HitActor->GetComponentByClass(UAbilitySystemComponent::StaticClass()));
 		static FGameplayTagContainer TargetTags;
@@ -27,13 +28,9 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		if (TargetTags.HasAny(TargetBlockedTags))
 			return;
 
-		ICOSelectableActor::Execute_SelectActor(HitActor);
-		if(SelectedActor)
-		{
-			ICOSelectableActor::Execute_DeselectActor(SelectedActor);
-		}
-
-		PlayerController->SetSelectedActor(HitActor);
+		auto Data = FGameplayEventData();
+		Data.OptionalObject = HitActor;
+		SendGameplayEvent(UCOGameplayTags::ActorSelected(), Data);
 	}
 	
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);

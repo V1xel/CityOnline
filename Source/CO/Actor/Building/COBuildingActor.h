@@ -15,7 +15,7 @@ class UCOConstructionDTO;
 class UCOBuildingAsset;
 
 UCLASS(Blueprintable)
-class CO_API ACOBuildingActor : public AActor, public ICOSelectableActor
+class CO_API ACOBuildingActor : public AActor
 {
 	GENERATED_BODY()
 
