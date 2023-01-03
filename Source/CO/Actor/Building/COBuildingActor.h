@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Attributes/COBuildingAttributeSet.h"
-#include "CO/Actor/Interfaces/COSelectableActor.h"
+#include "CO/Core/Actor/Interfaces/COSelectableActor.h"
 #include "GameFramework/Actor.h"
 #include "COBuildingActor.generated.h"
 

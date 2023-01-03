@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "COCharacterBase.h"
+#include "CO/Core/Actor/Character/COCharacterBase.h"
 #include "COVehicleCharacter.generated.h"
 
 UCLASS()
-class CO_API ACOVehicleCharacter : public ACharacter
+class CO_API ACOVehicleCharacter : public ACOCharacterBase
 {
 	GENERATED_BODY()
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Actor/Character/COCharacterBase.h"
+#include "CO/Core/Actor/Character/COCharacterBase.h"
 #include "COPlayerCharacter.generated.h"
 
 class USpringArmComponent;

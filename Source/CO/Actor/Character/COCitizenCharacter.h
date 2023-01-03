@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "COCharacterBase.h"
+#include "CO/Core/Actor/Character/COCharacterBase.h"
 #include "GameFramework/Character.h"
 #include "COCitizenCharacter.generated.h"
 

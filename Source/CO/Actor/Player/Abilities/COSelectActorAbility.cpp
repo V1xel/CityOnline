@@ -3,7 +3,7 @@
 
 #include "COSelectActorAbility.h"
 
-#include "CO/Actor/Interfaces/COSelectableActor.h"
+#include "CO/Core/Actor/Interfaces/COSelectableActor.h"
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"

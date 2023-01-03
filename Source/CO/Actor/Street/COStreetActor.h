@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Actor/Interfaces/COSelectableActor.h"
+#include "CO/Core/Actor/Interfaces/COSelectableActor.h"
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Database/Enums/COStreetPrestige.h"
 #include "GameFramework/Actor.h"
