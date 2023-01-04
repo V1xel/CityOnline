@@ -3,42 +3,26 @@
 
 #include "COSelectActorAbility.h"
 
-#include "CO/Core/Actor/Interfaces/COSelectableActor.h"
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 #include <CO/Core/COConstants.h>
 
 void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-                                            const FGameplayAbilityActorInfo* ActorInfo,
-                                            const FGameplayAbilityActivationInfo ActivationInfo,
-                                            const FGameplayEventData* TriggerEventData)
+	const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	ACOPlayerController* PlayerController = GetController(ActorInfo);
-	const auto SelectedActor = PlayerController->GetSelectedActor();
-	
-	AActor* HitActor = Cast<AActor>(TriggerEventData->OptionalObject);
-	if(HitActor && HitActor != SelectedActor)
-	{
-		auto AbilitySystem = Cast<UAbilitySystemComponent>(HitActor->GetComponentByClass(UAbilitySystemComponent::StaticClass()));
-		static FGameplayTagContainer TargetTags;
-		TargetTags.Reset();
-		AbilitySystem->GetOwnedGameplayTags(TargetTags);
-		if (TargetTags.HasAny(TargetBlockedTags))
-			return;
 
-		auto Data = FGameplayEventData();
-		Data.OptionalObject = HitActor;
-		SendGameplayEvent(UCOGameplayTags::ActorSelected(), Data);
-	}
-	
+	ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, ActorSelectedEffect, 0);
+	SendGameplayEvent(UCOGameplayTags::ActorSelected(), *TriggerEventData);
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
 
 bool UCOSelectActorAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
-	return true;
+	return !TargetTags->HasAny(TargetBlockedTags);
 }
 
 void UCOSelectActorAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,

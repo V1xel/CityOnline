@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Core/Actor/Character/COCharacterBase.h"
+#include "CO/Core/Actor/Player/COPlayerCharacterBase.h"
 #include "GameFramework/Character.h"
 #include "COCitizenCharacter.generated.h"
 
 UCLASS()
-class CO_API ACOCitizenCharacter : public ACOCharacterBase
+class CO_API ACOCitizenCharacter : public ACharacter
 {
 	GENERATED_BODY()
 

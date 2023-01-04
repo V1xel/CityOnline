@@ -55,15 +55,3 @@ void ACOBuildingActor::ComposeBuilding()
 	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (floors - 1)));
 	Meshes.Add(Roof);
 }
-
-void ACOBuildingActor::SelectActor_Implementation()
-{
-	ICOSelectableActor::SelectActor_Implementation();
-}
-
-void ACOBuildingActor::DeselectActor_Implementation()
-{
-	ICOSelectableActor::DeselectActor_Implementation();
-}
-
-

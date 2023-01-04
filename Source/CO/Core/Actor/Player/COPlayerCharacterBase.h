@@ -6,7 +6,7 @@
 #include "GameFramework/DefaultPawn.h"
 #include "AbilitySystemInterface.h"
 #include "CO/Actor/Player/Attributes/COPlayerAttributeSet.h"
-#include "COCharacterBase.generated.h"
+#include "COPlayerCharacterBase.generated.h"
 
 class UBehaviorTree;
 class AAIController;

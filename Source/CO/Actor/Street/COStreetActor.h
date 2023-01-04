@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Core/Actor/Interfaces/COSelectableActor.h"
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Database/Enums/COStreetPrestige.h"
 #include "GameFramework/Actor.h"
@@ -34,9 +33,6 @@ public:
 	
 	void CommitBuildingTransaction();
 
-	virtual void SelectActor_Implementation() override;
-
-	virtual void DeselectActor_Implementation() override;
 public:
 	UPROPERTY()
 	TArray<UCOStreetCellComponent*> Cells{};

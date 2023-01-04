@@ -4,11 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Attributes/COBuildingAttributeSet.h"
-#include "CO/Core/Actor/Interfaces/COSelectableActor.h"
 #include "GameFramework/Actor.h"
 #include "COBuildingActor.generated.h"
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConfigurationUpdatedDelegate);
 
 class UCOAbilitySystemComponent;
 class UCOConstructionDTO;
@@ -28,10 +25,6 @@ public:
 
 	UFUNCTION()
 	void ComposeBuilding();
-
-	virtual void SelectActor_Implementation() override;
-
-	virtual void DeselectActor_Implementation() override;
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -56,7 +49,4 @@ private:
 	bool IsSelected;
 
 	bool IsEdited;
-
-	UPROPERTY()
-	FOnConfigurationUpdatedDelegate OnConfigurationUpdatedDelegate;
 };

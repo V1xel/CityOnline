@@ -9,7 +9,7 @@
 ACOVehicleCharacter::ACOVehicleCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	//AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 // Called when the game starts or when spawned
@@ -25,9 +25,6 @@ void ACOVehicleCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void ACOVehicleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
-

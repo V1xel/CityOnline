@@ -1,8 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "COCharacterBase.h"
-
+#include "COPlayerCharacterBase.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"

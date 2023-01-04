@@ -12,13 +12,3 @@ ACOStreetActor::ACOStreetActor()
 	SceneComponent->SetMobility(EComponentMobility::Static);
 	SetRootComponent(SceneComponent);
 }
-
-void ACOStreetActor::SelectActor_Implementation()
-{
-	ICOSelectableActor::SelectActor_Implementation();
-}
-
-void ACOStreetActor::DeselectActor_Implementation()
-{
-	ICOSelectableActor::DeselectActor_Implementation();
-}
