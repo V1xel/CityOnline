@@ -56,7 +56,7 @@ bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 	}
 
 	auto Controller = GetController(ActorInfo);
-	auto Street = Controller->GetSelectedActor();
+	auto Street = Cast<ACOStreetActor>(Controller->SelectedActor);
 	if (!Street) 
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Build can not be activated. There is no street target.");

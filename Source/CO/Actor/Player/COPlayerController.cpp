@@ -33,5 +33,5 @@ void ACOPlayerController::OnUnPossess()
 
 void ACOPlayerController::OnActorSelected(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	_selectedActor = EventData->Target.Get();
+	SelectedActor = EventData->Target.Get();
 }

@@ -14,8 +14,6 @@ class CO_API ACOPlayerController : public APlayerController
 	ACOPlayerController();
 
 public:
-	const AActor* GetSelectedActor() { return _selectedActor; }
-
 	virtual void OnPossess(APawn* aPawn) override;
 
 	virtual void OnUnPossess() override;
@@ -26,9 +24,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	FGameplayTag ListenActorSelectedTag;
 
-private:
-	UPROPERTY()
-	const AActor* _selectedActor;
+	UPROPERTY(BlueprintReadOnly)
+	const AActor* SelectedActor;
 
+private:
 	FDelegateHandle _actorSelectedHandle;
 };
