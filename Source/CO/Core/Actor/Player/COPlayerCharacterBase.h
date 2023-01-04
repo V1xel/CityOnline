@@ -12,6 +12,8 @@ class UBehaviorTree;
 class AAIController;
 class UCOAbilitySystemComponent;
 class UCOActorSelectionComponent;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class CO_API ACOPlayerCharacterBase : public ADefaultPawn, public IAbilitySystemInterface
@@ -20,18 +22,49 @@ class CO_API ACOPlayerCharacterBase : public ADefaultPawn, public IAbilitySystem
 
 public:
 	ACOPlayerCharacterBase();
-public:
-	bool IsSelected;
 
 	virtual void BeginPlay() override;
 
 	virtual void PossessedBy(AController* NewController) override;
-	
+
+	virtual void Tick(float DeltaTime) override;
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	UCOAbilitySystemComponent* AbilitySystemComponent{};
+	UFUNCTION(BlueprintCallable)
+		void AddForwardMovementInput(float Value);
+
+	UFUNCTION(BlueprintCallable)
+		void AddRightMovementInput(float Value);
+
+	UFUNCTION(BlueprintCallable)
+		void AddCameraYawInput(float Value);
+
+	UFUNCTION(BlueprintCallable)
+		void NavigateOnObject(AActor* object, float zoom);
+
+	UFUNCTION(BlueprintCallable)
+		void ZoomCamera(float Value);
+
+	UFUNCTION(BlueprintCallable)
+		void EnableRotateCamera();
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		USpringArmComponent* SpringArm;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UCameraComponent* Camera;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	UCOPlayerAttributeSet* AttributeSetBase{};
+		UCOAbilitySystemComponent* AbilitySystemComponent {};
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+		UCOPlayerAttributeSet* AttributeSetBase {};
+
+private:
+	bool EnableCameraRotation;
+	float DesiredTargetArmLength;
+
+	float ArmLengthScalingSpeed = 10;
 };
