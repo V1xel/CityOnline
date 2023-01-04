@@ -28,6 +28,9 @@ protected:
 							bool bWasCancelled) override;
 
 public:
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> ActorSelectedEffect;
 
+	UPROPERTY(EditAnywhere)
+	FGameplayTag BroadcastedEventTag;
 };

@@ -4,7 +4,6 @@
 #include "COPlayerController.h"
 #include "CO/Actor/Street/COStreetActor.h"
 #include "CO/Actor/Building/COBuildingActor.h"
-#include "GameplayTags.h"
 
 ACOPlayerController::ACOPlayerController()
 {
@@ -13,36 +12,26 @@ ACOPlayerController::ACOPlayerController()
 	bEnableMouseOverEvents = true;
 }
 
-void ACOPlayerController::SetSelectedActor(AActor* Value)
+void ACOPlayerController::OnPossess(APawn* aPawn)
 {
-	SelectedActor = Value;
+	Super::OnPossess(aPawn);
 
-	const auto Street = Cast<ACOStreetActor>(Value);
-	if (Street)
-	{
-		OnStreetSelected.Broadcast(Street);
-		return;
-	}
-
-	const auto Building = Cast<ACOBuildingActor>(Value);
-	if (Building)
-	{
-		OnBuildingSelected.Broadcast(Building);
-		return;
-	}
+	auto delegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &ACOPlayerController::OnActorSelected);
+	auto pawn = Cast<IAbilitySystemInterface>(aPawn);
+	auto asc = pawn->GetAbilitySystemComponent();
+	_actorSelectedHandle = asc->AddGameplayEventTagContainerDelegate(ListenActorSelectedTag.GetSingleTagContainer(), delegate);
 }
 
-ACOStreetActor* ACOPlayerController::TryGetSelectedStreet()
+void ACOPlayerController::OnUnPossess()
 {
-	return Cast<ACOStreetActor>(SelectedActor);
+	auto pawn = Cast<IAbilitySystemInterface>(GetPawn());
+	auto asc = pawn->GetAbilitySystemComponent();
+	asc->RemoveGameplayEventTagContainerDelegate(ListenActorSelectedTag.GetSingleTagContainer(), _actorSelectedHandle);
+
+	Super::OnUnPossess();
 }
 
-ACOBuildingActor* ACOPlayerController::TryGetSelectedBuilding()
+void ACOPlayerController::OnActorSelected(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	return Cast<ACOBuildingActor>(SelectedActor);
-}
-
-FGameplayTag ACOPlayerController::GetTagFromString(FString TagName)
-{
-	return UGameplayTagsManager::Get().RequestGameplayTag(FName(TagName));
+	_selectedActor = EventData->Target.Get();
 }

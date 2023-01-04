@@ -3,14 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CO/Core/AbilitySystem/COGameplayAbilityBase.h"
 #include "COPlayerController.generated.h"
-
-class ACOStreetActor;
-class ACOBuildingActor;
-struct FGameplayTag;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStreetSelectedDelegate, const ACOStreetActor*, Street);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingSelectedDelegate, const ACOBuildingActor*, Building);
 
 UCLASS()
 class CO_API ACOPlayerController : public APlayerController
@@ -20,29 +14,21 @@ class CO_API ACOPlayerController : public APlayerController
 	ACOPlayerController();
 
 public:
-	AActor* GetSelectedActor() { return SelectedActor; }
+	const AActor* GetSelectedActor() { return _selectedActor; }
 
-	UFUNCTION(BlueprintCallable)
-	ACOStreetActor* TryGetSelectedStreet();
+	virtual void OnPossess(APawn* aPawn) override;
 
-	UFUNCTION(BlueprintCallable)
-	ACOBuildingActor* TryGetSelectedBuilding();
+	virtual void OnUnPossess() override;
 
-	void SetSelectedActor(AActor* Value);;
+	void OnActorSelected(FGameplayTag Tag, const FGameplayEventData* EventData);
 
 public:
-	UPROPERTY(BlueprintAssignable)
-		FOnStreetSelectedDelegate OnStreetSelected {};
-
-	UPROPERTY(BlueprintAssignable)
-		FOnBuildingSelectedDelegate OnBuildingSelected {};
-
-	UFUNCTION(BlueprintPure, BlueprintCallable)
-	static FGameplayTag GetTagFromString(FString TagName);
+	UPROPERTY(EditAnywhere)
+	FGameplayTag ListenActorSelectedTag;
 
 private:
 	UPROPERTY()
-		AActor* SelectedActor;
+	const AActor* _selectedActor;
 
-
+	FDelegateHandle _actorSelectedHandle;
 };

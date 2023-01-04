@@ -6,7 +6,11 @@
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
-#include <CO/Core/COConstants.h>
+
+bool UCOSelectActorAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
+{
+	return !TargetTags->HasAny(TargetBlockedTags);
+}
 
 void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo,
@@ -16,13 +20,8 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, ActorSelectedEffect, 0);
-	SendGameplayEvent(UCOGameplayTags::ActorSelected(), *TriggerEventData);
+	SendGameplayEvent(BroadcastedEventTag, *TriggerEventData);
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
-}
-
-bool UCOSelectActorAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
-{
-	return !TargetTags->HasAny(TargetBlockedTags);
 }
 
 void UCOSelectActorAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
