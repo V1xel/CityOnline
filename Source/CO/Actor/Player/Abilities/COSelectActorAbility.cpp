@@ -19,6 +19,7 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Select Actor ActivateAbility!"));
 	ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, ActorSelectedEffect, 0);
 	SendGameplayEvent(BroadcastedEventTag, *TriggerEventData);
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);

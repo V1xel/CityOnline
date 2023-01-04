@@ -33,5 +33,6 @@ void ACOPlayerController::OnUnPossess()
 
 void ACOPlayerController::OnActorSelected(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Controller Handled Select Actor!"));
 	SelectedActor = EventData->Target.Get();
 }
