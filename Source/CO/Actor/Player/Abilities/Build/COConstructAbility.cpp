@@ -18,7 +18,6 @@ void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 
 	SelectionDTOT = Cast<UCOSelectionDTO>(TriggerEventData->OptionalObject);
 	auto BuildDTO = Cast<UCOBuildDTO>(TriggerEventData->OptionalObject2);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Construct ActivateAbility!"));
 
 	if (SelectionDTOT && BuildDTO) {
 		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActor, FTransform(SelectionDTOT->Rotation, SelectionDTOT->Center));
