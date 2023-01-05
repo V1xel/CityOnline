@@ -24,12 +24,12 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), AllocationCanceledDelegate);
 
-	auto effect = EnableCellAllocationEffect.GetDefaultObject();
-	auto effectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
-	effectContext.AddSourceObject(_BuildDTO);
-	auto effectSpec = FGameplayEffectSpecHandle(new FGameplayEffectSpec(effect, effectContext));
+	auto Effect = EnableCellAllocationEffect.GetDefaultObject();
+	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
+	EffectContext.AddSourceObject(_BuildDTO);
+	auto EffectSpec = FGameplayEffectSpecHandle(new FGameplayEffectSpec(Effect, EffectContext));
 
-	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpec);
+	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, EffectSpec);
 }
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
