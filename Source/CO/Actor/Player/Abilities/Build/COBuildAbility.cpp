@@ -14,13 +14,12 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
-	_Handle = Handle;
-	_ActorInfo = ActorInfo;
-	_ActivationInfo = ActivationInfo;
-	auto buildingTag = TriggerEventData->InstigatorTags.First();
-	auto buildingName = UGameplayTagExtension::GetTagSecondElement(buildingTag);
-	auto buildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(buildingName), "");
-	_BuildDTO = buildingSpecialization.ToDTO();
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	auto BuildingTag = TriggerEventData->InstigatorTags.First();
+	auto BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
+	auto BuildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
+	_BuildDTO = BuildingSpecialization.ToDTO();
 
 	FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), AllocationCanceledDelegate);

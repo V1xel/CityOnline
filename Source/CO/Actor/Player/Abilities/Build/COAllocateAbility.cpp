@@ -14,14 +14,10 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	_Handle = Handle;
-	_ActorInfo = ActorInfo;
-	_ActivationInfo = ActivationInfo;
-
-	auto context = GetGrantedByEffectContext();
-	auto dto = Cast<UCOBuildDTO>(context.GetSourceObject());
+	auto Context = GetGrantedByEffectContext();
+	auto DTO = Cast<UCOBuildDTO>(Context.GetSourceObject());
 	const auto PlayerController = GetPlayerController();
-	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController, dto);
+	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController, DTO);
 	SelectCellsAbilityTask->SetDrawDebugSelection(DebugAllocation);
 	SelectCellsAbilityTask->SetMousePositionAsFirstPoint();
 	SelectCellsAbilityTask->ReadyForActivation();
