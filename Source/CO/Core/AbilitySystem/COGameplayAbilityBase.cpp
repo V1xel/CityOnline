@@ -27,3 +27,11 @@ ACOPlayerCharacter* UCOGameplayAbilityBase::GetOwnerActor(const FGameplayAbility
 {
 	return Cast<ACOPlayerCharacter>(ActorInfo->OwnerActor);
 }
+
+void UCOGameplayAbilityBase::SendGameplayEvents(FGameplayTagContainer TagContainer, FGameplayEventData Payload)
+{
+	for (auto Tag : TagContainer)
+	{
+		SendGameplayEvent(Tag, Payload);
+	}
+}

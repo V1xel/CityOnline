@@ -32,10 +32,6 @@ protected:
 public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> ActorSelectedEffect;
-
-	UPROPERTY(EditAnywhere)
-	FGameplayTag BroadcastedEventTag;
-
 private:
 	FDelegateHandle _actorSelectedHandle;
 };

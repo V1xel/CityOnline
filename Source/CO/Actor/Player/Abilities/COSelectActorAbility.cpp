@@ -24,14 +24,17 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		return;
 	}
 
+	FGameplayTagContainer AbilityGrantedTags;
+	ActorSelectedEffect.GetDefaultObject()->GetOwnedGameplayTags(AbilityGrantedTags);
+
 	auto PreviousTarget = Cast<IAbilitySystemInterface>(GetPlayerController()->SelectedActor);
 	if (PreviousTarget) {
 		auto AbilitySystem = PreviousTarget->GetAbilitySystemComponent();
-		AbilitySystem->RemoveActiveEffectsWithGrantedTags(BroadcastedEventTag.GetSingleTagContainer());
+		AbilitySystem->RemoveActiveEffectsWithGrantedTags(AbilityGrantedTags);
 	}
 
 	ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, ActorSelectedEffect, 0);
-	SendGameplayEvent(BroadcastedEventTag, *TriggerEventData);
+	SendGameplayEvents(AbilityGrantedTags, *TriggerEventData);
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }

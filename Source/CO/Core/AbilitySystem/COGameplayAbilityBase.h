@@ -32,6 +32,8 @@ protected:
 		return Cast<T>(TriggerEventData->OptionalObject);
 	}
 
+	void SendGameplayEvents(FGameplayTagContainer TagContainer, FGameplayEventData Payload);
+
 protected:
 	FGameplayAbilitySpecHandle _Handle;
 	const FGameplayAbilityActorInfo* _ActorInfo;
