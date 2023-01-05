@@ -7,6 +7,8 @@
 
 void UCOCreateStreetCellsAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
 	const auto Owner = Cast<ACOStreetActor>(ActorInfo->OwnerActor);
 	const auto HorizontalOffset = Coverage * Scale.X / (Horizontal - 1);
 	const auto VerticalOffset = Coverage * Scale.Y / (Vertical - 1);

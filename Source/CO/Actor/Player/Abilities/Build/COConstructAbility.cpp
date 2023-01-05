@@ -18,43 +18,47 @@ void UCOConstructAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	FGameplayEventTagMulticastDelegate::FDelegate ConstructConfigurateDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOConstructAbility::OnConstructConfigurate);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::UpdatedConfiguration().GetSingleTagContainer(), ConstructConfigurateDelegate);
 
-	SelectionDTOT = Cast<UCOSelectionDTO>(TriggerEventData->OptionalObject);
-	auto BuildDTO = Cast<UCOBuildDTO>(TriggerEventData->OptionalObject2);
+	FGameplayEventTagMulticastDelegate::FDelegate ConstructFinalizeDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOConstructAbility::OnConstructFinalize);
+	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::UpdatedConfiguration().GetSingleTagContainer(), ConstructFinalizeDelegate);
 
-	if (SelectionDTOT && BuildDTO) {
-		Construction = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActor, FTransform(SelectionDTOT->Rotation, SelectionDTOT->Center));
-		Construction->BuildingAsset = FindBestAsset(SelectionDTOT, BuildDTO);
-		Construction->ComposeBuilding();
-		Construction->FinishSpawning(FTransform());
-		Construction->SetActorLocationAndRotation(SelectionDTOT->Center, SelectionDTOT->Rotation + Construction->BuildingAsset->RotationOffset);
+	_SelectionDTO = Cast<UCOSelectionDTO>(TriggerEventData->OptionalObject);
+	_BuildDTO = Cast<UCOBuildDTO>(TriggerEventData->OptionalObject2);
+
+	if (_SelectionDTO && _BuildDTO) {
+		_Asset = FindBestAsset();
+		_BuildingActor = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(_SelectionDTO->Rotation, _SelectionDTO->Center));
+		_BuildingActor->BuildingAsset = _Asset;
+		_BuildingActor->ComposeBuilding();
+		_BuildingActor->FinishSpawning(FTransform());
+		_BuildingActor->SetActorLocationAndRotation(_SelectionDTO->Center, _SelectionDTO->Rotation + _Asset->RotationOffset);
 
 		auto Data = FGameplayEventData();
-		Data.OptionalObject = Construction;
-		SendGameplayEvent(UCOGameplayTags::Select(), Data);
+		Data.Target = _BuildingActor;
+		SendGameplayEvent(SelectBuildingAfterItIsConstructedTag, Data);
 	}
 }
 
-UCOBuildingAsset* UCOConstructAbility::FindBestAsset(const UCOSelectionDTO* SelectionDTO, const UCOBuildDTO* BuildDTO)
+UCOBuildingAsset* UCOConstructAbility::FindBestAsset()
 {
 	int matchCount = -1;
 	UCOBuildingAsset* BestAsset = nullptr;
 	for (UCOBuildingAsset* Asset : RootAsset->BuildingsAssets)
 	{
 		int currentCount = 0;
-		if (Asset->HasCorner == SelectionDTO->HasCorner)
+		if (Asset->HasCorner == _SelectionDTO->HasCorner)
 		{
 			currentCount++;
 		}
-		if (Asset->IsLiving == BuildDTO->IsLiving ||
-			Asset->IsStore == BuildDTO->IsStore)
+		if (Asset->IsLiving == _BuildDTO->IsLiving ||
+			Asset->IsStore == _BuildDTO->IsStore)
 		{
 			currentCount++;
 		}
-		if (Asset->Width == SelectionDTO->Width || Asset->Width == SelectionDTO->Length)
+		if (Asset->Width == _SelectionDTO->Width || Asset->Width == _SelectionDTO->Length)
 		{
 			currentCount++;
 		}
-		if (Asset->Length == SelectionDTO->Length || Asset->Length == SelectionDTO->Width)
+		if (Asset->Length == _SelectionDTO->Length || Asset->Length == _SelectionDTO->Width)
 		{
 			currentCount++;
 		}
@@ -68,19 +72,25 @@ UCOBuildingAsset* UCOConstructAbility::FindBestAsset(const UCOSelectionDTO* Sele
 	return BestAsset;
 }
 
-void UCOConstructAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
-{
-}
-
 void UCOConstructAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
 void UCOConstructAbility::OnConstructConfigurate(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	if (Construction && EventData && EventData->OptionalObject) {
-		Construction->Configuration = Cast<UCOConstructionDTO>(EventData->OptionalObject);
-		Construction->ApplyChanges();
-		Construction->SetActorLocationAndRotation(SelectionDTOT->Center, SelectionDTOT->Rotation + Construction->BuildingAsset->RotationOffset);
+	if (_BuildingActor && EventData && EventData->Target) {
+		_BuildingActor->Configuration = Cast<UCOConstructionDTO>(EventData->Target);
+		_BuildingActor->ApplyChanges();
+		_BuildingActor->SetActorLocationAndRotation(_SelectionDTO->Center, _SelectionDTO->Rotation + _Asset->RotationOffset);
+	}
+}
+
+void UCOConstructAbility::OnConstructFinalize(FGameplayTag Tag, const FGameplayEventData* EventData)
+{
+	if (_BuildingActor && EventData && EventData->Target) {
+		auto Data = FGameplayEventData();
+		Data.Target = _BuildingActor;
+		SendGameplayEvent(UCOGameplayTags::Select(), Data);
 	}
 }

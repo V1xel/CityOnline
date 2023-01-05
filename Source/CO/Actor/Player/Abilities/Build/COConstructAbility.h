@@ -26,25 +26,44 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
 
-	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
-
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 		bool bWasCancelled) override;
 
 	void OnConstructConfigurate(FGameplayTag Tag, const FGameplayEventData* EventData);
 
-	UCOBuildingAsset* FindBestAsset(const UCOSelectionDTO* SelectionDTO,const UCOBuildDTO* BuildDTO);
+	void OnConstructFinalize(FGameplayTag Tag, const FGameplayEventData* EventData);
+
+	UCOBuildingAsset* FindBestAsset();
 public:
-	UPROPERTY()
-	UCOSelectionDTO* SelectionDTOT;
-
-	ACOBuildingActor* Construction;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCORootAsset* RootAsset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<ACOBuildingActor> BuildingActor;
+	TSubclassOf<ACOBuildingActor> BuildingActorClass;
+
+	UPROPERTY()
+	FGameplayTag ListenBuildingConfigurationUpdatedTag;
+
+	UPROPERTY()
+	FGameplayTag ListenBuildingConfigurationFinalizedTag;
+
+	UPROPERTY()
+	FGameplayTag SelectBuildingAfterItIsConstructedTag;
+
+	UPROPERTY()
+	FGameplayTag OccupyStreetCellsTag;
+
+private:
+	UPROPERTY()
+	UCOSelectionDTO* _SelectionDTO;
+
+	UPROPERTY()
+	UCOBuildDTO* _BuildDTO;
+
+	UPROPERTY()
+	UCOBuildingAsset* _Asset;
+
+	UPROPERTY()
+	ACOBuildingActor* _BuildingActor;
 };
