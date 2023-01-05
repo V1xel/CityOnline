@@ -8,7 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "COStreetActor.generated.h"
 
-
+class UCOAbilitySystemComponent;
 class UCOStreetBuildingComponent;
 class UCOStreetInformationComponent;
 class UCOStreetLeasingComponent;
@@ -16,12 +16,16 @@ class ACOBuildingActor;
 class UCOStreetCellComponent;
 
 UCLASS()
-class CO_API ACOStreetActor : public AActor
+class CO_API ACOStreetActor : public AActor, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
 	ACOStreetActor();
+
+	virtual void BeginPlay() override;
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	void CalculatePotentialOutput();
 
@@ -36,6 +40,10 @@ public:
 public:
 	UPROPERTY()
 	TArray<UCOStreetCellComponent*> Cells{};
+
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UCOAbilitySystemComponent* AbilitySystemComponent {};
 	
 protected:
 	bool IsConstructed;

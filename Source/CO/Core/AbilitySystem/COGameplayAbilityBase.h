@@ -18,7 +18,11 @@ class CO_API UCOGameplayAbilityBase : public UGameplayAbility
 	GENERATED_BODY()
 
 protected:
-	ACOPlayerController* GetController(const FGameplayAbilityActorInfo* ActorInfo) const;
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo,
+		const FGameplayEventData* TriggerEventData) override;
+
+	ACOPlayerController* GetPlayerController() const;
 	
 	ACOPlayerCharacter* GetOwnerActor(const FGameplayAbilityActorInfo* ActorInfo) const;
 	
@@ -27,4 +31,9 @@ protected:
 	{
 		return Cast<T>(TriggerEventData->OptionalObject);
 	}
+
+protected:
+	FGameplayAbilitySpecHandle _Handle;
+	const FGameplayAbilityActorInfo* _ActorInfo;
+	FGameplayAbilityActivationInfo _ActivationInfo;
 };

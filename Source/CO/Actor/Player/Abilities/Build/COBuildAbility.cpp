@@ -55,7 +55,7 @@ bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 		return false;
 	}
 
-	auto Controller = GetController(ActorInfo);
+	auto Controller = GetPlayerController();
 	auto Street = Cast<ACOStreetActor>(Controller->SelectedActor);
 	if (!Street) 
 	{

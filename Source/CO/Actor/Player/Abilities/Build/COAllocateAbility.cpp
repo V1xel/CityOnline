@@ -20,7 +20,7 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 	auto context = GetGrantedByEffectContext();
 	auto dto = Cast<UCOBuildDTO>(context.GetSourceObject());
-	const auto PlayerController = GetController(ActorInfo);
+	const auto PlayerController = GetPlayerController();
 	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController, dto);
 	SelectCellsAbilityTask->SetDrawDebugSelection(DebugAllocation);
 	SelectCellsAbilityTask->SetMousePositionAsFirstPoint();

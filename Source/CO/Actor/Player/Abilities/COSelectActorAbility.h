@@ -27,10 +27,15 @@ protected:
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 							bool bWasCancelled) override;
 
+	void OnAnotherSelectionStarted(FGameplayTag Tag, const FGameplayEventData* EventData);
+
 public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> ActorSelectedEffect;
 
 	UPROPERTY(EditAnywhere)
 	FGameplayTag BroadcastedEventTag;
+
+private:
+	FDelegateHandle _actorSelectedHandle;
 };
