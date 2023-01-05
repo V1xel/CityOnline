@@ -34,7 +34,6 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, _BuildDTO->Name);
 	FGameplayEventData BuildEventData = FGameplayEventData();
 	BuildEventData.OptionalObject = EventData->OptionalObject;
 
@@ -54,7 +53,7 @@ bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 		return false;
 	}
 
-	auto Controller = GetPlayerController();
+	auto Controller = Cast<ACOPlayerController>(ActorInfo->PlayerController);
 	auto Street = Cast<ACOStreetActor>(Controller->SelectedActor);
 	if (!Street) 
 	{

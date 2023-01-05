@@ -50,11 +50,5 @@ private:
 	UPROPERTY()
 	UCOBuildDTO* _BuildDTO;
 
-	FGameplayAbilitySpecHandle _Handle;
-
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
-
-	const FGameplayAbilityActorInfo* _ActorInfo;
-
-	FGameplayAbilityActivationInfo _ActivationInfo;
 };

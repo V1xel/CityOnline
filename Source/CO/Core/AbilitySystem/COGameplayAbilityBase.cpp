@@ -5,7 +5,7 @@
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Actor/Player/COPlayerController.h"
 
-void UCOGameplayAbilityBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UCOGameplayAbilityBase::ActivateAbility(FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
@@ -16,10 +16,6 @@ void UCOGameplayAbilityBase::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 
 ACOPlayerController* UCOGameplayAbilityBase::GetPlayerController() const
 {
-	if (_ActorInfo->PlayerController == nullptr) {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("ActorInfo->PlayerController is null. Possibly InitAbilityActorInfo was not called."));
-	}
-
 	return Cast<ACOPlayerController>(_ActorInfo->PlayerController);
 }
 

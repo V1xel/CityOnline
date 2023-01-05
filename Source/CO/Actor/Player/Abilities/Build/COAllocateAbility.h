@@ -38,12 +38,4 @@ protected:
 	UCOSelectCellsAbilityTask* SelectCellsAbilityTask;
 
 	FDelegateHandle AllocateCanceledHandle;
-
-
-private:
-	FGameplayAbilitySpecHandle _Handle;
-
-	const FGameplayAbilityActorInfo* _ActorInfo; 
-
-	FGameplayAbilityActivationInfo _ActivationInfo;
 };
