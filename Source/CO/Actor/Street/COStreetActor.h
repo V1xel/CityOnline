@@ -9,9 +9,6 @@
 #include "COStreetActor.generated.h"
 
 class UCOAbilitySystemComponent;
-class UCOStreetBuildingComponent;
-class UCOStreetInformationComponent;
-class UCOStreetLeasingComponent;
 class ACOBuildingActor;
 class UCOStreetCellComponent;
 
@@ -48,12 +45,6 @@ public:
 protected:
 	bool IsConstructed;
 	
-	UPROPERTY()
-	UCOStreetInformationComponent* InformationComponent;
-	
-	UPROPERTY()
-	UCOStreetLeasingComponent* LeasingComponent;
-
 	UPROPERTY()
 	USceneComponent* SceneComponent;
 	

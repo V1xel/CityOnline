@@ -5,6 +5,7 @@
 #include "CO/Extensions/GameplayTagExtension.h"
 #include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
 #include "CO/Actor/Player/Abilities/DTO/COBuildDTO.h"
+#include "GameplayTagContainer.h"
 #include "COBuildingTable.generated.h"
 
 USTRUCT()
