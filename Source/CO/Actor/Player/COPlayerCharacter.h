@@ -14,4 +14,17 @@ class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
 public:
 	ACOPlayerCharacter();
 
+	virtual void BeginPlay() override;
+
+	void OnActorSelected(FGameplayTag Tag, const FGameplayEventData* EventData);
+
+public:
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTag ListenActorSelectedTag;
+
+	UPROPERTY(BlueprintReadOnly)
+	AActor* SelectedActor;
+private:
+	FDelegateHandle _actorSelectedHandle;
 };

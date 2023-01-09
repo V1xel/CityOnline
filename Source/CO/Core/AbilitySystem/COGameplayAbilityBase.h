@@ -23,6 +23,8 @@ protected:
 		const FGameplayEventData* TriggerEventData) override;
 
 	ACOPlayerController* GetPlayerController() const;
+
+	ACOPlayerCharacter* GetOwnerCharacter() const; 
 	
 	ACOPlayerCharacter* GetOwnerActor(const FGameplayAbilityActorInfo* ActorInfo) const;
 	
@@ -38,4 +40,5 @@ protected:
 	FGameplayAbilitySpecHandle _Handle;
 	const FGameplayAbilityActorInfo* _ActorInfo;
 	FGameplayAbilityActivationInfo _ActivationInfo;
+	TArray<FActiveGameplayEffectHandle>* _GameplayEffectHandles{};
 };

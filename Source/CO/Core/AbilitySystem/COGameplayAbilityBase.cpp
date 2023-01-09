@@ -19,6 +19,11 @@ ACOPlayerController* UCOGameplayAbilityBase::GetPlayerController() const
 	return Cast<ACOPlayerController>(_ActorInfo->PlayerController);
 }
 
+ACOPlayerCharacter* UCOGameplayAbilityBase::GetOwnerCharacter() const
+{
+	return Cast<ACOPlayerCharacter>(_ActorInfo->OwnerActor);
+}
+
 ACOPlayerCharacter* UCOGameplayAbilityBase::GetOwnerActor(const FGameplayAbilityActorInfo* ActorInfo) const
 {
 	return Cast<ACOPlayerCharacter>(ActorInfo->OwnerActor);

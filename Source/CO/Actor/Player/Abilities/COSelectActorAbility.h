@@ -15,23 +15,29 @@ class CO_API UCOSelectActorAbility : public UCOGameplayAbilityBase
 	GENERATED_BODY()
 
 protected:
+	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags,
+		OUT FGameplayTagContainer* OptionalRelevantTags) const;
+
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 							 const FGameplayAbilityActivationInfo ActivationInfo,
 							 const FGameplayEventData* TriggerEventData) override;
 
-	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags,
-		OUT FGameplayTagContainer* OptionalRelevantTags) const;
+	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 							bool bWasCancelled) override;
 
-	void OnAnotherSelectionStarted(FGameplayTag Tag, const FGameplayEventData* EventData);
-
 public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> ActorSelectedEffect;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> ActorDeselectedEffect;
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTag BroadcastedEventOnSelect;
 private:
-	FDelegateHandle _actorSelectedHandle;
+	TArray<FActiveGameplayEffectHandle> _AppliedEffects;
 };

@@ -6,6 +6,7 @@
 #include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
+#include "Templates/SharedPointer.h"
 
 bool UCOSelectActorAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
@@ -17,6 +18,7 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Select Started");
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(TriggerEventData->Target);
@@ -24,17 +26,19 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		return;
 	}
 
-	FGameplayTagContainer AbilityGrantedTags;
-	ActorSelectedEffect.GetDefaultObject()->GetOwnedGameplayTags(AbilityGrantedTags);
+	_AppliedEffects = ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, ActorSelectedEffect, 0);
+	SendGameplayEvent(BroadcastedEventOnSelect, *TriggerEventData);
+}
 
-	auto PreviousTarget = Cast<IAbilitySystemInterface>(GetPlayerController()->SelectedActor);
-	if (PreviousTarget) {
-		auto AbilitySystem = PreviousTarget->GetAbilitySystemComponent();
-		AbilitySystem->RemoveActiveEffectsWithGrantedTags(AbilityGrantedTags);
+void UCOSelectActorAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
+{
+	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Select Canceled");
+	for (auto Effect : _AppliedEffects)
+	{
+		Cast<IAbilitySystemInterface>(GetOwnerCharacter()->SelectedActor)->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Effect);
 	}
-
-	ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, ActorSelectedEffect, 0);
-	SendGameplayEvents(AbilityGrantedTags, *TriggerEventData);
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
