@@ -18,7 +18,6 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Select Started");
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(TriggerEventData->Target);
@@ -34,10 +33,10 @@ void UCOSelectActorAbility::CancelAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Select Canceled");
 	for (auto Effect : _AppliedEffects)
 	{
-		Cast<IAbilitySystemInterface>(GetOwnerCharacter()->SelectedActor)->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Effect);
+		auto SelectedActorAbilityInterface = Cast<IAbilitySystemInterface>(GetOwnerCharacter()->SelectedActor);
+		SelectedActorAbilityInterface->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Effect);
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);

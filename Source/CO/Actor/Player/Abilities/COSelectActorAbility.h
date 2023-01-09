@@ -34,9 +34,6 @@ public:
 	TSubclassOf<UGameplayEffect> ActorSelectedEffect;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UGameplayEffect> ActorDeselectedEffect;
-
-	UPROPERTY(EditAnywhere)
 	FGameplayTag BroadcastedEventOnSelect;
 private:
 	TArray<FActiveGameplayEffectHandle> _AppliedEffects;
