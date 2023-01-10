@@ -37,4 +37,7 @@ public:
 	FGameplayTag BroadcastedEventOnSelect;
 private:
 	TArray<FActiveGameplayEffectHandle> _AppliedEffects;
+
+	UPROPERTY()
+	const AActor* _Target;
 };

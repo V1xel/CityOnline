@@ -3,6 +3,7 @@
 
 #include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
 #include "CO/Actor/Player/Abilities/AbilityTasks/COSelectCellsAbilityTask.h"
+#include "CO/Core/AbilitySystem/COAbilityTaskBase.h"
 #include "CO/Extensions/GameplayTagExtension.h"
 #include "CO/Core/COConstants.h"
 #include "AbilitySystemComponent.h"
@@ -16,40 +17,32 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 	auto Context = GetGrantedByEffectContext();
 	auto DTO = Cast<UCOBuildDTO>(Context.GetSourceObject());
-	const auto PlayerController = GetPlayerController();
-	SelectCellsAbilityTask = UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(this, "SelectCellsTask", PlayerController, DTO);
-	SelectCellsAbilityTask->SetDrawDebugSelection(DebugAllocation);
-	SelectCellsAbilityTask->SetMousePositionAsFirstPoint();
-	SelectCellsAbilityTask->ReadyForActivation();
-
-	FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOAllocateAbility::OnAllocationCanceled);
-	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateCancel().GetSingleTagContainer(), AllocationCanceledDelegate);
-	AllocateCanceledHandle = AllocationCanceledDelegate.GetHandle();
+	_AllocationTask = UCOAbilityTaskBase::CreateAllocationTask<UCOSelectCellsAbilityTask>(this, TriggerEventData->TargetData);
 }
 
-void UCOAllocateAbility::OnAllocationCanceled(FGameplayTag Tag, const FGameplayEventData* EventData)
+void UCOAllocateAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
 {
-	UCOSelectionDTO* SelectionDTO = SelectCellsAbilityTask->GetSelectionResult();
+	UCOSelectionDTO* SelectionDTO = _AllocationTask->SelectionDTO;
 	if (SelectionDTO && SelectionDTO->IsValid) {
 		auto Data = FGameplayEventData();
 		Data.OptionalObject = SelectionDTO;
-		SendGameplayEvent(UCOGameplayTags::AllocateFinished(), Data);
+		SendGameplayEvent(BroadcastedEventOnAllocationFinished, Data);
 	}
 
-	SelectCellsAbilityTask->ExternalConfirm(true);
-	EndAbility(_Handle, _ActorInfo, _ActivationInfo, false, false);
+	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
 
-void UCOAllocateAbility::NotifyAllocationUpdated(UCOSelectionDTO* SelectionDTO)
+void UCOAllocateAbility::AbilityTaskTick()
 {
 	auto Data = FGameplayEventData();
-	Data.OptionalObject = SelectionDTO;
-	SendGameplayEvent(UCOGameplayTags::UpdatedAllocation(), Data);
+	Data.OptionalObject = _AllocationTask->SelectionDTO;
+
+	SendGameplayEvent(BroadcastedEventOnAllocationUpdated, Data);
 }
 
 void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
+	_AllocationTask->ExternalConfirm(true);
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateCancel().GetSingleTagContainer(), AllocateCanceledHandle);
 }

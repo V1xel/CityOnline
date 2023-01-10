@@ -8,7 +8,10 @@
 #include "COBuildAbility.generated.h"
 
 class UCOBuildDTO;
+class UCORootAsset;
 class UCOSelectionDTO;
+class UCOBuildingAsset;
+class ACOBuildingActor;
 class UCOSelectCellsAbilityTask;
 
 /**
@@ -36,13 +39,15 @@ public:
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 							bool bWasCancelled) override;
 
+
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
 
-	UFUNCTION(Server, Reliable)
-	void ApplyPlease();
-
-	void ApplyPlease_Implementation();
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCORootAsset* RootAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ACOBuildingActor> BuildingActorClass;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> EnableCellAllocationEffect{};
@@ -50,9 +55,15 @@ public:
 	UPROPERTY(EditAnywhere)
 	UDataTable* BuildingsTable {};
 
+	UPROPERTY(EditAnywhere)
+	FGameplayTag ListenEventOnAllocationFinished;
+
 private:
 	UPROPERTY()
 	UCOBuildDTO* _BuildDTO;
 
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
+
+	UPROPERTY()
+	ACOBuildingActor* _BuildingActor;
 };

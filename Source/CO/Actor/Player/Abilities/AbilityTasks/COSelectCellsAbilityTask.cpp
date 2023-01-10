@@ -8,30 +8,6 @@
 #include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
 #include "CO/Core/COConstants.h"
 
-UCOSelectCellsAbilityTask::UCOSelectCellsAbilityTask()
-{
-	bTickingTask = true;
-	_SelectionDTO = NewObject<UCOSelectionDTO>();
-	_DrawDebugSelection = true;
-}
-
-UCOSelectCellsAbilityTask* UCOSelectCellsAbilityTask::HandleSelectionTillSelectionEnded(UCOAllocateAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOBuildDTO* BuildDTO)
-{
-	UCOSelectCellsAbilityTask* Task = NewAbilityTask<UCOSelectCellsAbilityTask>(Cast<UGameplayAbility>(OwningAbility), TaskInstanceName);
-	Task->_OwningAbility = OwningAbility;
-	Task->_PlayerController = PlayerController;
-	Task->_BuildDTO = BuildDTO;
-	
-	return Task;
-}
-
-void UCOSelectCellsAbilityTask::SetMousePositionAsFirstPoint() 
-{
-	FHitResult HitResult;
-	_PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
-	SelectionStartedLocation = HitResult.Location;
-}
-
 bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,
 	TArray<FHitResult>& OutHits) const
 {
@@ -40,14 +16,10 @@ bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVe
 	const FCollisionShape CollisionBox = FCollisionShape::MakeBox(Extent);
 	const FVector Center = (RectangleEnd + RectangleStart) / 2;
 
-	if (_DrawDebugSelection) {
-		DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 10);
-	}
-
 	return GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
 }
 
-void UCOSelectCellsAbilityTask::HandleActorComponentSelection(TArray<FHitResult>& HitResults)
+void UCOSelectCellsAbilityTask::UpdateCellsState(TArray<FHitResult>& HitResults)
 {
 	TArray<UCOStreetCellComponent*> DesiredSelectedComponents;
 	
@@ -113,9 +85,6 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	FVector SelectionNormal;
 	for (auto Cell : _SelectedCells)
 	{
-		if (_DrawDebugSelection) {
-			DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 20, FColor::Yellow, false, -1, 0, 20);
-		}
 		if(MinimumHorizontal > Cell->Horizontal)
 		{
 			MinimumHorizontal = Cell->Horizontal;
@@ -135,9 +104,7 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		if (Cell->IsExtreme)
 		{
 			ExtremeCount++;
-			if (_DrawDebugSelection) {
-				DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 40, FColor::Blue, false, -1, 0, 20);
-			}
+				
 			SelectionNormal = SelectionNormal - Cell->GetComponentLocation();
 			HasExtreme = true;
 		}
@@ -153,9 +120,6 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	const FVector SelectionNormalSafe = SelectionNormal.GetSafeNormal2D();
 	const FVector SelectionNormalCorrect = (SelectionCenterCorrect - SelectionNormalSafe).GetSafeNormal2D();
 
-	if (_DrawDebugSelection) {
-		DrawDebugDirectionalArrow(GetWorld(), SelectionNormalSafe, SelectionCenterCorrect, 2000, FColor::Green, false, -1, 0, 50);
-	}
 	FVector FinalFinalNormal;
 	if (ExtremeCount == 3) {
 		FinalFinalNormal = -SelectionNormalCorrect;
@@ -167,16 +131,12 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		FinalFinalNormal = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
 	}
 
-	if (_DrawDebugSelection) {
-		DrawDebugDirectionalArrow(GetWorld(), -FinalFinalNormal, -FinalFinalNormal * 1000, 2000, FColor::Red, false, -1, 0, 50);
-	}
-
-	_SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
-	_SelectionDTO->Center = SelectionCenterCorrect;
-	_SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal + 1;
-	_SelectionDTO->Width = MaximumVertical - MinimumVertical + 1;
-	_SelectionDTO->HasExtreme = HasExtreme;
-	_SelectionDTO->HasCorner = HasCorner;
+	SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
+	SelectionDTO->Center = SelectionCenterCorrect;
+	SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal + 1;
+	SelectionDTO->Width = MaximumVertical - MinimumVertical + 1;
+	SelectionDTO->HasExtreme = HasExtreme;
+	SelectionDTO->HasCorner = HasCorner;
 }
 
 void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
@@ -184,39 +144,42 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 	Super::TickTask(DeltaTime);
 
 	FHitResult CurrentMousePositionHitResult;
-	_PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
+	Ability->GetActorInfo().PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
 
 	TArray<FHitResult> OutHits;
-	RaycastWithRectangle(SelectionStartedLocation, CurrentMousePositionHitResult.Location, OutHits);
-	HandleActorComponentSelection(OutHits);
+	RaycastWithRectangle(_SelectionStartedLocation, CurrentMousePositionHitResult.Location, OutHits);
+	UpdateCellsState(OutHits);
+
 	CollectSelectionData();
 	ValidateSelectionData();
-	NotifyAllocationUpdated();
+	
+	auto AllocateAbility = Cast<UCOAllocateAbility>(Ability);
+	AllocateAbility->AbilityTaskTick();
 }
 
 void UCOSelectCellsAbilityTask::ValidateSelectionData() 
 {
 	bool valid = true;
 
-	if (!_SelectionDTO->HasExtreme) {
+	if (!SelectionDTO->HasExtreme) {
 		valid = false;
 	}
 
-	if (_SelectionDTO->Length > _BuildDTO->MaxLength ||
-		_SelectionDTO->Width > _BuildDTO->MaxWidth)
+	if (SelectionDTO->Length > _BuildDTO->MaxLength ||
+		SelectionDTO->Width > _BuildDTO->MaxWidth)
 	{
-		if (_SelectionDTO->Width > _BuildDTO->MaxLength ||
-			_SelectionDTO->Length > _BuildDTO->MaxWidth)
+		if (SelectionDTO->Width > _BuildDTO->MaxLength ||
+			SelectionDTO->Length > _BuildDTO->MaxWidth)
 		{
 			valid = false;
 		}
 	}
 
-	if (_SelectionDTO->Length < _BuildDTO->MinLength ||
-		_SelectionDTO->Width < _BuildDTO->MinWidth)
+	if (SelectionDTO->Length < _BuildDTO->MinLength ||
+		SelectionDTO->Width < _BuildDTO->MinWidth)
 	{
-		if (_SelectionDTO->Width < _BuildDTO->MinLength ||
-			_SelectionDTO->Length < _BuildDTO->MinWidth)
+		if (SelectionDTO->Width < _BuildDTO->MinLength ||
+			SelectionDTO->Length < _BuildDTO->MinWidth)
 		{
 			valid = false;
 		}
@@ -232,15 +195,7 @@ void UCOSelectCellsAbilityTask::ValidateSelectionData()
 		}
 	}
 
-	_SelectionDTO->IsValid = valid;
-}
-
-void UCOSelectCellsAbilityTask::NotifyAllocationUpdated()
-{
-	auto ability = _OwningAbility.Get();
-	if (ability != nullptr) {
-		ability->NotifyAllocationUpdated(_SelectionDTO);
-	}
+	SelectionDTO->IsValid = valid;
 }
 
 void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)

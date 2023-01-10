@@ -9,6 +9,14 @@
 #include "CO/Actor/Player/Abilities/AbilityTasks/COSelectCellsAbilityTask.h"
 #include "CO/Core/COConstants.h"
 #include "CO/Extensions/GameplayTagExtension.h"
+#include "CO/Database/Assets/COBuildingAsset.h"
+#include "CO/Database/Assets/CORootAsset.h"
+#include "CO/Actor/Building/COBuildingActor.h"
+
+bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
+{
+	return true;
+}
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -21,50 +29,35 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	auto BuildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
 	_BuildDTO = BuildingSpecialization.ToDTO();
 
-	FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
-	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), AllocationCanceledDelegate);
+	FGameplayEventTagMulticastDelegate::FDelegate AllocationFinishedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
+	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnAllocationFinished.GetSingleTagContainer(), AllocationFinishedDelegate);
 
-	UAbilitySystemComponent* const AbilitySystemComponent = ActorInfo->AbilitySystemComponent.Get();
-
-	ApplyPlease();
+	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
+	EffectContext.AddSourceObject(_BuildDTO);
+	auto SpecHandle = FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), EffectContext));
+	ActorInfo->AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	FGameplayEventData BuildEventData = FGameplayEventData();
-	BuildEventData.OptionalObject = EventData->OptionalObject;
-
-	_ActorInfo->AbilitySystemComponent->RemoveActiveGameplayEffect(_AllocationEffectHandle);
-	BuildEventData.OptionalObject2 = _BuildDTO;
-	
-	SendGameplayEvent(UCOGameplayTags::Construct(), BuildEventData);
-
-	EndAbility(_Handle, _ActorInfo, _ActivationInfo, false, false);
+	auto SelectionDTO = Cast<UCOSelectionDTO>(EventData->OptionalObject);
+	auto Asset = RootAsset->FindBestAsset(SelectionDTO, _BuildDTO);
+	_BuildingActor = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
+	_BuildingActor->BuildingAsset = Asset;
+	_BuildingActor->ComposeBuilding();
+	_BuildingActor->FinishSpawning(FTransform());
+	_BuildingActor->SetActorLocationAndRotation(SelectionDTO->Center, SelectionDTO->Rotation + Asset->RotationOffset);
 }
 
-void UCOBuildAbility::ApplyPlease_Implementation()
-{
-	auto Effect = EnableCellAllocationEffect.GetDefaultObject();
-	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
-	EffectContext.AddSourceObject(_BuildDTO);
-	auto SpecHandle = FGameplayEffectSpecHandle(new FGameplayEffectSpec(Effect, EffectContext));
-
-	auto effects = _ActorInfo->AbilitySystemComponent->GetActiveGameplayEffects();
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::FromInt(effects.GetActiveEffectCount(FGameplayEffectQuery())));
-	_ActorInfo->AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-	auto effects2 = _ActorInfo->AbilitySystemComponent->GetActiveGameplayEffects();
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::FromInt(effects2.GetActiveEffectCount(FGameplayEffectQuery())));
-}
-
-bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
-{
-	return true;
-}
 
 void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
+
+	
+
+	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
 
 void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -72,3 +65,4 @@ void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const 
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
+

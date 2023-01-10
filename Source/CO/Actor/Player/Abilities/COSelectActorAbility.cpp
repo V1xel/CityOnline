@@ -19,8 +19,9 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	_Target = TriggerEventData->Target.Get();
 	_AppliedEffects = ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, ActorSelectedEffect, 0);
-	SendGameplayEvent(BroadcastedEventOnSelect, *TriggerEventData);
 }
 
 void UCOSelectActorAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
@@ -29,7 +30,7 @@ void UCOSelectActorAbility::CancelAbility(const FGameplayAbilitySpecHandle Handl
 
 	for (auto Effect : _AppliedEffects)
 	{
-		auto SelectedActorAbilityInterface = Cast<IAbilitySystemInterface>(GetOwnerCharacter()->SelectedActor);
+		auto SelectedActorAbilityInterface = Cast<IAbilitySystemInterface>(_Target);
 		SelectedActorAbilityInterface->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Effect);
 	}
 

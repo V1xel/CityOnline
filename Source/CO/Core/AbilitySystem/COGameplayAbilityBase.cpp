@@ -14,25 +14,9 @@ void UCOGameplayAbilityBase::ActivateAbility(FGameplayAbilitySpecHandle Handle, 
 	_ActivationInfo = ActivationInfo;
 }
 
-ACOPlayerController* UCOGameplayAbilityBase::GetPlayerController() const
+void UCOGameplayAbilityBase::EndAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	bool bReplicateEndAbility, bool bWasCancelled)
 {
-	return Cast<ACOPlayerController>(_ActorInfo->PlayerController);
-}
-
-ACOPlayerCharacter* UCOGameplayAbilityBase::GetOwnerCharacter() const
-{
-	return Cast<ACOPlayerCharacter>(_ActorInfo->OwnerActor);
-}
-
-ACOPlayerCharacter* UCOGameplayAbilityBase::GetOwnerActor(const FGameplayAbilityActorInfo* ActorInfo) const
-{
-	return Cast<ACOPlayerCharacter>(ActorInfo->OwnerActor);
-}
-
-void UCOGameplayAbilityBase::SendGameplayEvents(FGameplayTagContainer TagContainer, FGameplayEventData Payload)
-{
-	for (auto Tag : TagContainer)
-	{
-		SendGameplayEvent(Tag, Payload);
-	}
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

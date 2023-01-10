@@ -22,21 +22,11 @@ protected:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
 
-	ACOPlayerController* GetPlayerController() const;
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle,
+		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+		bool bReplicateEndAbility, bool bWasCancelled) override;
 
-	ACOPlayerCharacter* GetOwnerCharacter() const; 
-	
-	ACOPlayerCharacter* GetOwnerActor(const FGameplayAbilityActorInfo* ActorInfo) const;
-	
-	template <typename T>
-	T* GetOptionalParameter(const FGameplayEventData* TriggerEventData)
-	{
-		return Cast<T>(TriggerEventData->OptionalObject);
-	}
-
-	void SendGameplayEvents(FGameplayTagContainer TagContainer, FGameplayEventData Payload);
-
-protected:
+private:
 	FGameplayAbilitySpecHandle _Handle;
 	const FGameplayAbilityActorInfo* _ActorInfo;
 	FGameplayAbilityActivationInfo _ActivationInfo;

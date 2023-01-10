@@ -15,9 +15,6 @@ public:
 	ACOPlayerCharacter();
 
 	virtual void BeginPlay() override;
-
-	void OnActorSelected(FGameplayTag Tag, const FGameplayEventData* EventData);
-
 public:
 
 	UPROPERTY(EditAnywhere)

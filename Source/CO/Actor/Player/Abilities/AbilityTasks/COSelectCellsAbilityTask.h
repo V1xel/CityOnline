@@ -3,36 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/Tasks/AbilityTask.h"
 #include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
+#include "CO/Core/AbilitySystem/COAbilityTaskBase.h"
 #include "COSelectCellsAbilityTask.generated.h"
 
 class UCOStreetCellComponent;
-class ACOPlayerController;
 class UCOBuildingDetails;
 class UCOSelectionDTO;
-class UCOAllocateAbility;
+class UCOBuildDTO;
 
 /**
  * 
  */
 UCLASS()
-class CO_API UCOSelectCellsAbilityTask : public UAbilityTask
+class CO_API UCOSelectCellsAbilityTask : public UCOAbilityTaskBase
 {
 	GENERATED_BODY()
 
-	UCOSelectCellsAbilityTask();
 public:
-	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
-	static UCOSelectCellsAbilityTask* HandleSelectionTillSelectionEnded(UCOAllocateAbility* OwningAbility, FName TaskInstanceName, ACOPlayerController* PlayerController, UCOBuildDTO* BuildDTO);
-	
 	virtual void ExternalConfirm(bool bEndTask) override;
-
-	UCOSelectionDTO* GetSelectionResult() const { return _SelectionDTO; }
-
-	void SetDrawDebugSelection(bool Value) { _DrawDebugSelection = Value; }
-
-	void SetMousePositionAsFirstPoint();
 protected:
 	virtual void TickTask(float DeltaTime) override;
 
@@ -40,36 +29,21 @@ protected:
 
 	bool RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,	TArray<FHitResult>& OutHits) const;
 
-	void HandleActorComponentSelection(TArray<FHitResult>& HitResults);
+	void UpdateCellsState(TArray<FHitResult>& HitResults);
 
 	void CollectSelectionData();
 
 	void ValidateSelectionData();
 
-	void NotifyAllocationUpdated();
+public:
+	UPROPERTY()
+		UCOSelectionDTO* SelectionDTO{};
 
-protected:
+private:
 	UPROPERTY()
-	FVector SelectionStartedLocation{};
-	
+		FVector _SelectionStartedLocation{};
 	UPROPERTY()
-	ACOPlayerController* _PlayerController{};
-	
+		TArray<UCOStreetCellComponent*> _SelectedCells{};
 	UPROPERTY()
-	TArray<UCOStreetCellComponent*> _SelectedCells{};
-
-	UPROPERTY()
-	UCOSelectionDTO* _SelectionDTO;
-
-	UPROPERTY()
-	UCOBuildDTO* _BuildDTO;
-
-	UPROPERTY()
-	TWeakObjectPtr<UCOAllocateAbility> _OwningAbility;
-
-	UPROPERTY()
-	bool _DrawDebugSelection;
-
-	UPROPERTY()
-	bool _TurnOffValidation;
+		UCOBuildDTO* _BuildDTO {};
 };

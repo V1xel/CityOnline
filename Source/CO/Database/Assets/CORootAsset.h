@@ -7,6 +7,8 @@
 #include "CORootAsset.generated.h"
 
 class UCOBuildingAsset;
+class UCOSelectionDTO;
+class UCOBuildDTO;
 
 /**
  * 
@@ -22,4 +24,6 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<UCOBuildingAsset*> BuildingsAssets;
+
+	UCOBuildingAsset* FindBestAsset(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO);
 };
