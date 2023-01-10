@@ -196,10 +196,6 @@ void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 
 void UCOSelectCellsAbilityTask::ValidateSelectionData() 
 {
-	if (_TurnOffValidation) {
-		return;
-	}
-
 	bool valid = true;
 
 	if (!_SelectionDTO->HasExtreme) {

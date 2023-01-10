@@ -24,12 +24,9 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	FGameplayEventTagMulticastDelegate::FDelegate AllocationCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(UCOGameplayTags::AllocateFinished().GetSingleTagContainer(), AllocationCanceledDelegate);
 
-	auto Effect = EnableCellAllocationEffect.GetDefaultObject();
-	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
-	EffectContext.AddSourceObject(_BuildDTO);
-	auto EffectSpec = FGameplayEffectSpecHandle(new FGameplayEffectSpec(Effect, EffectContext));
+	UAbilitySystemComponent* const AbilitySystemComponent = ActorInfo->AbilitySystemComponent.Get();
 
-	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, EffectSpec);
+	ApplyPlease();
 }
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
@@ -45,22 +42,22 @@ void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEven
 	EndAbility(_Handle, _ActorInfo, _ActivationInfo, false, false);
 }
 
+void UCOBuildAbility::ApplyPlease_Implementation()
+{
+	auto Effect = EnableCellAllocationEffect.GetDefaultObject();
+	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
+	EffectContext.AddSourceObject(_BuildDTO);
+	auto SpecHandle = FGameplayEffectSpecHandle(new FGameplayEffectSpec(Effect, EffectContext));
+
+	auto effects = _ActorInfo->AbilitySystemComponent->GetActiveGameplayEffects();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::FromInt(effects.GetActiveEffectCount(FGameplayEffectQuery())));
+	_ActorInfo->AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	auto effects2 = _ActorInfo->AbilitySystemComponent->GetActiveGameplayEffects();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::FromInt(effects2.GetActiveEffectCount(FGameplayEffectQuery())));
+}
+
 bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
-	if (!Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Build can not be activated. Seems to be Tag validation.");
-		return false;
-	}
-
-	auto Character = Cast<ACOPlayerCharacter>(ActorInfo->OwnerActor);
-	auto Street = Cast<ACOStreetActor>(Character->SelectedActor);
-	if (!Street) 
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Build can not be activated. There is no street target.");
-		return false;
-	}
-
 	return true;
 }
 

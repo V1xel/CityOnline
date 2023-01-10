@@ -38,6 +38,10 @@ public:
 
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
 
+	UFUNCTION(Server, Reliable)
+	void ApplyPlease();
+
+	void ApplyPlease_Implementation();
 public:
 
 	UPROPERTY(EditAnywhere)

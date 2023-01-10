@@ -30,7 +30,7 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 void UCOAllocateAbility::OnAllocationCanceled(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
 	UCOSelectionDTO* SelectionDTO = SelectCellsAbilityTask->GetSelectionResult();
-	if (SelectionDTO->IsValid) {
+	if (SelectionDTO && SelectionDTO->IsValid) {
 		auto Data = FGameplayEventData();
 		Data.OptionalObject = SelectionDTO;
 		SendGameplayEvent(UCOGameplayTags::AllocateFinished(), Data);

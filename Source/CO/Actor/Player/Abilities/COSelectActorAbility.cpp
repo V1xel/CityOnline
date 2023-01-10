@@ -10,7 +10,7 @@
 
 bool UCOSelectActorAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
-	return !TargetTags->HasAny(TargetBlockedTags);
+	return !TargetTags->HasAny(TargetBlockedTags) && TargetTags->HasAll(TargetRequiredTags);
 }
 
 void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -19,13 +19,8 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(TriggerEventData->Target);
-	if (!TargetAbilitySystem) {
-		return;
-	}
-
 	_AppliedEffects = ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, ActorSelectedEffect, 0);
+
 	SendGameplayEvent(BroadcastedEventOnSelect, *TriggerEventData);
 }
 
