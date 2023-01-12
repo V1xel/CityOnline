@@ -79,7 +79,7 @@ void UCOSelectCellsAbilityTask::UpdateCellsState(TArray<FHitResult>& HitResults)
 
 void UCOSelectCellsAbilityTask::CollectSelectionData()
 {
-	if(_SelectedCells.Num() == 0)
+	if (_SelectedCells.Num() == 0) 
 		return;
 	
 	auto MinimumHorizontal = _SelectedCells[0]->Horizontal;

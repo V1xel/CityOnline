@@ -58,7 +58,7 @@ public:
 	FGameplayTag ListenEventOnAllocationFinished;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag BuildingParentTag;
+	FGameplayTag FilterBuildingTag;
 
 private:
 	UPROPERTY()

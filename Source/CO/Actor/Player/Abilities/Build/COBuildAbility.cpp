@@ -22,7 +22,7 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	auto BuildingTag = TriggerEventData->InstigatorTags.Filter(FGameplayTagContainer(BuildingParentTag)).First();
+	auto BuildingTag = TriggerEventData->InstigatorTags.Filter(FGameplayTagContainer(FilterBuildingTag)).First();
 	auto BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
 	auto BuildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
 	_BuildDTO = BuildingSpecialization.ToDTO();

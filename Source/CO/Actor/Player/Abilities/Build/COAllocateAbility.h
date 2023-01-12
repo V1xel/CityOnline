@@ -40,9 +40,14 @@ public:
 	FGameplayTag BroadcastedEventOnAllocationFinished;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag AllocatePermissionTag;
+	FGameplayTag FilterAllocatePermissionTag;
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTag ListenCancelAllocateTag;
 
 private:
 	UPROPERTY()
 	UCOSelectCellsAbilityTask* _AllocationTask;
+
+	FDelegateHandle _CancelDelegateHandle;
 };

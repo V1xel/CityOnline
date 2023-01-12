@@ -15,7 +15,7 @@ UCOStreetCellComponent::UCOStreetCellComponent()
 		DynamicMaterial = UMaterialInstanceDynamic::Create(CellMaterialAsset.Object, this, "CellMaterial");
 		UMeshComponent::SetMaterial(0, DynamicMaterial);
 	}
-	
+
 	USceneComponent::SetMobility(EComponentMobility::Static);
 }
 

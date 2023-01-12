@@ -8,10 +8,6 @@
 void UCOGameplayAbilityBase::ActivateAbility(FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	_Handle = Handle;
-	_ActorInfo = ActorInfo;
-	_ActivationInfo = ActivationInfo;
 }
 
 void UCOGameplayAbilityBase::EndAbility(const FGameplayAbilitySpecHandle Handle,

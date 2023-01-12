@@ -27,6 +27,7 @@ void UCOCreateStreetCellsAbility::ActivateAbility(const FGameplayAbilitySpecHand
 			Cell->Vertical = iVertical + 1;
 			Cell->IsExtreme = iHorizontal == 0 || iVertical == 0 || iHorizontal == (Horizontal - 1) || iVertical == (Vertical - 1);
 			Cell->IsCorner = ((iHorizontal == iVertical) && Cell->IsExtreme) || (iHorizontal == Horizontal - 1 && iVertical == 0) || (iVertical == Vertical - 1 && iHorizontal == 0);
+			Cell->SetIsReplicated(true);
 
 			Owner->Cells.Add(Cell);
 		}

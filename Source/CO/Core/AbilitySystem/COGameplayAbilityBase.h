@@ -25,10 +25,4 @@ protected:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility, bool bWasCancelled) override;
-
-private:
-	FGameplayAbilitySpecHandle _Handle;
-	const FGameplayAbilityActorInfo* _ActorInfo;
-	FGameplayAbilityActivationInfo _ActivationInfo;
-	TArray<FActiveGameplayEffectHandle>* _GameplayEffectHandles{};
 };

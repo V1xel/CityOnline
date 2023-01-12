@@ -15,7 +15,11 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	auto AllocatePermissionActiveEffects = ActorInfo->AbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(AllocatePermissionTag.GetSingleTagContainer()));
+	auto AllocationCancelDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
+	(FGameplayTag Tag, const FGameplayEventData* EventData) { CancelAbility(Handle, ActorInfo, ActivationInfo, false); });
+	_CancelDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenCancelAllocateTag.GetSingleTagContainer(), AllocationCancelDelegate);
+
+	auto AllocatePermissionActiveEffects = ActorInfo->AbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
 	if (AllocatePermissionActiveEffects.Num() > 0) {
 		FGameplayEffectContextHandle PermissionGrantedEffectContext = ActorInfo->AbilitySystemComponent->GetEffectContextFromActiveGEHandle(AllocatePermissionActiveEffects[0]);
 		_AllocationTask = UCOAbilityTaskBase::CreateAllocationTask<UCOSelectCellsAbilityTask>(this, TriggerEventData->TargetData, PermissionGrantedEffectContext);
@@ -53,6 +57,8 @@ void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, con
 	if (_AllocationTask) {
 		_AllocationTask->ExternalConfirm(true);
 	}
+
+	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(ListenCancelAllocateTag.GetSingleTagContainer(), _CancelDelegateHandle);
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
