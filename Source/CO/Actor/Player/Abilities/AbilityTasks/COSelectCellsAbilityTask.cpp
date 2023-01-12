@@ -8,6 +8,13 @@
 #include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
 #include "CO/Core/COConstants.h"
 
+void UCOSelectCellsAbilityTask::Initialize()
+{
+	_SelectionDTO = NewObject<UCOSelectionDTO>();
+	_BuildDTO = Cast<UCOBuildDTO>(_PermissionGrantedEffectContext.GetSourceObject());
+	_SelectionStartedLocation = _TargetData.Get(0)->GetHitResult()->Location;
+}
+
 bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,
 	TArray<FHitResult>& OutHits) const
 {
@@ -15,6 +22,8 @@ bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVe
 	const FVector Extent = FVector(FMath::Sqrt(Size.X * Size.X), FMath::Sqrt(Size.Y * Size.Y), 10);
 	const FCollisionShape CollisionBox = FCollisionShape::MakeBox(Extent);
 	const FVector Center = (RectangleEnd + RectangleStart) / 2;
+
+	DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 10);
 
 	return GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
 }
@@ -85,6 +94,7 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	FVector SelectionNormal;
 	for (auto Cell : _SelectedCells)
 	{
+		DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 20, FColor::Yellow, false, -1, 0, 20);
 		if(MinimumHorizontal > Cell->Horizontal)
 		{
 			MinimumHorizontal = Cell->Horizontal;
@@ -105,6 +115,7 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		{
 			ExtremeCount++;
 				
+			DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 40, FColor::Blue, false, -1, 0, 20);
 			SelectionNormal = SelectionNormal - Cell->GetComponentLocation();
 			HasExtreme = true;
 		}
@@ -120,6 +131,8 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 	const FVector SelectionNormalSafe = SelectionNormal.GetSafeNormal2D();
 	const FVector SelectionNormalCorrect = (SelectionCenterCorrect - SelectionNormalSafe).GetSafeNormal2D();
 
+	DrawDebugDirectionalArrow(GetWorld(), SelectionNormalSafe, SelectionCenterCorrect, 2000, FColor::Green, false, -1, 0, 50);
+
 	FVector FinalFinalNormal;
 	if (ExtremeCount == 3) {
 		FinalFinalNormal = -SelectionNormalCorrect;
@@ -131,12 +144,14 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		FinalFinalNormal = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
 	}
 
-	SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
-	SelectionDTO->Center = SelectionCenterCorrect;
-	SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal + 1;
-	SelectionDTO->Width = MaximumVertical - MinimumVertical + 1;
-	SelectionDTO->HasExtreme = HasExtreme;
-	SelectionDTO->HasCorner = HasCorner;
+	DrawDebugDirectionalArrow(GetWorld(), -FinalFinalNormal, -FinalFinalNormal * 1000, 2000, FColor::Red, false, -1, 0, 50);
+
+	_SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
+	_SelectionDTO->Center = SelectionCenterCorrect;
+	_SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal + 1;
+	_SelectionDTO->Width = MaximumVertical - MinimumVertical + 1;
+	_SelectionDTO->HasExtreme = HasExtreme;
+	_SelectionDTO->HasCorner = HasCorner;
 }
 
 void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
@@ -161,25 +176,25 @@ void UCOSelectCellsAbilityTask::ValidateSelectionData()
 {
 	bool valid = true;
 
-	if (!SelectionDTO->HasExtreme) {
+	if (!_SelectionDTO->HasExtreme) {
 		valid = false;
 	}
 
-	if (SelectionDTO->Length > _BuildDTO->MaxLength ||
-		SelectionDTO->Width > _BuildDTO->MaxWidth)
+	if (_SelectionDTO->Length > _BuildDTO->MaxLength ||
+		_SelectionDTO->Width > _BuildDTO->MaxWidth)
 	{
-		if (SelectionDTO->Width > _BuildDTO->MaxLength ||
-			SelectionDTO->Length > _BuildDTO->MaxWidth)
+		if (_SelectionDTO->Width > _BuildDTO->MaxLength ||
+			_SelectionDTO->Length > _BuildDTO->MaxWidth)
 		{
 			valid = false;
 		}
 	}
 
-	if (SelectionDTO->Length < _BuildDTO->MinLength ||
-		SelectionDTO->Width < _BuildDTO->MinWidth)
+	if (_SelectionDTO->Length < _BuildDTO->MinLength ||
+		_SelectionDTO->Width < _BuildDTO->MinWidth)
 	{
-		if (SelectionDTO->Width < _BuildDTO->MinLength ||
-			SelectionDTO->Length < _BuildDTO->MinWidth)
+		if (_SelectionDTO->Width < _BuildDTO->MinLength ||
+			_SelectionDTO->Length < _BuildDTO->MinWidth)
 		{
 			valid = false;
 		}
@@ -195,7 +210,7 @@ void UCOSelectCellsAbilityTask::ValidateSelectionData()
 		}
 	}
 
-	SelectionDTO->IsValid = valid;
+	_SelectionDTO->IsValid = valid;
 }
 
 void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)

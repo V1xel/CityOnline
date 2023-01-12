@@ -41,7 +41,6 @@ public:
 
 
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCORootAsset* RootAsset;
@@ -57,6 +56,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	FGameplayTag ListenEventOnAllocationFinished;
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTag BuildingParentTag;
 
 private:
 	UPROPERTY()

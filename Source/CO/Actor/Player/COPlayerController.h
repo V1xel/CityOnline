@@ -12,4 +12,6 @@ class CO_API ACOPlayerController : public APlayerController
 	GENERATED_BODY()
 
 	ACOPlayerController();
+
+
 };

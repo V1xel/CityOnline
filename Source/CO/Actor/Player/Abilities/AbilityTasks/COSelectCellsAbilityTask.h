@@ -21,7 +21,11 @@ class CO_API UCOSelectCellsAbilityTask : public UCOAbilityTaskBase
 	GENERATED_BODY()
 
 public:
+	virtual void Initialize() override;
+
 	virtual void ExternalConfirm(bool bEndTask) override;
+
+	UCOSelectionDTO* GetResult() { return _SelectionDTO; }
 protected:
 	virtual void TickTask(float DeltaTime) override;
 
@@ -35,15 +39,14 @@ protected:
 
 	void ValidateSelectionData();
 
-public:
-	UPROPERTY()
-		UCOSelectionDTO* SelectionDTO{};
-
 private:
 	UPROPERTY()
 		FVector _SelectionStartedLocation{};
 	UPROPERTY()
 		TArray<UCOStreetCellComponent*> _SelectedCells{};
 	UPROPERTY()
-		UCOBuildDTO* _BuildDTO {};
+		UCOBuildDTO* _BuildDTO;
+
+	UPROPERTY()
+		UCOSelectionDTO* _SelectionDTO;
 };

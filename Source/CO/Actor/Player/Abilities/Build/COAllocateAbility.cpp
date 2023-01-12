@@ -15,14 +15,21 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	auto Context = GetGrantedByEffectContext();
-	auto DTO = Cast<UCOBuildDTO>(Context.GetSourceObject());
-	_AllocationTask = UCOAbilityTaskBase::CreateAllocationTask<UCOSelectCellsAbilityTask>(this, TriggerEventData->TargetData);
+	auto AllocatePermissionActiveEffects = ActorInfo->AbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(AllocatePermissionTag.GetSingleTagContainer()));
+	if (AllocatePermissionActiveEffects.Num() > 0) {
+		FGameplayEffectContextHandle PermissionGrantedEffectContext = ActorInfo->AbilitySystemComponent->GetEffectContextFromActiveGEHandle(AllocatePermissionActiveEffects[0]);
+		_AllocationTask = UCOAbilityTaskBase::CreateAllocationTask<UCOSelectCellsAbilityTask>(this, TriggerEventData->TargetData, PermissionGrantedEffectContext);
+	}
 }
 
 void UCOAllocateAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
 {
-	UCOSelectionDTO* SelectionDTO = _AllocationTask->SelectionDTO;
+	if (!_AllocationTask) {
+		EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+		return;
+	}
+
+	UCOSelectionDTO* SelectionDTO = _AllocationTask->GetResult();
 	if (SelectionDTO && SelectionDTO->IsValid) {
 		auto Data = FGameplayEventData();
 		Data.OptionalObject = SelectionDTO;
@@ -35,7 +42,7 @@ void UCOAllocateAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, 
 void UCOAllocateAbility::AbilityTaskTick()
 {
 	auto Data = FGameplayEventData();
-	Data.OptionalObject = _AllocationTask->SelectionDTO;
+	Data.OptionalObject = _AllocationTask->GetResult();
 
 	SendGameplayEvent(BroadcastedEventOnAllocationUpdated, Data);
 }
@@ -43,6 +50,9 @@ void UCOAllocateAbility::AbilityTaskTick()
 void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	_AllocationTask->ExternalConfirm(true);
+	if (_AllocationTask) {
+		_AllocationTask->ExternalConfirm(true);
+	}
+
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

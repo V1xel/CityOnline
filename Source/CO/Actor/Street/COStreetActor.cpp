@@ -18,9 +18,7 @@ void ACOStreetActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (AbilitySystemComponent) {
-		AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	}
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
 
 

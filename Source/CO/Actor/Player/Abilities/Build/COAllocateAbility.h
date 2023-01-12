@@ -39,6 +39,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	FGameplayTag BroadcastedEventOnAllocationFinished;
 
+	UPROPERTY(EditAnywhere)
+	FGameplayTag AllocatePermissionTag;
+
 private:
 	UPROPERTY()
 	UCOSelectCellsAbilityTask* _AllocationTask;

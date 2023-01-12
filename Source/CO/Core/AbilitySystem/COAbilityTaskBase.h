@@ -16,16 +16,22 @@ class CO_API UCOAbilityTaskBase : public UAbilityTask
 	
 public:
 	template <class TAbilityTask>
-	static FORCEINLINE TAbilityTask* CreateAllocationTask(UGameplayAbility* OwningAbility, FGameplayAbilityTargetDataHandle TargetData, bool bTickingTask = true)
+	static FORCEINLINE TAbilityTask* CreateAllocationTask(UGameplayAbility* OwningAbility, FGameplayAbilityTargetDataHandle TargetData, FGameplayEffectContextHandle PermissionGrantedEffectContext, bool bTickingTask = true)
 	{
 		TAbilityTask* Task = NewAbilityTask<TAbilityTask>(OwningAbility);
+		Task->_PermissionGrantedEffectContext = PermissionGrantedEffectContext;
 		Task->_TargetData = TargetData;
 		Task->bTickingTask = bTickingTask;
+		Task->Initialize();
 		Task->ReadyForActivation();
 
 		return Task;
 	}
 
 protected:
+	virtual void Initialize() {};
+
+	FGameplayEffectContextHandle _PermissionGrantedEffectContext;
+
 	FGameplayAbilityTargetDataHandle _TargetData;
 };

@@ -6,6 +6,8 @@
 #include "CO/Core/Actor/Player/COPlayerCharacterBase.h"
 #include "COPlayerCharacter.generated.h"
 
+class UCOBuildDTO;
+
 UCLASS()
 class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
 {
@@ -24,4 +26,5 @@ public:
 	AActor* SelectedActor;
 private:
 	FDelegateHandle _actorSelectedHandle;
+
 };
