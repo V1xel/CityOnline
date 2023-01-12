@@ -22,12 +22,11 @@ void UCOCreateStreetCellsAbility::ActivateAbility(const FGameplayAbilitySpecHand
 			auto CellOffset = FVector(HorizontalOffset * iHorizontal, VerticalOffset * iVertical, 1);
 			const FVector Position = CellOffset + WorldOffset;
 
-			auto Cell = Cast<UCOStreetCellComponent>(Owner->AddComponentByClass(UCOStreetCellComponent::StaticClass(), true, FTransform(FRotator::ZeroRotator, Position, FVector(Size, Size, 1)), false));
+			auto Cell = Cast<UCOStreetCellComponent>(Owner->AddComponentByClass(CellComponentClass, true, FTransform(FRotator::ZeroRotator, Position, FVector(Size, Size, 1)), false));
 			Cell->Horizontal = iHorizontal + 1;
 			Cell->Vertical = iVertical + 1;
 			Cell->IsExtreme = iHorizontal == 0 || iVertical == 0 || iHorizontal == (Horizontal - 1) || iVertical == (Vertical - 1);
 			Cell->IsCorner = ((iHorizontal == iVertical) && Cell->IsExtreme) || (iHorizontal == Horizontal - 1 && iVertical == 0) || (iVertical == Vertical - 1 && iHorizontal == 0);
-			Cell->SetIsReplicated(true);
 
 			Owner->Cells.Add(Cell);
 		}

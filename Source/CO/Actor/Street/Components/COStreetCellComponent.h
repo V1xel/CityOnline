@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <Net/UnrealNetwork.h>
 #include "COStreetCellComponent.generated.h"
 
 
@@ -12,42 +13,46 @@ class CO_API UCOStreetCellComponent : public UStaticMeshComponent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
-	UCOStreetCellComponent();
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override
+	{
+		Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+		DOREPLIFETIME(UCOStreetCellComponent, IsOccupied);
+		DOREPLIFETIME(UCOStreetCellComponent, IsSelected);
+		DOREPLIFETIME(UCOStreetCellComponent, IsExtreme);
+		DOREPLIFETIME(UCOStreetCellComponent, IsCorner);
+		DOREPLIFETIME(UCOStreetCellComponent, Horizontal);
+		DOREPLIFETIME(UCOStreetCellComponent, Vertical);
+	}
 
 public:
-	UFUNCTION()
 	void SetOccupied(bool Value);
 
-	UFUNCTION()
 	void SetSelected(bool Value);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetValid(bool Value);
+	void SetValid_Implementation(bool Value);
 
-private:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetVisible(bool Value);
+	void SetVisible_Implementation(bool Value);
 
 public:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	bool IsOccupied;
 	
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	bool IsSelected;
 	
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	bool IsExtreme;
 	
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	bool IsCorner;
 	
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	int Horizontal;
 	
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	int Vertical;
-
-	UPROPERTY(BlueprintReadWrite)
-	UMaterialInstanceDynamic* DynamicMaterial;
 };

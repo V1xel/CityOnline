@@ -59,6 +59,5 @@ void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, con
 	}
 
 	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(ListenCancelAllocateTag.GetSingleTagContainer(), _CancelDelegateHandle);
-
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

@@ -49,6 +49,7 @@ void UCOSelectCellsAbilityTask::UpdateCellsState(TArray<FHitResult>& HitResults)
 			if(PendingSelect)
 			{
 				HitComponent->SetSelected(true);
+				HitComponent->SetVisible(true);
 			}
 			
 			DesiredSelectedComponents.Add(HitComponent);
@@ -70,6 +71,7 @@ void UCOSelectCellsAbilityTask::UpdateCellsState(TArray<FHitResult>& HitResults)
 		if(PendingDeselect)
 		{
 			CellComponent->SetSelected(false);
+			CellComponent->SetVisible(false);
 		}
 	}
 
@@ -179,7 +181,6 @@ void UCOSelectCellsAbilityTask::ValidateSelectionData()
 	if (!_SelectionDTO->HasExtreme) {
 		valid = false;
 	}
-
 	if (_SelectionDTO->Length > _BuildDTO->MaxLength ||
 		_SelectionDTO->Width > _BuildDTO->MaxWidth)
 	{
@@ -189,7 +190,6 @@ void UCOSelectCellsAbilityTask::ValidateSelectionData()
 			valid = false;
 		}
 	}
-
 	if (_SelectionDTO->Length < _BuildDTO->MinLength ||
 		_SelectionDTO->Width < _BuildDTO->MinWidth)
 	{
@@ -199,7 +199,6 @@ void UCOSelectCellsAbilityTask::ValidateSelectionData()
 			valid = false;
 		}
 	}
-
 	for (auto Cell :  _SelectedCells)
 	{
 		if (Cell->IsOccupied) {
@@ -218,6 +217,7 @@ void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)
 	for (const auto SelectedComponent : _SelectedCells)
 	{
 		SelectedComponent->SetSelected(false);
+		SelectedComponent->SetVisible(false);
 	}
 
 	Super::ExternalConfirm(bEndTask);

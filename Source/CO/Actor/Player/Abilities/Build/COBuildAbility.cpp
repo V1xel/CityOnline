@@ -24,8 +24,8 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 	auto BuildingTag = TriggerEventData->InstigatorTags.Filter(FGameplayTagContainer(FilterBuildingTag)).First();
 	auto BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
-	auto BuildingSpecialization = *BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
-	_BuildDTO = BuildingSpecialization.ToDTO();
+	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
+	_BuildDTO = BuildingSpecialization->ToDTO();
 
 	FGameplayEventTagMulticastDelegate::FDelegate AllocationFinishedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnAllocationFinished.GetSingleTagContainer(), AllocationFinishedDelegate);

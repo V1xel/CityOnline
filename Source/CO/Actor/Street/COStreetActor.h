@@ -38,7 +38,6 @@ public:
 	UPROPERTY()
 	TArray<UCOStreetCellComponent*> Cells{};
 
-
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UCOAbilitySystemComponent* AbilitySystemComponent {};
 	

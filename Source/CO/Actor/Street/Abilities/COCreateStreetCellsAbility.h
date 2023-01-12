@@ -6,6 +6,7 @@
 #include "CO/Core/AbilitySystem/COGameplayAbilityBase.h"
 #include "COCreateStreetCellsAbility.generated.h"
 
+class UCOStreetCellComponent;
 /**
  * 
  */
@@ -23,6 +24,9 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TSubclassOf<UCOStreetCellComponent> CellComponentClass;
+
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 		FVector Scale;
 

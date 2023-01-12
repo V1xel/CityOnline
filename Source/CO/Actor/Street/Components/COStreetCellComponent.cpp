@@ -3,26 +3,9 @@
 
 #include "COStreetCellComponent.h"
 
-UCOStreetCellComponent::UCOStreetCellComponent()
-{
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> PlaneAsset(TEXT("StaticMesh'/Engine/BasicShapes/Plane.Plane'"));
-	if (PlaneAsset.Succeeded()) {
-		UStaticMeshComponent::SetStaticMesh(PlaneAsset.Object);
-	}
-
-	static ConstructorHelpers::FObjectFinder<UMaterial> CellMaterialAsset(TEXT("Material'/Game/CityOnline/Actor/Building/Material/BuildingCellValid.BuildingCellValid'"));
-	if (CellMaterialAsset.Succeeded()) {
-		DynamicMaterial = UMaterialInstanceDynamic::Create(CellMaterialAsset.Object, this, "CellMaterial");
-		UMeshComponent::SetMaterial(0, DynamicMaterial);
-	}
-
-	USceneComponent::SetMobility(EComponentMobility::Static);
-}
-
 void UCOStreetCellComponent::SetSelected(bool Value)
 {
 	IsSelected = Value;
-	SetVisible(IsSelected);
 }
 
 void UCOStreetCellComponent::SetOccupied(bool Value)
@@ -30,12 +13,10 @@ void UCOStreetCellComponent::SetOccupied(bool Value)
 	IsOccupied = Value;
 }
 
-void UCOStreetCellComponent::SetValid(bool Value)
+void UCOStreetCellComponent::SetValid_Implementation(bool Value)
 {
-	DynamicMaterial->SetScalarParameterValue("Valid", Value);
 }
 
-void UCOStreetCellComponent::SetVisible(bool Value)
+void UCOStreetCellComponent::SetVisible_Implementation(bool Value)
 {
-	DynamicMaterial->SetScalarParameterValue("Visible", Value);
 }
