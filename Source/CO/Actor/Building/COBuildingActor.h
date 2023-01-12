@@ -3,28 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "Attributes/COBuildingAttributeSet.h"
 #include "GameFramework/Actor.h"
 #include "COBuildingActor.generated.h"
 
 class UCOAbilitySystemComponent;
+class UCOBuildingPartComponent;
 class UCOConstructionDTO;
 class UCOBuildingAsset;
 
 UCLASS(Blueprintable)
-class CO_API ACOBuildingActor : public AActor
+class CO_API ACOBuildingActor : public AActor, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
-	ACOBuildingActor();
-
-	void ApplyChanges();
-
-	void RemoveActor();
-
-	UFUNCTION()
 	void ComposeBuilding();
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -42,10 +39,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	const UCOConstructionDTO* Configuration{};
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass;
+
 	int Floor;
 private:
 
-	TArray<UStaticMeshComponent*> Meshes{};
+	TArray<UCOBuildingPartComponent*> Meshes{};
 	bool IsSelected;
 
 	bool IsEdited;

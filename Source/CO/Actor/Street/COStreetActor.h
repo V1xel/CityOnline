@@ -3,14 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Actor/Player/COPlayerCharacter.h"
 #include "CO/Database/Enums/COStreetPrestige.h"
 #include "GameFramework/Actor.h"
+#include "AbilitySystemInterface.h"
 #include "COStreetActor.generated.h"
 
 class UCOAbilitySystemComponent;
 class ACOBuildingActor;
 class UCOStreetCellComponent;
+class ACOPlayerCharacter;
 
 UCLASS()
 class CO_API ACOStreetActor : public AActor, public IAbilitySystemInterface

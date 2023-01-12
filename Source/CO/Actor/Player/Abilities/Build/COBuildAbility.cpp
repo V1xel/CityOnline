@@ -10,6 +10,7 @@
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Database/Assets/CORootAsset.h"
 #include "CO/Actor/Building/COBuildingActor.h"
+#include "CO/Actor/Street/Abilities/DTO/CODeployBuildingDTO.h"
 
 bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
@@ -33,19 +34,22 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
 	EffectContext.AddSourceObject(_BuildDTO);
 
-	ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), EffectContext)));
+	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), EffectContext)));
 }
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Purple, TEXT("OnAllocationFinished"));
-	//auto SelectionDTO = Cast<UCOSelectionDTO>(EventData->OptionalObject);
-	//auto Asset = RootAsset->FindBestAsset(SelectionDTO, _BuildDTO);
-	//_BuildingActor = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
-	//_BuildingActor->BuildingAsset = Asset;
-	//_BuildingActor->ComposeBuilding();
-	//_BuildingActor->FinishSpawning(FTransform());
-	//_BuildingActor->SetActorLocationAndRotation(SelectionDTO->Center, SelectionDTO->Rotation + Asset->RotationOffset);
+	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(_AllocationEffectHandle);
+
+	_DeployBuilding = NewObject<UCODeployBuildingDTO>();
+
+	auto SelectionDTO = Cast<UCOSelectionDTO>(EventData->OptionalObject);
+	auto Asset = RootAsset->FindBestAsset(SelectionDTO, _BuildDTO);
+	_BuildingPreview = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
+	_BuildingPreview->BuildingAsset = Asset;
+	_BuildingPreview->ComposeBuilding();
+	_BuildingPreview->FinishSpawning(FTransform());
+	_BuildingPreview->SetActorLocationAndRotation(SelectionDTO->Center, SelectionDTO->Rotation + Asset->RotationOffset);
 }
 
 void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -53,7 +57,9 @@ void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, con
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 
-	
+	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
+	EffectContext.AddSourceObject(_DeployBuilding);
+	ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(PendingDeployEffect.GetDefaultObject(), EffectContext)));
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }

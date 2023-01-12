@@ -12,6 +12,7 @@ class UCORootAsset;
 class UCOSelectionDTO;
 class UCOBuildingAsset;
 class ACOBuildingActor;
+class UCODeployBuildingDTO;
 class UCOSelectCellsAbilityTask;
 
 /**
@@ -52,6 +53,9 @@ public:
 	TSubclassOf<UGameplayEffect> EnableCellAllocationEffect{};
 
 	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> PendingDeployEffect{};
+
+	UPROPERTY(EditAnywhere)
 	UDataTable* BuildingsTable {};
 
 	UPROPERTY(EditAnywhere)
@@ -67,5 +71,8 @@ private:
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
 
 	UPROPERTY()
-	ACOBuildingActor* _BuildingActor;
+		ACOBuildingActor* _BuildingPreview;
+
+	UPROPERTY()
+	UCODeployBuildingDTO* _DeployBuilding;
 };
