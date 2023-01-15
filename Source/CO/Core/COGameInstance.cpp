@@ -2,4 +2,9 @@
 
 
 #include "COGameInstance.h"
+#include <AbilitySystemGlobals.h>
 
+void UCOGameInstance::Init()
+{
+	UAbilitySystemGlobals::Get().InitGlobalData();
+}

@@ -19,4 +19,6 @@ class CO_API UCOGameInstance : public UGameInstance
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UCORootAsset* RootAsset;
+
+	virtual void Init() override;
 };
