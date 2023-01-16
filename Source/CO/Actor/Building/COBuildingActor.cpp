@@ -13,7 +13,6 @@ UAbilitySystemComponent* ACOBuildingActor::GetAbilitySystemComponent() const
 
 void ACOBuildingActor::ComposeBuilding()
 {
-	Meshes.Empty();
 	for (size_t i = 1; i <= 4; i++)
 	{
 		auto Mesh = Cast<UCOBuildingPartComponent>(AddComponentByClass(BuildingPartComponentClass, false, FTransform::Identity, false));

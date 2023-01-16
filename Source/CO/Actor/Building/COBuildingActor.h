@@ -35,6 +35,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCOBuildingAsset* BuildingAsset {};
-private:
+protected:
+	UPROPERTY()
 	TArray<UCOBuildingPartComponent*> Meshes{};
 };
