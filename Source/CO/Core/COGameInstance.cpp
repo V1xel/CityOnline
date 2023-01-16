@@ -6,5 +6,6 @@
 
 void UCOGameInstance::Init()
 {
+	Super::Init();
 	UAbilitySystemGlobals::Get().InitGlobalData();
 }
