@@ -6,7 +6,8 @@
 #include "UObject/NoExportTypes.h"
 #include "CODeployBuildingDTO.generated.h"
 
-class UCOBuildingAsset;
+class UCOSelectionDTO;
+class UCOBuildDTO;
 
 /**
  * 
@@ -19,9 +20,7 @@ class CO_API UCODeployBuildingDTO : public UObject
 public:
 	int Floors;
 
-	int Style;
+	FString BuildingName;
 
-	int Quality;
-
-	TArray<UCOStreetCellComponent*> _SelectedCells{};
+	UCOSelectionDTO* SelectionDTO;
 };

@@ -31,22 +31,10 @@ public:
 	UCOBuildingAttributeSet* BuildingAttributeSet{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCOBuildingAsset* BuildingAsset {};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UCOConstructionDTO> OverrideConfiguration {};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	const UCOConstructionDTO* Configuration{};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass;
-
-	int Floor;
 private:
-
 	TArray<UCOBuildingPartComponent*> Meshes{};
-	bool IsSelected;
-
-	bool IsEdited;
 };

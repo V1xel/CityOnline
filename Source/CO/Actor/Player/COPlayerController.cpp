@@ -13,23 +13,23 @@ ACOPlayerController::ACOPlayerController()
 	bEnableMouseOverEvents = true;
 }
 
-void ACOPlayerController::SendGameplayEventToPawn(FGameplayTag Tag, FGameplayEventData Payload, bool Client, bool Server)
+void ACOPlayerController::SendGameplayEventToPawn(FGameplayTag Tag, FGameplayEventData Payload, bool SendToServer)
 {
-	if (Client) {
-		Cast<IAbilitySystemInterface>(GetPawn())->GetAbilitySystemComponent()->HandleGameplayEvent(Tag, &Payload);
-	}
-	if (Server) {
+	if (SendToServer) {
 		SendServerGameplayEventToPawn(Tag, Payload);
+	}
+	else {
+		Cast<IAbilitySystemInterface>(GetPawn())->GetAbilitySystemComponent()->HandleGameplayEvent(Tag, &Payload);
 	}
 }
 
-void ACOPlayerController::SendGameplayEventToListener(AActor* Listener, FGameplayTag Tag, FGameplayEventData Payload, bool Client, bool Server)
+void ACOPlayerController::SendGameplayEventToListener(AActor* Listener, FGameplayTag Tag, FGameplayEventData Payload, bool SendToServer)
 {
-	if (Client) {
-		Cast<IAbilitySystemInterface>(Listener)->GetAbilitySystemComponent()->HandleGameplayEvent(Tag, &Payload);
-	}
-	if (Server) {
+	if (SendToServer) {
 		SendServerGameplayEventToListener(Listener, Tag, Payload);
+	}
+	else {
+		Cast<IAbilitySystemInterface>(Listener)->GetAbilitySystemComponent()->HandleGameplayEvent(Tag, &Payload);
 	}
 }
 

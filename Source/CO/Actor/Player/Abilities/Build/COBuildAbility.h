@@ -65,13 +65,17 @@ public:
 	FGameplayTag FilterBuildingTag;
 
 private:
+	bool _Confirm;
+
+	FString _BuildingName;
+
 	UPROPERTY()
 	UCOBuildDTO* _BuildDTO;
 
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
 
 	UPROPERTY()
-		ACOBuildingActor* _BuildingPreview;
+	ACOBuildingActor* _BuildingPreview;
 
 	UPROPERTY()
 	UCODeployBuildingDTO* _DeployBuilding;

@@ -36,10 +36,10 @@ public:
 	float FloorHeight = 410;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	UStaticMesh* FirstFloor;
+	UStaticMesh* MainFloor;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	UStaticMesh* MiddleFloor;
+	UStaticMesh* ExtensionFloor;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UStaticMesh* Roof;

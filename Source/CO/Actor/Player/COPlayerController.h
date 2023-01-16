@@ -17,10 +17,10 @@ class CO_API ACOPlayerController : public APlayerController
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SendGameplayEventToPawn(FGameplayTag Tag, FGameplayEventData Payload, bool Client, bool Server);
+	void SendGameplayEventToPawn(FGameplayTag Tag, FGameplayEventData Payload, bool SendToServer);
 
 	UFUNCTION(BlueprintCallable)
-	void SendGameplayEventToListener(AActor* Listener, FGameplayTag Tag, FGameplayEventData Payload, bool Client, bool Server);
+	void SendGameplayEventToListener(AActor* Listener, FGameplayTag Tag, FGameplayEventData Payload, bool SendToServer);
 
 	UFUNCTION(Server, Reliable)
 	void SendServerGameplayEventToPawn(FGameplayTag Tag, FGameplayEventData Payload);

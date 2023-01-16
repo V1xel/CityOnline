@@ -5,7 +5,6 @@
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 #include "CO/Actor/Building/Components/COBuildingPartComponent.h"
-#include "CO/Actor/Player/Abilities/DTO/COConstructionDTO.h"
 
 UAbilitySystemComponent* ACOBuildingActor::GetAbilitySystemComponent() const
 {
@@ -14,30 +13,21 @@ UAbilitySystemComponent* ACOBuildingActor::GetAbilitySystemComponent() const
 
 void ACOBuildingActor::ComposeBuilding()
 {
-	int floors = 2;
-	if (Configuration) {
-		floors = Configuration->Floors;
-	}
-	
 	Meshes.Empty();
-	for (size_t i = 0; i <= floors; i++)
+	for (size_t i = 1; i <= 4; i++)
 	{
 		auto Mesh = Cast<UCOBuildingPartComponent>(AddComponentByClass(BuildingPartComponentClass, false, FTransform::Identity, false));
-		if (Mesh)
-		{
-			Meshes.Add(Mesh);
-			if (i == 0) {
-				Mesh->SetStaticMesh(BuildingAsset->FirstFloor);
-			}
-			else if (i <= floors) {
-				Mesh->SetStaticMesh(BuildingAsset->MiddleFloor);
-				Mesh->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (i - 1)));
-			}
-		}
+		Mesh->SetStaticMesh(BuildingAsset->ExtensionFloor);
+		Mesh->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (i - 1)));
+		Meshes.Add(Mesh);
 	}
+
+	auto MainFloor = Cast<UCOBuildingPartComponent>(AddComponentByClass(BuildingPartComponentClass, false, FTransform::Identity, false));
+	MainFloor->SetStaticMesh(BuildingAsset->MainFloor);
+	Meshes.Add(MainFloor);
 
 	auto Roof = Cast<UCOBuildingPartComponent>(AddComponentByClass(BuildingPartComponentClass, false, FTransform::Identity, false));
 	Roof->SetStaticMesh(BuildingAsset->Roof);
-	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (floors - 1)));
+	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (4 - 1)));
 	Meshes.Add(Roof);
 }

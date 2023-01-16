@@ -23,17 +23,24 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	auto BuildingTag = TriggerEventData->InstigatorTags.Filter(FGameplayTagContainer(FilterBuildingTag)).First();
-	auto BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
-	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
-	_BuildDTO = BuildingSpecialization->ToDTO();
+	FGameplayEventTagMulticastDelegate::FDelegate BuildConfirmedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([&]
+	(FGameplayTag Tag, const FGameplayEventData* EventData) { _Confirm = true; CancelAbility(Handle, ActorInfo, ActivationInfo, false); });
+	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnAllocationFinished.GetSingleTagContainer(), BuildConfirmedDelegate);
+
+	FGameplayEventTagMulticastDelegate::FDelegate BuildCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([&]
+	(FGameplayTag Tag, const FGameplayEventData* EventData) { CancelAbility(Handle, ActorInfo, ActivationInfo, false); });
+	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnAllocationFinished.GetSingleTagContainer(), BuildCanceledDelegate);
 
 	FGameplayEventTagMulticastDelegate::FDelegate AllocationFinishedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnAllocationFinished.GetSingleTagContainer(), AllocationFinishedDelegate);
 
-	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
-	EffectContext.AddSourceObject(_BuildDTO);
 
+	auto BuildingTag = TriggerEventData->InstigatorTags.Filter(FGameplayTagContainer(FilterBuildingTag)).First();
+	_BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
+	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(FName(_BuildingName), "");
+	auto BuildDTO = BuildingSpecialization->ToDTO();
+	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
+	EffectContext.AddSourceObject(BuildDTO);
 	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), EffectContext)));
 }
 
@@ -41,15 +48,11 @@ void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEven
 {
 	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(_AllocationEffectHandle);
 
+	auto SelectionDTO = Cast<UCOSelectionDTO>(EventData->Target);
 	_DeployBuilding = NewObject<UCODeployBuildingDTO>();
-
-	auto SelectionDTO = Cast<UCOSelectionDTO>(EventData->OptionalObject);
-	auto Asset = RootAsset->FindBestAsset(SelectionDTO, _BuildDTO);
-	_BuildingPreview = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(SelectionDTO->Rotation, SelectionDTO->Center));
-	_BuildingPreview->BuildingAsset = Asset;
-	_BuildingPreview->ComposeBuilding();
-	_BuildingPreview->FinishSpawning(FTransform());
-	_BuildingPreview->SetActorLocationAndRotation(SelectionDTO->Center, SelectionDTO->Rotation + Asset->RotationOffset);
+	_DeployBuilding->SelectionDTO = SelectionDTO;
+	_DeployBuilding->BuildingName = _BuildingName;
+	_DeployBuilding->Floors = 4;
 }
 
 void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -57,9 +60,11 @@ void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, con
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 
-	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
-	EffectContext.AddSourceObject(_DeployBuilding);
-	ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(PendingDeployEffect.GetDefaultObject(), EffectContext)));
+	if (_Confirm) {
+		auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
+		EffectContext.AddSourceObject(_DeployBuilding);
+		ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(PendingDeployEffect.GetDefaultObject(), EffectContext)));
+	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
