@@ -57,9 +57,14 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UDataTable* BuildingsTable {};
+	UPROPERTY(EditAnywhere)
+		FGameplayTag ListenEventOnAllocationFinished;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag ListenEventOnAllocationFinished;
+		FGameplayTag ListenEventOnBuildConfirmed;
+
+	UPROPERTY(EditAnywhere)
+		FGameplayTag ListenEventOnBuildCanceled;
 
 	UPROPERTY(EditAnywhere)
 	FGameplayTag FilterBuildingTag;
@@ -70,13 +75,13 @@ private:
 	FString _BuildingName;
 
 	UPROPERTY()
+	UCOSelectionDTO* _SelectionDTO;
+
+	UPROPERTY()
 	UCOBuildDTO* _BuildDTO;
 
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
 
 	UPROPERTY()
 	ACOBuildingActor* _BuildingPreview;
-
-	UPROPERTY()
-	UCODeployBuildingDTO* _DeployBuilding;
 };
