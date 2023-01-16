@@ -5,7 +5,6 @@
 #include "CO/Actor/Player/Abilities/AbilityTasks/COSelectCellsAbilityTask.h"
 #include "CO/Core/AbilitySystem/COAbilityTaskBase.h"
 #include "CO/Extensions/GameplayTagExtension.h"
-#include "CO/Core/COConstants.h"
 #include "AbilitySystemComponent.h"
 #include "COBuildAbility.h"
 

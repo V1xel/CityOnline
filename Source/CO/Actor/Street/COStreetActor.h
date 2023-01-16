@@ -6,12 +6,15 @@
 #include "CO/Database/Enums/COStreetPrestige.h"
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
+#include "Abilities/GameplayAbilityTargetDataFilter.h"
+#include "GameplayEffectTypes.h"
+#include "Delegates/IDelegateInstance.h"
 #include "COStreetActor.generated.h"
 
-class UCOAbilitySystemComponent;
 class ACOBuildingActor;
 class UCOStreetCellComponent;
 class ACOPlayerCharacter;
+
 
 UCLASS()
 class CO_API ACOStreetActor : public AActor, public IAbilitySystemInterface
@@ -23,37 +26,35 @@ public:
 
 	virtual void BeginPlay() override;
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override 
+	{
+		return AbilitySystemComponent;
+	}
 
-	void CalculatePotentialOutput();
+	void OnEffectApplied(AActor* Source, FGameplayEffectSpecHandle SpecHandle, FActiveGameplayEffectHandle ActiveHandle);
 
-	bool CheckBuildingRequirements();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void PendingDeployEffectApplied(FGameplayEffectContextHandle EffectContextHandle);
 
-	void CancelBuildingTransaction();
-
-	void FailBuildingTransaction();
-	
-	void CommitBuildingTransaction();
+	void PendingDeployEffectApplied_Implementation(FGameplayEffectContextHandle EffectContextHandle)
+	{
+	}
 
 public:
 	UPROPERTY()
 	TArray<UCOStreetCellComponent*> Cells{};
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	UCOAbilitySystemComponent* AbilitySystemComponent {};
+	UAbilitySystemComponent* AbilitySystemComponent {};
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTag ListenBuildingDeployEffectAppliedTag;
 	
 protected:
-	bool IsConstructed;
-	
 	UPROPERTY()
 	USceneComponent* SceneComponent;
 	
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
-	FString _Name;
-	
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
-	ECOStreetPrestige _Prestige;
-	
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
-	ACOPlayerCharacter* _Tenant;
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAppliedDelegate, FGameplayEffectContextHandle, EffectContextHandle);
+	UPROPERTY()
+	TMap<FGameplayTag, FOnAppliedDelegate> OnAppliedMap;
 };

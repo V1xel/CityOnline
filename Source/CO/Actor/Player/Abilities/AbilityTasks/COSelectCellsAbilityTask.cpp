@@ -6,7 +6,6 @@
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
 #include "CO/Actor/Player/Abilities/Build/COBuildAbility.h"
 #include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
-#include "CO/Core/COConstants.h"
 
 void UCOSelectCellsAbilityTask::Initialize()
 {
