@@ -13,6 +13,7 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	_Target = TriggerEventData->Target.Get();
 
 	auto AllocationCancelDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
 	(FGameplayTag Tag, const FGameplayEventData* EventData) { CancelAbility(Handle, ActorInfo, ActivationInfo, false); });
@@ -35,6 +36,7 @@ void UCOAllocateAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, 
 	UCOSelectionDTO* SelectionDTO = _AllocationTask->GetResult();
 	if (SelectionDTO && SelectionDTO->IsValid) {
 		auto Data = FGameplayEventData();
+		Data.Target = _Target;
 		Data.OptionalObject = SelectionDTO;
 		SendGameplayEvent(BroadcastedEventOnAllocationFinished, Data);
 	}
@@ -45,6 +47,7 @@ void UCOAllocateAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, 
 void UCOAllocateAbility::AbilityTaskTick()
 {
 	auto Data = FGameplayEventData();
+	Data.Target = _Target;
 	Data.OptionalObject = _AllocationTask->GetResult();
 
 	SendGameplayEvent(BroadcastedEventOnAllocationUpdated, Data);

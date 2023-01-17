@@ -75,6 +75,9 @@ private:
 	FString _BuildingName;
 
 	UPROPERTY()
+	const AActor* _Target;
+
+	UPROPERTY()
 	UCOSelectionDTO* _SelectionDTO;
 
 	UPROPERTY()

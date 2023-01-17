@@ -22,12 +22,12 @@ void ACOStreetActor::BeginPlay()
 
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
-	//auto AsyncTask = UAbilityAsync_WaitGameplayEffectApplied::WaitGameplayEffectAppliedToActor(this, FGameplayTargetDataFilterHandle(), FGameplayTagRequirements(), FGameplayTagRequirements());
-	//AsyncTask->OnApplied.AddDynamic(this, &ACOStreetActor::OnEffectApplied);
+	auto AsyncTask = UAbilityAsync_WaitGameplayEffectApplied::WaitGameplayEffectAppliedToActor(this, FGameplayTargetDataFilterHandle(), FGameplayTagRequirements(), FGameplayTagRequirements());
+	AsyncTask->OnApplied.AddDynamic(this, &ACOStreetActor::OnEffectApplied);
 
-	//FOnAppliedDelegate DeployEffectAppliedDelegate;
-	//DeployEffectAppliedDelegate.AddDynamic(this, &ACOStreetActor::PendingDeployEffectApplied);
-	//OnAppliedMap.Add(ListenBuildingDeployEffectAppliedTag, DeployEffectAppliedDelegate);
+	FOnAppliedDelegate DeployEffectAppliedDelegate;
+	DeployEffectAppliedDelegate.AddDynamic(this, &ACOStreetActor::PendingDeployEffectApplied);
+	OnAppliedMap.Add(ListenBuildingDeployEffectAppliedTag, DeployEffectAppliedDelegate);
 }
 
 void ACOStreetActor::OnEffectApplied(AActor* Source, FGameplayEffectSpecHandle SpecHandle, FActiveGameplayEffectHandle ActiveHandle)

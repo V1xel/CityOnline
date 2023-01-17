@@ -47,6 +47,9 @@ public:
 
 private:
 	UPROPERTY()
+	const AActor* _Target;
+
+	UPROPERTY()
 	UCOSelectCellsAbilityTask* _AllocationTask;
 
 	FDelegateHandle _CancelDelegateHandle;
