@@ -25,7 +25,11 @@ public:
 
 	virtual void ExternalConfirm(bool bEndTask) override;
 
-	UCOSelectionDTO* GetResult() { return _SelectionDTO; }
+	void VisualizeSelection();
+
+	UCOSelectionDTO* GetVisualisationResult();
+
+	UCOSelectionDTO* CalculateSelectionData(FGameplayAbilityTargetDataHandle TargetData);
 protected:
 	virtual void TickTask(float DeltaTime) override;
 
@@ -33,11 +37,11 @@ protected:
 
 	bool RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,	TArray<FHitResult>& OutHits) const;
 
-	void UpdateCellsState(TArray<FHitResult>& HitResults);
+	TArray<UCOStreetCellComponent*> GetSelectedCells(TArray<FHitResult>& HitResults);
 
-	void CollectSelectionData();
+	void CollectSelectionData(UCOSelectionDTO* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
 
-	void ValidateSelectionData();
+	void ValidateSelectionData(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO);
 
 private:
 	UPROPERTY()

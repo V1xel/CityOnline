@@ -22,80 +22,39 @@ bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVe
 	const FCollisionShape CollisionBox = FCollisionShape::MakeBox(Extent);
 	const FVector Center = (RectangleEnd + RectangleStart) / 2;
 
-	DrawDebugBox(GetWorld(), Center, Extent, FColor::Red, false, -1, 0, 10);
-
 	return GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
 }
 
-void UCOSelectCellsAbilityTask::UpdateCellsState(TArray<FHitResult>& HitResults)
+TArray<UCOStreetCellComponent*> UCOSelectCellsAbilityTask::GetSelectedCells(TArray<FHitResult>& HitResults)
 {
-	TArray<UCOStreetCellComponent*> DesiredSelectedComponents;
+	TArray<UCOStreetCellComponent*> SelectedCells;
 	
 	for (auto HitResult : HitResults)
 	{
-		UCOStreetCellComponent* HitComponent = Cast<UCOStreetCellComponent>(HitResult.GetComponent());
-		if(HitComponent)
+		UCOStreetCellComponent* SelectedCell = Cast<UCOStreetCellComponent>(HitResult.GetComponent());
+		if(SelectedCell)
 		{
-			bool PendingSelect = true;
-			for (const auto SelectedComponent : _SelectedCells)
-			{
-				if(SelectedComponent == HitComponent)
-				{
-					PendingSelect = false;
-					break;
-				}
-			}
-			if(PendingSelect)
-			{
-				HitComponent->SetSelected(true);
-				HitComponent->SetVisible(true);
-			}
-			
-			DesiredSelectedComponents.Add(HitComponent);
+			SelectedCells.Add(SelectedCell);
 		}
 	}
 
-	for (const auto CellComponent : _SelectedCells)
-	{
-		bool PendingDeselect = true;
-		for (auto HitResult : HitResults)
-		{
-			UCOStreetCellComponent* HitComponent = Cast<UCOStreetCellComponent>(HitResult.GetComponent());
-			if(HitComponent && CellComponent == HitComponent)
-			{
-				PendingDeselect = false;
-			}
-		}
-
-		if(PendingDeselect)
-		{
-			CellComponent->SetSelected(false);
-			CellComponent->SetVisible(false);
-		}
-	}
-
-	_SelectedCells.Empty();
-	_SelectedCells = DesiredSelectedComponents;
+	return SelectedCells;
 }
 
-void UCOSelectCellsAbilityTask::CollectSelectionData()
+void UCOSelectCellsAbilityTask::CollectSelectionData(UCOSelectionDTO* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells)
 {
-	if (_SelectedCells.Num() == 0) 
-		return;
-	
-	auto MinimumHorizontal = _SelectedCells[0]->Horizontal;
-	auto MaximumHorizontal = _SelectedCells[0]->Horizontal;
-	auto MinimumVertical = _SelectedCells[0]->Vertical;
-	auto MaximumVertical = _SelectedCells[0]->Vertical;
+	auto MinimumHorizontal = SelectedCells[0]->Horizontal;
+	auto MaximumHorizontal = SelectedCells[0]->Horizontal;
+	auto MinimumVertical = SelectedCells[0]->Vertical;
+	auto MaximumVertical = SelectedCells[0]->Vertical;
 	bool HasExtreme = false;
 	bool HasCorner = false;
 	int ExtremeCount = 0;
 
 	FVector SelectionCenter;
 	FVector SelectionNormal;
-	for (auto Cell : _SelectedCells)
+	for (auto Cell : SelectedCells)
 	{
-		DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 20, FColor::Yellow, false, -1, 0, 20);
 		if(MinimumHorizontal > Cell->Horizontal)
 		{
 			MinimumHorizontal = Cell->Horizontal;
@@ -116,7 +75,6 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		{
 			ExtremeCount++;
 				
-			DrawDebugBox(GetWorld(), Cell->GetComponentLocation(), FVector::OneVector * 40, FColor::Blue, false, -1, 0, 20);
 			SelectionNormal = SelectionNormal - Cell->GetComponentLocation();
 			HasExtreme = true;
 		}
@@ -128,11 +86,9 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		SelectionCenter = SelectionCenter + Cell->GetComponentLocation();
 	}
 
-	const FVector SelectionCenterCorrect = SelectionCenter / _SelectedCells.Num();
+	const FVector SelectionCenterCorrect = SelectionCenter / SelectedCells.Num();
 	const FVector SelectionNormalSafe = SelectionNormal.GetSafeNormal2D();
 	const FVector SelectionNormalCorrect = (SelectionCenterCorrect - SelectionNormalSafe).GetSafeNormal2D();
-
-	DrawDebugDirectionalArrow(GetWorld(), SelectionNormalSafe, SelectionCenterCorrect, 2000, FColor::Green, false, -1, 0, 50);
 
 	FVector FinalFinalNormal;
 	if (ExtremeCount == 3) {
@@ -145,81 +101,113 @@ void UCOSelectCellsAbilityTask::CollectSelectionData()
 		FinalFinalNormal = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
 	}
 
-	DrawDebugDirectionalArrow(GetWorld(), -FinalFinalNormal, -FinalFinalNormal * 1000, 2000, FColor::Red, false, -1, 0, 50);
+	SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
+	SelectionDTO->Center = SelectionCenterCorrect;
+	SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal + 1;
+	SelectionDTO->Width = MaximumVertical - MinimumVertical + 1;
+	SelectionDTO->HasExtreme = HasExtreme;
+	SelectionDTO->HasCorner = HasCorner;
+}
 
-	_SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
-	_SelectionDTO->Center = SelectionCenterCorrect;
-	_SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal + 1;
-	_SelectionDTO->Width = MaximumVertical - MinimumVertical + 1;
-	_SelectionDTO->HasExtreme = HasExtreme;
-	_SelectionDTO->HasCorner = HasCorner;
+void UCOSelectCellsAbilityTask::VisualizeSelection() 
+{
+	FHitResult CurrentMousePositionHitResult;
+	Ability->GetActorInfo().PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
+
+	for (auto Cell : _SelectedCells)
+	{
+		Cell->SetVisible(false);
+		Cell->SetSelected(false);
+	}
+	_SelectedCells.Empty();
+
+	TArray<FHitResult> OutHits;
+	RaycastWithRectangle(_SelectionStartedLocation, CurrentMousePositionHitResult.Location, OutHits);
+	auto Cells = GetSelectedCells(OutHits);
+	if (Cells.Num() == 0) 
+		return;
+	
+	CollectSelectionData(_SelectionDTO, Cells);
+	ValidateSelectionData(_SelectionDTO, _BuildDTO);
+
+	for (auto Cell : Cells)
+	{
+		Cell->SetVisible(true);
+		if (Cell->IsOccupied) {
+			Cell->SetValid(false);
+		}
+		else {
+			Cell->SetValid(_SelectionDTO->IsValid);
+		}
+	}
+
+	_SelectedCells = Cells;
 }
 
 void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
 {
 	Super::TickTask(DeltaTime);
+	VisualizeSelection();
 
-	FHitResult CurrentMousePositionHitResult;
-	Ability->GetActorInfo().PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
-
-	TArray<FHitResult> OutHits;
-	RaycastWithRectangle(_SelectionStartedLocation, CurrentMousePositionHitResult.Location, OutHits);
-	UpdateCellsState(OutHits);
-
-	CollectSelectionData();
-	ValidateSelectionData();
-	
 	auto AllocateAbility = Cast<UCOAllocateAbility>(Ability);
 	AllocateAbility->AbilityTaskTick();
 }
 
-void UCOSelectCellsAbilityTask::ValidateSelectionData() 
+void UCOSelectCellsAbilityTask::ValidateSelectionData(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO) 
 {
 	bool valid = true;
-
-	if (!_SelectionDTO->HasExtreme) {
+	if (!SelectionDTO->HasExtreme) {
 		valid = false;
 	}
-	if (_SelectionDTO->Length > _BuildDTO->MaxLength ||
-		_SelectionDTO->Width > _BuildDTO->MaxWidth)
+	if (SelectionDTO->Length > BuildDTO->MaxLength ||
+		SelectionDTO->Width > BuildDTO->MaxWidth)
 	{
-		if (_SelectionDTO->Width > _BuildDTO->MaxLength ||
-			_SelectionDTO->Length > _BuildDTO->MaxWidth)
+		if (SelectionDTO->Width > BuildDTO->MaxLength ||
+			SelectionDTO->Length > BuildDTO->MaxWidth)
 		{
 			valid = false;
 		}
 	}
-	if (_SelectionDTO->Length < _BuildDTO->MinLength ||
-		_SelectionDTO->Width < _BuildDTO->MinWidth)
+	if (SelectionDTO->Length < BuildDTO->MinLength ||
+		SelectionDTO->Width < BuildDTO->MinWidth)
 	{
-		if (_SelectionDTO->Width < _BuildDTO->MinLength ||
-			_SelectionDTO->Length < _BuildDTO->MinWidth)
+		if (SelectionDTO->Width < BuildDTO->MinLength ||
+			SelectionDTO->Length < BuildDTO->MinWidth)
 		{
 			valid = false;
-		}
-	}
-	for (auto Cell :  _SelectedCells)
-	{
-		if (Cell->IsOccupied) {
-			Cell->SetValid(false);
-		}
-		else {
-			Cell->SetValid(valid);
 		}
 	}
 
-	_SelectionDTO->IsValid = valid;
+	SelectionDTO->IsValid = valid;
 }
 
 void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)
 {
-	for (const auto SelectedComponent : _SelectedCells)
-	{
-		SelectedComponent->SetSelected(false);
-		SelectedComponent->SetVisible(false);
+	if (bTickingTask) {
+		for (const auto SelectedComponent : _SelectedCells)
+		{
+			SelectedComponent->SetSelected(false);
+			SelectedComponent->SetVisible(false);
+		}
 	}
 
 	Super::ExternalConfirm(bEndTask);
+}
+
+UCOSelectionDTO* UCOSelectCellsAbilityTask::GetVisualisationResult()
+{
+	return _SelectionDTO;
+}
+
+UCOSelectionDTO* UCOSelectCellsAbilityTask::CalculateSelectionData(FGameplayAbilityTargetDataHandle TargetData)
+{
+	TArray<FHitResult> OutHits;
+	RaycastWithRectangle(_SelectionStartedLocation, TargetData.Get(0)->GetHitResult()->Location, OutHits);
+	auto Cells = GetSelectedCells(OutHits);
+	CollectSelectionData(_SelectionDTO, Cells);
+	ValidateSelectionData(_SelectionDTO, _BuildDTO);
+
+	return _SelectionDTO;
 }
 
 void UCOSelectCellsAbilityTask::OnDestroy(bool AbilityIsEnding)

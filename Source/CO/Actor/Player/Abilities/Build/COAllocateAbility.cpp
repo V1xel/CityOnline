@@ -14,27 +14,37 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	_Target = TriggerEventData->Target.Get();
-
 	auto AllocationCancelDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
-	(FGameplayTag Tag, const FGameplayEventData* EventData) { CancelAbility(Handle, ActorInfo, ActivationInfo, false); });
+	(FGameplayTag Tag, const FGameplayEventData* EventData) { AllocationCancel(Handle, ActorInfo, ActivationInfo, EventData); });
 	_CancelDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenCancelAllocateTag.GetSingleTagContainer(), AllocationCancelDelegate);
 
 	auto AllocatePermissionActiveEffects = ActorInfo->AbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
 	if (AllocatePermissionActiveEffects.Num() > 0) {
 		FGameplayEffectContextHandle PermissionGrantedEffectContext = ActorInfo->AbilitySystemComponent->GetEffectContextFromActiveGEHandle(AllocatePermissionActiveEffects[0]);
-		_AllocationTask = UCOAbilityTaskBase::CreateAllocationTask<UCOSelectCellsAbilityTask>(this, TriggerEventData->TargetData, PermissionGrantedEffectContext);
+		_AllocationTask = UCOAbilityTaskBase::CreateAllocationTask<UCOSelectCellsAbilityTask>(this, TriggerEventData->TargetData, PermissionGrantedEffectContext, true);
 	}
 }
 
-void UCOAllocateAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
+void UCOAllocateAbility::AbilityTaskTick()
+{
+	auto Data = FGameplayEventData();
+	Data.Target = _Target;
+	Data.OptionalObject = _AllocationTask->GetVisualisationResult();
+
+	SendGameplayEvent(BroadcastedEventOnAllocationUpdated, Data);
+}
+
+void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayEventData* TriggerEventData)
 {
 	if (!_AllocationTask) {
 		EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 		return;
 	}
 
-	UCOSelectionDTO* SelectionDTO = _AllocationTask->GetResult();
-	if (SelectionDTO && SelectionDTO->IsValid) {
+	UCOSelectionDTO* SelectionDTO = _AllocationTask->CalculateSelectionData(TriggerEventData->TargetData);
+	if (SelectionDTO->IsValid) {
 		auto Data = FGameplayEventData();
 		Data.Target = _Target;
 		Data.OptionalObject = SelectionDTO;
@@ -42,15 +52,6 @@ void UCOAllocateAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, 
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
-}
-
-void UCOAllocateAbility::AbilityTaskTick()
-{
-	auto Data = FGameplayEventData();
-	Data.Target = _Target;
-	Data.OptionalObject = _AllocationTask->GetResult();
-
-	SendGameplayEvent(BroadcastedEventOnAllocationUpdated, Data);
 }
 
 void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,

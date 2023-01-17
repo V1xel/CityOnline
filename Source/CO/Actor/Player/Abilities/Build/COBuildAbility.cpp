@@ -57,19 +57,18 @@ void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, con
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 
 	if (_Confirm && _Target && _SelectionDTO) {
-		auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
 		auto DeployBuilding = NewObject<UCODeployBuildingDTO>();
 		DeployBuilding->SelectionDTO = _SelectionDTO;
 		DeployBuilding->BuildingName = _BuildingName;
 		DeployBuilding->Floors = 4;
-		EffectContext.AddSourceObject(DeployBuilding);
-		auto EffectSpecHandle = FGameplayEffectSpecHandle(new FGameplayEffectSpec(PendingDeployEffect.GetDefaultObject(), EffectContext));
-
+		
 		FGameplayAbilityTargetData_ActorArray* TargetData = new FGameplayAbilityTargetData_ActorArray();
 		TargetData->TargetActorArray.Add(const_cast<AActor*>(_Target));
 		FGameplayAbilityTargetDataHandle TargetDataHandle(TargetData);
 
-		ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TargetDataHandle, PendingDeployEffect, 0);
+		auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
+		EffectContext.AddSourceObject(DeployBuilding);
+		ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(PendingDeployEffect.GetDefaultObject(), EffectContext)), TargetDataHandle);
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
