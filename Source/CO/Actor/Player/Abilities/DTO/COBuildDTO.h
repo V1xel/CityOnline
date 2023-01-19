@@ -6,9 +6,6 @@
 #include "UObject/Object.h"
 #include "COBuildDTO.generated.h"
 
-/**
- * !TODO May replace DTO With Payload in future. UCOBuildPayload
- */
 UCLASS(Blueprintable)
 class CO_API UCOBuildDTO : public UObject
 {

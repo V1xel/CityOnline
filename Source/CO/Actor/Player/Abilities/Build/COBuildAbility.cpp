@@ -6,10 +6,10 @@
 #include "CO/Actor/Street/COStreetActor.h"
 #include "CO/Actor/Player/COPlayerState.h"
 #include "CO/Extensions/GameplayTagExtension.h"
-#include "CO/Actor/Player/Abilities/AbilityTasks/COSelectCellsAbilityTask.h"
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Database/Assets/CORootAsset.h"
 #include "CO/Actor/Building/COBuildingActor.h"
+#include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Actor/Street/Abilities/DTO/CODeployBuildingDTO.h"
 
 bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const

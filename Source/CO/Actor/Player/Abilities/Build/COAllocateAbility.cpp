@@ -2,7 +2,7 @@
 
 
 #include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
-#include "CO/Actor/Player/Abilities/AbilityTasks/COSelectCellsAbilityTask.h"
+#include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Core/AbilitySystem/COAbilityTaskBase.h"
 #include "CO/Extensions/GameplayTagExtension.h"
 #include "AbilitySystemComponent.h"

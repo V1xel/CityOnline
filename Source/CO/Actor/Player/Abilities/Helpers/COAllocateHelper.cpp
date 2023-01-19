@@ -1,11 +1,10 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "COSelectCellsAbilityTask.h"
-#include "CO/Actor/Player/COPlayerController.h"
+#include "COAllocateHelper.h"
+#include "CO/Actor/Player/Abilities/DTO/COBuildDTO.h"
+#include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
-#include "CO/Actor/Player/Abilities/Build/COBuildAbility.h"
-#include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
 
 bool UCOAllocateAbilityHelper::RaycastWithRectangle(UWorld* World, FVector RectangleStart, FVector RectangleEnd,
 	TArray<FHitResult>& OutHits)
@@ -18,14 +17,15 @@ bool UCOAllocateAbilityHelper::RaycastWithRectangle(UWorld* World, FVector Recta
 	return World->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
 }
 
-TArray<UCOStreetCellComponent*> UCOAllocateAbilityHelper::GetSelectedCells(TArray<FHitResult>& HitResults)
+TArray<UCOStreetCellComponent*> UCOAllocateAbilityHelper::GetSelectedCells(AActor* Target, TArray<FHitResult>& HitResults)
 {
 	TArray<UCOStreetCellComponent*> SelectedCells;
-	
+	AActor* Owner = nullptr;
+
 	for (auto HitResult : HitResults)
 	{
 		UCOStreetCellComponent* SelectedCell = Cast<UCOStreetCellComponent>(HitResult.GetComponent());
-		if(SelectedCell)
+		if(SelectedCell && SelectedCell->GetOwner() == Target)
 		{
 			SelectedCells.Add(SelectedCell);
 		}
@@ -138,27 +138,28 @@ bool UCOAllocateAbilityHelper::ValidateSelectionData(UCOSelectionDTO* SelectionD
 	return valid;
 }
 
-UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionData(const UObject* WorldContextObject, FVector Start, FVector End)
+UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionData(AActor* Target, FVector Start, FVector End)
 {
 	auto SelectionDTO = NewObject<UCOSelectionDTO>();
+	UWorld* World = Target->GetWorld();
 
 	TArray<FHitResult> OutHits;
-	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	
 	RaycastWithRectangle(World, Start, End, OutHits);
-	auto Cells = GetSelectedCells(OutHits);
+	auto Cells = GetSelectedCells(Target, OutHits);
 	CollectSelectionData(SelectionDTO, Cells);
 
 	return SelectionDTO;
 }
 
-UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(const UObject* WorldContextObject, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
+UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
 {
 	auto SelectionDTO = NewObject<UCOSelectionDTO>();
+	UWorld* World = Target->GetWorld();
 
 	TArray<FHitResult> OutHits;
-	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
 	RaycastWithRectangle(World, Start, End, OutHits);
-	auto Cells = GetSelectedCells(OutHits);
+	auto Cells = GetSelectedCells(Target, OutHits);
 	CollectSelectionData(SelectionDTO, Cells);
 	OutSelectedCells = Cells;
 
