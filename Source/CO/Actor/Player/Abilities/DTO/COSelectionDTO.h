@@ -28,6 +28,4 @@ public:
 	FVector Center;
 
 	FRotator Rotation;
-
-	bool IsValid = false;
 };

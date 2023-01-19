@@ -66,7 +66,7 @@ void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, con
 		TargetData->TargetActorArray.Add(const_cast<AActor*>(_Target));
 		FGameplayAbilityTargetDataHandle TargetDataHandle(TargetData);
 
-		auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
+		auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get()));
 		EffectContext.AddSourceObject(DeployBuilding);
 		ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(PendingDeployEffect.GetDefaultObject(), EffectContext)), TargetDataHandle);
 	}

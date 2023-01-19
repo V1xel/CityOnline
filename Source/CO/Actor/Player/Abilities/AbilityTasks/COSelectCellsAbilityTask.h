@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
 #include "CO/Core/AbilitySystem/COAbilityTaskBase.h"
+#include "UObject/Object.h"
 #include "COSelectCellsAbilityTask.generated.h"
 
 class UCOStreetCellComponent;
@@ -16,40 +17,30 @@ class UCOBuildDTO;
  * 
  */
 UCLASS()
-class CO_API UCOSelectCellsAbilityTask : public UCOAbilityTaskBase
+class CO_API UCOAllocateAbilityHelper : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize() override;
+	UFUNCTION(BlueprintPure, meta = (bIgnoreSelf = "true", WorldContext = "WorldContextObject"))
+		static UCOSelectionDTO* CalculateSelectionData(const UObject* WorldContextObject, FVector Start, FVector End);
 
-	virtual void ExternalConfirm(bool bEndTask) override;
+	UFUNCTION(BlueprintPure, meta = (bIgnoreSelf = "true", WorldContext = "WorldContextObject"))
+		static UCOSelectionDTO* CalculateSelectionDataWithCells(const UObject* WorldContextObject, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells);
 
-	void VisualizeSelection();
+	UFUNCTION(BlueprintPure)
+	static bool ValidateSelectionData(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO);
+private:
+	static bool RaycastWithRectangle(UWorld* World, FVector RectangleStart, FVector RectangleEnd, TArray<FHitResult>& OutHits);
 
-	UCOSelectionDTO* GetVisualisationResult();
+	static TArray<UCOStreetCellComponent*> GetSelectedCells(TArray<FHitResult>& HitResults);
 
-	UCOSelectionDTO* CalculateSelectionData(FGameplayAbilityTargetDataHandle TargetData);
-protected:
-	virtual void TickTask(float DeltaTime) override;
-
-	virtual void OnDestroy(bool AbilityIsEnding) override;
-
-	bool RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,	TArray<FHitResult>& OutHits) const;
-
-	TArray<UCOStreetCellComponent*> GetSelectedCells(TArray<FHitResult>& HitResults);
-
-	void CollectSelectionData(UCOSelectionDTO* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
-
-	void ValidateSelectionData(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO);
-
+	static void CollectSelectionData(UCOSelectionDTO* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
 private:
 	UPROPERTY()
 		FVector _SelectionStartedLocation{};
 	UPROPERTY()
-		TArray<UCOStreetCellComponent*> _SelectedCells{};
-	UPROPERTY()
-		UCOBuildDTO* _BuildDTO;
+		TArray<UCOStreetCellComponent*> _LastSelectedCells{};
 
 	UPROPERTY()
 		UCOSelectionDTO* _SelectionDTO;

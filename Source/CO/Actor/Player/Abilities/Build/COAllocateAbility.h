@@ -29,7 +29,7 @@ public:
 
 	void AllocationCancel(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-		const FGameplayEventData* TriggerEventData);
+		const FGameplayEventData* ActivateEventData, const FGameplayEventData* CancelEventData);
 
 public:
 	UPROPERTY(EditAnywhere)
@@ -47,12 +47,14 @@ public:
 	UPROPERTY(EditAnywhere)
 	FGameplayTag ListenCancelAllocateTag;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> AllocateInProgressEffect{};
+
 private:
 	UPROPERTY()
 	const AActor* _Target;
 
-	UPROPERTY()
-	UCOSelectCellsAbilityTask* _AllocationTask;
-
 	FDelegateHandle _CancelDelegateHandle;
+
+	TArray<FActiveGameplayEffectHandle> _EffectHadles;
 };

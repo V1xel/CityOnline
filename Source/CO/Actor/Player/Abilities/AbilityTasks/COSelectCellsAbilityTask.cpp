@@ -7,25 +7,18 @@
 #include "CO/Actor/Player/Abilities/Build/COBuildAbility.h"
 #include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
 
-void UCOSelectCellsAbilityTask::Initialize()
-{
-	_SelectionDTO = NewObject<UCOSelectionDTO>();
-	_BuildDTO = Cast<UCOBuildDTO>(_PermissionGrantedEffectContext.GetSourceObject());
-	_SelectionStartedLocation = _TargetData.Get(0)->GetHitResult()->Location;
-}
-
-bool UCOSelectCellsAbilityTask::RaycastWithRectangle(FVector RectangleStart, FVector RectangleEnd,
-	TArray<FHitResult>& OutHits) const
+bool UCOAllocateAbilityHelper::RaycastWithRectangle(UWorld* World, FVector RectangleStart, FVector RectangleEnd,
+	TArray<FHitResult>& OutHits)
 {
 	const FVector Size = (RectangleEnd - RectangleStart) / 2;
 	const FVector Extent = FVector(FMath::Sqrt(Size.X * Size.X), FMath::Sqrt(Size.Y * Size.Y), 10);
 	const FCollisionShape CollisionBox = FCollisionShape::MakeBox(Extent);
 	const FVector Center = (RectangleEnd + RectangleStart) / 2;
 
-	return GetWorld()->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
+	return World->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
 }
 
-TArray<UCOStreetCellComponent*> UCOSelectCellsAbilityTask::GetSelectedCells(TArray<FHitResult>& HitResults)
+TArray<UCOStreetCellComponent*> UCOAllocateAbilityHelper::GetSelectedCells(TArray<FHitResult>& HitResults)
 {
 	TArray<UCOStreetCellComponent*> SelectedCells;
 	
@@ -41,8 +34,12 @@ TArray<UCOStreetCellComponent*> UCOSelectCellsAbilityTask::GetSelectedCells(TArr
 	return SelectedCells;
 }
 
-void UCOSelectCellsAbilityTask::CollectSelectionData(UCOSelectionDTO* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells)
+void UCOAllocateAbilityHelper::CollectSelectionData(UCOSelectionDTO* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells)
 {
+	if (SelectedCells.Num() == 0) {
+		return;
+	}
+
 	auto MinimumHorizontal = SelectedCells[0]->Horizontal;
 	auto MaximumHorizontal = SelectedCells[0]->Horizontal;
 	auto MinimumVertical = SelectedCells[0]->Vertical;
@@ -109,52 +106,12 @@ void UCOSelectCellsAbilityTask::CollectSelectionData(UCOSelectionDTO* SelectionD
 	SelectionDTO->HasCorner = HasCorner;
 }
 
-void UCOSelectCellsAbilityTask::VisualizeSelection() 
+bool UCOAllocateAbilityHelper::ValidateSelectionData(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO)
 {
-	FHitResult CurrentMousePositionHitResult;
-	Ability->GetActorInfo().PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, CurrentMousePositionHitResult);
-
-	for (auto Cell : _SelectedCells)
-	{
-		Cell->SetVisible(false);
-		Cell->SetSelected(false);
-	}
-	_SelectedCells.Empty();
-
-	TArray<FHitResult> OutHits;
-	RaycastWithRectangle(_SelectionStartedLocation, CurrentMousePositionHitResult.Location, OutHits);
-	auto Cells = GetSelectedCells(OutHits);
-	if (Cells.Num() == 0) 
-		return;
-	
-	CollectSelectionData(_SelectionDTO, Cells);
-	ValidateSelectionData(_SelectionDTO, _BuildDTO);
-
-	for (auto Cell : Cells)
-	{
-		Cell->SetVisible(true);
-		if (Cell->IsOccupied) {
-			Cell->SetValid(false);
-		}
-		else {
-			Cell->SetValid(_SelectionDTO->IsValid);
-		}
+	if (!BuildDTO) {
+		return false;
 	}
 
-	_SelectedCells = Cells;
-}
-
-void UCOSelectCellsAbilityTask::TickTask(float DeltaTime)
-{
-	Super::TickTask(DeltaTime);
-	VisualizeSelection();
-
-	auto AllocateAbility = Cast<UCOAllocateAbility>(Ability);
-	AllocateAbility->AbilityTaskTick();
-}
-
-void UCOSelectCellsAbilityTask::ValidateSelectionData(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO) 
-{
 	bool valid = true;
 	if (!SelectionDTO->HasExtreme) {
 		valid = false;
@@ -178,39 +135,33 @@ void UCOSelectCellsAbilityTask::ValidateSelectionData(UCOSelectionDTO* Selection
 		}
 	}
 
-	SelectionDTO->IsValid = valid;
+	return valid;
 }
 
-void UCOSelectCellsAbilityTask::ExternalConfirm(bool bEndTask)
+UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionData(const UObject* WorldContextObject, FVector Start, FVector End)
 {
-	if (bTickingTask) {
-		for (const auto SelectedComponent : _SelectedCells)
-		{
-			SelectedComponent->SetSelected(false);
-			SelectedComponent->SetVisible(false);
-		}
-	}
+	auto SelectionDTO = NewObject<UCOSelectionDTO>();
 
-	Super::ExternalConfirm(bEndTask);
-}
-
-UCOSelectionDTO* UCOSelectCellsAbilityTask::GetVisualisationResult()
-{
-	return _SelectionDTO;
-}
-
-UCOSelectionDTO* UCOSelectCellsAbilityTask::CalculateSelectionData(FGameplayAbilityTargetDataHandle TargetData)
-{
 	TArray<FHitResult> OutHits;
-	RaycastWithRectangle(_SelectionStartedLocation, TargetData.Get(0)->GetHitResult()->Location, OutHits);
+	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	RaycastWithRectangle(World, Start, End, OutHits);
 	auto Cells = GetSelectedCells(OutHits);
-	CollectSelectionData(_SelectionDTO, Cells);
-	ValidateSelectionData(_SelectionDTO, _BuildDTO);
+	CollectSelectionData(SelectionDTO, Cells);
 
-	return _SelectionDTO;
+	return SelectionDTO;
 }
 
-void UCOSelectCellsAbilityTask::OnDestroy(bool AbilityIsEnding)
+UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(const UObject* WorldContextObject, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
 {
-	Super::OnDestroy(AbilityIsEnding);
+	auto SelectionDTO = NewObject<UCOSelectionDTO>();
+
+	TArray<FHitResult> OutHits;
+	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	RaycastWithRectangle(World, Start, End, OutHits);
+	auto Cells = GetSelectedCells(OutHits);
+	CollectSelectionData(SelectionDTO, Cells);
+	OutSelectedCells = Cells;
+
+	return SelectionDTO;
 }
+
