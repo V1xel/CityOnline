@@ -17,7 +17,7 @@ bool UCOAllocateAbilityHelper::RaycastWithRectangle(UWorld* World, FVector Recta
 	return World->SweepMultiByChannel(OutHits, Center, Center, FQuat::Identity, ECC_WorldStatic, CollisionBox);
 }
 
-TArray<UCOStreetCellComponent*> UCOAllocateAbilityHelper::GetSelectedCells(AActor* Target, TArray<FHitResult>& HitResults)
+TArray<UCOStreetCellComponent*> UCOAllocateAbilityHelper::GetSelectedCells(const AActor* Target, TArray<FHitResult>& HitResults)
 {
 	TArray<UCOStreetCellComponent*> SelectedCells;
 	AActor* Owner = nullptr;
@@ -138,13 +138,12 @@ bool UCOAllocateAbilityHelper::ValidateSelectionData(UCOSelectionDTO* SelectionD
 	return valid;
 }
 
-UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionData(AActor* Target, FVector Start, FVector End)
+UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionData(const AActor* Target, FVector Start, FVector End)
 {
 	auto SelectionDTO = NewObject<UCOSelectionDTO>();
 	UWorld* World = Target->GetWorld();
 
 	TArray<FHitResult> OutHits;
-	
 	RaycastWithRectangle(World, Start, End, OutHits);
 	auto Cells = GetSelectedCells(Target, OutHits);
 	CollectSelectionData(SelectionDTO, Cells);
@@ -152,7 +151,7 @@ UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionData(AActor* Target
 	return SelectionDTO;
 }
 
-UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
+UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(const AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
 {
 	auto SelectionDTO = NewObject<UCOSelectionDTO>();
 	UWorld* World = Target->GetWorld();

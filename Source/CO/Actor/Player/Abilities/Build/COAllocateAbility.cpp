@@ -35,25 +35,28 @@ void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handl
 	const FGameplayEventData* ActivateEventData, const FGameplayEventData* CancelEventData)
 {
 	auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(_Target)->GetAbilitySystemComponent();
-	for (auto Handle : _EffectHadles)
+	for (auto EffectHandle : _EffectHadles)
 	{
-		TargetAbilitySystem->RemoveActiveGameplayEffect(Handle);
+		TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
 	}
 
 	auto AllocatePermissionActiveEffects = ActorInfo->AbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
 	FGameplayEffectContextHandle PermissionGrantedEffectContext = ActorInfo->AbilitySystemComponent->GetEffectContextFromActiveGEHandle(AllocatePermissionActiveEffects[0]);
 	auto BuildDTO = Cast<UCOBuildDTO>(PermissionGrantedEffectContext.GetSourceObject());
 
-	//auto StartLocation = ActivateEventData->TargetData.Get(0)->GetHitResult()->Location;
-	//auto EndLocation = CancelEventData->TargetData.Get(0)->GetHitResult()->Location;
-	//UCOSelectionDTO* SelectionDTO = UCOAllocateAbilityHelper::CalculateSelectionData(GetWorld(), StartLocation, EndLocation);
-	
-//	if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, BuildDTO)) {
-	//	auto Data = FGameplayEventData();
-	//	Data.Target = _Target;
-	//	Data.OptionalObject = SelectionDTO;
-	//	SendGameplayEvent(BroadcastedEventOnAllocationFinished, Data);
-//	}
+	if (ActivateEventData->TargetData.IsValid(0) && CancelEventData->TargetData.IsValid(0)) 
+	{
+		auto StartLocation = ActivateEventData->TargetData.Get(0)->GetHitResult()->Location;
+		auto EndLocation = CancelEventData->TargetData.Get(0)->GetHitResult()->Location;
+		UCOSelectionDTO* SelectionDTO = UCOAllocateAbilityHelper::CalculateSelectionData(ActivateEventData->Target.Get(), StartLocation, EndLocation);
+
+		if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, BuildDTO)) {
+			auto Data = FGameplayEventData();
+			Data.Target = _Target;
+			Data.OptionalObject = SelectionDTO;
+			SendGameplayEvent(BroadcastedEventOnAllocationFinished, Data);
+		}
+	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }

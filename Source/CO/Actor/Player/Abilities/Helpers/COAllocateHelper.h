@@ -17,17 +17,17 @@ class CO_API UCOAllocateAbilityHelper : public UObject
 
 public:
 	UFUNCTION(BlueprintPure, meta = (bIgnoreSelf = "true", WorldContext = "WorldContextObject"))
-		static UCOSelectionDTO* CalculateSelectionData(AActor* Target, FVector Start, FVector End);
+		static UCOSelectionDTO* CalculateSelectionData(const AActor* Target, FVector Start, FVector End);
 
 	UFUNCTION(BlueprintPure, meta = (bIgnoreSelf = "true", WorldContext = "WorldContextObject"))
-		static UCOSelectionDTO* CalculateSelectionDataWithCells(AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells);
+		static UCOSelectionDTO* CalculateSelectionDataWithCells(const AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells);
 
 	UFUNCTION(BlueprintPure)
 	static bool ValidateSelectionData(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO);
 private:
 	static bool RaycastWithRectangle(UWorld* World, FVector RectangleStart, FVector RectangleEnd, TArray<FHitResult>& OutHits);
 
-	static TArray<UCOStreetCellComponent*> GetSelectedCells(AActor* Target, TArray<FHitResult>& HitResults);
+	static TArray<UCOStreetCellComponent*> GetSelectedCells(const AActor* Target, TArray<FHitResult>& HitResults);
 
 	static void CollectSelectionData(UCOSelectionDTO* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
 };
