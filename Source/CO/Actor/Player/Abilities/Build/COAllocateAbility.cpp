@@ -26,30 +26,19 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get()));
 	EffectContext.AddSourceObject(BuildDTO);
 	auto EffectSpec = FGameplayEffectSpecHandle(new FGameplayEffectSpec(AllocateInProgressEffect.GetDefaultObject(), EffectContext));
+
 	_EffectHadles = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, EffectSpec, TriggerEventData->TargetData);
-}
-
-void UCOAllocateAbility::AbilityTaskTick()
-{
-	auto Data = FGameplayEventData();
-	Data.Target = _Target;
-	//Data.OptionalObject = _AllocationTask->GetVisualisationResult();
-
-	SendGameplayEvent(BroadcastedEventOnAllocationUpdated, Data);
 }
 
 void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* ActivateEventData, const FGameplayEventData* CancelEventData)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("AllocationCancel"));
 	auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(_Target)->GetAbilitySystemComponent();
 	for (auto Handle : _EffectHadles)
 	{
 		TargetAbilitySystem->RemoveActiveGameplayEffect(Handle);
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("RemoveActiveGameplayEffect"));
 	}
-	_EffectHadles.Empty();
 
 	auto AllocatePermissionActiveEffects = ActorInfo->AbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
 	FGameplayEffectContextHandle PermissionGrantedEffectContext = ActorInfo->AbilitySystemComponent->GetEffectContextFromActiveGEHandle(AllocatePermissionActiveEffects[0]);
