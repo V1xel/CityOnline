@@ -11,6 +11,7 @@
 #include "CO/Actor/Building/COBuildingActor.h"
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Actor/Street/Abilities/DTO/CODeployBuildingDTO.h"
+#include <CO/Actor/Player/Abilities/DTO/COTargetData_BuildDTO.h>
 
 bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
@@ -38,8 +39,9 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	_BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(FName(_BuildingName), "");
 	auto BuildDTO = BuildingSpecialization->ToDTO();
-	auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext());
-	EffectContext.AddSourceObject(BuildDTO);
+	//auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get()));
+	auto EffectContext = FGameplayEffectContextHandle(new FCOEffectContext_BuildDTO(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get(), BuildDTO));
+
 	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), EffectContext)));
 }
 

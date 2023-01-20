@@ -27,9 +27,14 @@ public:
 
 	void AllocationCancel(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-		const FGameplayEventData* ActivateEventData, const FGameplayEventData* CancelEventData);
+		const FGameplayEventData* CancelEventData);
+
+	UFUNCTION(BlueprintPure)
+	static UCOBuildDTO* GetBuildDTO(FGameplayEffectContextHandle EffectContextHandle);
 
 public:
+	FVector AllocateStartLocation;
+
 	UPROPERTY(EditAnywhere)
 	bool DebugAllocation;
 
