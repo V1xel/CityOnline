@@ -8,7 +8,7 @@
 #include "AbilitySystemComponent.h"
 #include <AbilitySystemInterface.h>
 #include "COBuildAbility.h"
-#include <CO/Actor/Player/Abilities/DTO/COTargetData_BuildDTO.h>
+#include <CO/Core/AbilitySystem/COGameplayEffectContext.h>
 
 void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -27,6 +27,10 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 	auto EffectSpec = FGameplayEffectSpecHandle(new FGameplayEffectSpec(AllocateInProgressEffect.GetDefaultObject(), PermissionGrantedEffectContext));
 	_EffectHadles = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, EffectSpec, TriggerEventData->TargetData);
+	auto TestContext = PermissionGrantedEffectContext.Get();
+	auto EffectContextBuildDTO = static_cast<FCOGameplayEffectContext*>(TestContext);
+	
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(EffectContextBuildDTO->TestVariable));
 }
 
 void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handle,
@@ -34,12 +38,7 @@ void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handl
 	const FGameplayEventData* CancelEventData)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Allocate Cancel"));
-
-	//auto AllocatePermissionActiveEffects = ActorInfo->AbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
-	//FGameplayEffectContextHandle PermissionGrantedEffectContext = ActorInfo->AbilitySystemComponent->GetEffectContextFromActiveGEHandle(AllocatePermissionActiveEffects[0]);
-	//auto TestContext = PermissionGrantedEffectContext.Get();
-	//auto EffectContextBuildDTO = static_cast<FCOEffectContext_BuildDTO*>(TestContext);
-	//auto BuildDTO = EffectContextBuildDTO->ToObject();
+	auto AllocatePermissionActiveEffects = ActorInfo->AbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
 
 	//if (CancelEventData->TargetData.IsValid(0)) 
 	//{
@@ -55,31 +54,24 @@ void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handl
 	//}
 
 	auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(_Target)->GetAbilitySystemComponent();
-	for (auto EffectHandle : _EffectHadles)
-	{
-		TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
-	}
+//	for (auto EffectHandle : _EffectHadles)
+//	{
+//		TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
+	//}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
 
-UCOBuildDTO* UCOAllocateAbility::GetBuildDTO(FGameplayEffectContextHandle EffectContextHandle)
+UCOBuildDTO* UCOAllocateAbility::GetEffectContextFromActiveGEHandleTest(UAbilitySystemComponent* AS, FActiveGameplayEffectHandle Handle)
 {
-	auto EffectContext = EffectContextHandle.Get();
-	auto Context = static_cast<FCOEffectContext_BuildDTO*>(EffectContext);
+	FGameplayEffectContextHandle PermissionGrantedEffectContext = AS->GetEffectContextFromActiveGEHandle(Handle);
+	auto TestContext = PermissionGrantedEffectContext.Get();
+	auto EffectContextBuildDTO = static_cast<FCOGameplayEffectContext*>(TestContext);
+	auto dto = NewObject<UCOBuildDTO>();
 
-	auto BuildDTO = NewObject<UCOBuildDTO>();
-	BuildDTO->MinFlours = Context->MinFlours;
-	BuildDTO->MaxFlours = Context->MaxFlours;
-	BuildDTO->Name = Context->Name;
-	BuildDTO->MinWidth = Context->MinWidth;
-	BuildDTO->MaxWidth = Context->MaxWidth;
-	BuildDTO->MinLength = Context->MinLength;
-	BuildDTO->MaxLength = Context->MaxLength;
-	BuildDTO->IsLiving = Context->IsLiving;
-	BuildDTO->IsStore = Context->IsStore;
+	dto->MaxFlours = EffectContextBuildDTO->TestVariable;
 
-	return BuildDTO;
+	return dto;// EffectContextBuildDTO->ToObject();
 }
 
 void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,

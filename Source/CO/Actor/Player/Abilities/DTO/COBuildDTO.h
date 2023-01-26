@@ -6,6 +6,32 @@
 #include "UObject/Object.h"
 #include "COBuildDTO.generated.h"
 
+USTRUCT(BlueprintType)
+struct CO_API FCOBuildDTOContext
+{
+	GENERATED_BODY()
+public:
+
+	int MinWidth;
+
+	int MaxWidth;
+
+	int MinLength;
+
+	int MaxLength;
+
+	int MinFlours;
+
+	int MaxFlours;
+
+	bool IsLiving;
+
+	bool IsStore;
+
+	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+};
+
+
 UCLASS(Blueprintable)
 class CO_API UCOBuildDTO : public UObject
 {

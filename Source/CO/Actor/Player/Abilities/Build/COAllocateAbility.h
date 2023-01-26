@@ -30,7 +30,7 @@ public:
 		const FGameplayEventData* CancelEventData);
 
 	UFUNCTION(BlueprintPure)
-	static UCOBuildDTO* GetBuildDTO(FGameplayEffectContextHandle EffectContextHandle);
+		static UCOBuildDTO* GetEffectContextFromActiveGEHandleTest(UAbilitySystemComponent* AS, FActiveGameplayEffectHandle Handle);
 
 public:
 	FVector AllocateStartLocation;
