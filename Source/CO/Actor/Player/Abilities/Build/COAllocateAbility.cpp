@@ -27,10 +27,6 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 	auto EffectSpec = FGameplayEffectSpecHandle(new FGameplayEffectSpec(AllocateInProgressEffect.GetDefaultObject(), PermissionGrantedEffectContext));
 	_EffectHadles = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, EffectSpec, TriggerEventData->TargetData);
-	auto TestContext = PermissionGrantedEffectContext.Get();
-	auto EffectContextBuildDTO = static_cast<FCOGameplayEffectContext*>(TestContext);
-	
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(EffectContextBuildDTO->BuildDTO.MaxFlours));
 }
 
 void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handle,
@@ -67,11 +63,8 @@ UCOBuildDTO* UCOAllocateAbility::GetEffectContextFromActiveGEHandleTest(UAbility
 	FGameplayEffectContextHandle PermissionGrantedEffectContext = AS->GetEffectContextFromActiveGEHandle(Handle);
 	auto TestContext = PermissionGrantedEffectContext.Get();
 	auto EffectContextBuildDTO = static_cast<FCOGameplayEffectContext*>(TestContext);
-	auto dto = NewObject<UCOBuildDTO>();
-
-	dto->MaxFlours = EffectContextBuildDTO->BuildDTO.MaxFlours;
-
-	return dto;// EffectContextBuildDTO->ToObject();
+	
+	return EffectContextBuildDTO->BuildDTO->ToObject();
 }
 
 void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,

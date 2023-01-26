@@ -4,12 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "Abilities/GameplayAbilityTargetTypes.h"
 #include "COBuildDTO.generated.h"
 
 USTRUCT(BlueprintType)
-struct CO_API FCOBuildDTOContext
+struct CO_API FCOBuildDTOTargetData : public FGameplayAbilityTargetData
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
+
+	FString Name;
 
 	int32 MinWidth;
 
@@ -24,6 +27,8 @@ struct CO_API FCOBuildDTOContext
 	int32 MaxFlours;
 
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+
+	UCOBuildDTO* ToObject();
 };
 
 
@@ -60,14 +65,15 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool IsStore;
 
-	FCOBuildDTOContext ToStruct() {
-		auto Struct = FCOBuildDTOContext();
-		Struct.MinWidth = MinWidth;
-		Struct.MaxWidth = MaxWidth;
-		Struct.MinLength = MinLength;
-		Struct.MaxLength = MaxLength;
-		Struct.MinFlours = MinFlours;
-		Struct.MaxFlours = MaxFlours;
+	FCOBuildDTOTargetData* ToStruct() {
+		auto Struct = new FCOBuildDTOTargetData();
+		Struct->Name = Name;
+		Struct->MinWidth = MinWidth;
+		Struct->MaxWidth = MaxWidth;
+		Struct->MinLength = MinLength;
+		Struct->MaxLength = MaxLength;
+		Struct->MinFlours = MinFlours;
+		Struct->MaxFlours = MaxFlours;
 
 		return Struct;
 	}

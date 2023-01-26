@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbilityTargetActor.h"
-#include "CO/Actor/Player/Abilities/Build/COBuildAbility.h"
 #include "COGameplayEffectContext.generated.h"
 
 /**
@@ -40,7 +39,7 @@ public:
 		return StaticStruct();
 	}
 
-	void AddBuildDTO(UCOBuildDTO* InBuildDTO);
+	void AddBuildDTO();
 
 	/** Creates a copy of this context, used to duplicate for later modifications */
 	virtual FCOGameplayEffectContext* Duplicate() const override
@@ -57,10 +56,6 @@ public:
 	}
 
 	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess) override;
-	
-public: 
-	UPROPERTY()
-	FCOBuildDTOContext BuildDTO;
 };
 
 template <>
