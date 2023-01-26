@@ -38,8 +38,9 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	auto BuildingTag = TriggerEventData->InstigatorTags.Filter(FGameplayTagContainer(FilterBuildingTag)).First();
 	_BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(FName(_BuildingName), "");
-	auto BuildDTO = BuildingSpecialization->ToDTO();
-	auto EffectContext = FGameplayEffectContextHandle(new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get(), 23));
+	auto Context = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
+	Context->AddBuildDTO(BuildingSpecialization->ToDTO());
+	auto EffectContext = FGameplayEffectContextHandle(Context);
 
 	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), EffectContext)));
 }

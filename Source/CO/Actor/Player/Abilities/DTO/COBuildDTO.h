@@ -10,23 +10,18 @@ USTRUCT(BlueprintType)
 struct CO_API FCOBuildDTOContext
 {
 	GENERATED_BODY()
-public:
 
-	int MinWidth;
+	int32 MinWidth;
 
-	int MaxWidth;
+	int32 MaxWidth;
 
-	int MinLength;
+	int32 MinLength;
 
-	int MaxLength;
+	int32 MaxLength;
 
-	int MinFlours;
+	int32 MinFlours;
 
-	int MaxFlours;
-
-	bool IsLiving;
-
-	bool IsStore;
+	int32 MaxFlours;
 
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 };
@@ -64,4 +59,16 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool IsStore;
+
+	FCOBuildDTOContext ToStruct() {
+		auto Struct = FCOBuildDTOContext();
+		Struct.MinWidth = MinWidth;
+		Struct.MaxWidth = MaxWidth;
+		Struct.MinLength = MinLength;
+		Struct.MaxLength = MaxLength;
+		Struct.MinFlours = MinFlours;
+		Struct.MaxFlours = MaxFlours;
+
+		return Struct;
+	}
 };

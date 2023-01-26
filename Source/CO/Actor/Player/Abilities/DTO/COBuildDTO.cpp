@@ -2,5 +2,12 @@
 
 bool FCOBuildDTOContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
-    return false;
+	Ar << MinWidth;
+	Ar << MaxWidth;
+	Ar << MinLength;
+	Ar << MaxLength;
+	Ar << MinFlours;
+	Ar << MaxFlours;
+
+    return true;
 }

@@ -30,7 +30,7 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	auto TestContext = PermissionGrantedEffectContext.Get();
 	auto EffectContextBuildDTO = static_cast<FCOGameplayEffectContext*>(TestContext);
 	
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(EffectContextBuildDTO->TestVariable));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(EffectContextBuildDTO->BuildDTO.MaxFlours));
 }
 
 void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handle,
@@ -69,7 +69,7 @@ UCOBuildDTO* UCOAllocateAbility::GetEffectContextFromActiveGEHandleTest(UAbility
 	auto EffectContextBuildDTO = static_cast<FCOGameplayEffectContext*>(TestContext);
 	auto dto = NewObject<UCOBuildDTO>();
 
-	dto->MaxFlours = EffectContextBuildDTO->TestVariable;
+	dto->MaxFlours = EffectContextBuildDTO->BuildDTO.MaxFlours;
 
 	return dto;// EffectContextBuildDTO->ToObject();
 }
