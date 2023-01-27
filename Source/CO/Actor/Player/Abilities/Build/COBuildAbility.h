@@ -12,7 +12,7 @@ class UCORootAsset;
 class UCOSelectionDTO;
 class UCOBuildingAsset;
 class ACOBuildingActor;
-class UCODeployBuildingDTO;
+class UCOBuildConfigurationDTO;
 class UCOSelectCellsAbilityTask;
 
 /**
@@ -33,6 +33,8 @@ public:
 		bool bWasCancelled) override;
 
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
+
+	void OnConfigurationUpdated(FGameplayTag Tag, const FGameplayEventData* EventData);
 
 	void OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData, bool Confirm);
@@ -55,6 +57,9 @@ public:
 		FGameplayTag ListenEventOnAllocationFinished;
 
 	UPROPERTY(EditAnywhere)
+		FGameplayTag ListenEventOnConfigurationUpdated;
+
+	UPROPERTY(EditAnywhere)
 		FGameplayTag ListenEventOnBuildConfirmed;
 
 	UPROPERTY(EditAnywhere)
@@ -68,18 +73,19 @@ public:
 
 private:
 	UPROPERTY()
-		const AActor* _Target;
-
-	UPROPERTY()
-		UCOSelectionDTO* _SelectionDTO;
-
-	UPROPERTY()
-		UCOBuildDTO* _BuildDTO;
-
-	UPROPERTY()
 		ACOBuildingActor* _BuildingPreview;
 
-	FString _BuildingName;
+	FGameplayAbilityTargetDataHandle _SelectionDTOTargetDataHandle;
+
+	FGameplayAbilityTargetDataHandle _ConfigurationDTOTargetDataHandle;
+
+	FDelegateHandle _OnAllocationFinishedDelegateHandle;
+
+	FDelegateHandle _OnConfigurationUpdatedDelegateHandle;
+
+	FDelegateHandle _OnBuildConfirmedDelegateHandle;
+
+	FDelegateHandle _OnBuildCanceledDelegateHandle;
 
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
 };

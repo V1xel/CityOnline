@@ -55,9 +55,9 @@ public:
 
 private:
 	UPROPERTY()
-		UCOBuildDTO* _BuildDTO;
-	UPROPERTY()
 		const AActor* _Target;
+
+	FGameplayAbilityTargetDataHandle _BuildDTOTargetDataHandle;
 
 	FVector _AllocateStartLocation;
 

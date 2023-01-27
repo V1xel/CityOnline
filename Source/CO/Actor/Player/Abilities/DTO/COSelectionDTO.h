@@ -56,5 +56,5 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FVector Direction;
 
-	FCOSelectionDTOTargetData* ToTargetData();
+	FGameplayAbilityTargetDataHandle ToTargetDataHandle();
 };

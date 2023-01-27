@@ -4,7 +4,6 @@
 #include "COPlayerController.h"
 #include "CO/Actor/Street/COStreetActor.h"
 #include "CO/Actor/Building/COBuildingActor.h"
-#include "CO/Actor/Street/Abilities/DTO/CODeployBuildingDTO.h"
 
 ACOPlayerController::ACOPlayerController()
 {

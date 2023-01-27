@@ -22,9 +22,9 @@ struct CO_API FCOBuildDTOTargetData : public FGameplayAbilityTargetData
 
 	int32 MaxLength;
 
-	int32 MinFlours;
+	int32 MinFloors;
 
-	int32 MaxFlours;
+	int32 MaxFloors;
 
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
@@ -54,10 +54,10 @@ public:
 		int32 MaxLength;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		int32 MinFlours;
+		int32 MinFloors;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		int32 MaxFlours;
+		int32 MaxFloors;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		bool IsLiving;
@@ -65,5 +65,5 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		bool IsStore;
 
-	FCOBuildDTOTargetData* ToTargetData();
+	FGameplayAbilityTargetDataHandle ToTargetDataHandle();
 };

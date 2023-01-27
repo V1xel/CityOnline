@@ -7,27 +7,27 @@ bool FCOBuildDTOTargetData::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& b
 	Ar << MaxWidth;
 	Ar << MinLength;
 	Ar << MaxLength;
-	Ar << MinFlours;
-	Ar << MaxFlours;
+	Ar << MinFloors;
+	Ar << MaxFloors;
 
     return true;
 }
 
 UCOBuildDTO* FCOBuildDTOTargetData::ToDTO()
 {
-	auto Object = NewObject<UCOBuildDTO>();
-	Object->Name = Name;
-	Object->MinWidth = MinWidth;
-	Object->MaxWidth = MaxWidth;
-	Object->MinLength = MinLength;
-	Object->MaxLength = MaxLength;
-	Object->MinFlours = MinFlours;
-	Object->MaxFlours = MaxFlours;
+	auto DTO = NewObject<UCOBuildDTO>();
+	DTO->Name = Name;
+	DTO->MinWidth = MinWidth;
+	DTO->MaxWidth = MaxWidth;
+	DTO->MinLength = MinLength;
+	DTO->MaxLength = MaxLength;
+	DTO->MinFloors = MinFloors;
+	DTO->MaxFloors = MaxFloors;
 
-	return Object;
+	return DTO;
 }
 
-FCOBuildDTOTargetData* UCOBuildDTO::ToTargetData()
+FGameplayAbilityTargetDataHandle UCOBuildDTO::ToTargetDataHandle()
 {
 	auto TargetData = new FCOBuildDTOTargetData();
 	TargetData->Name = Name;
@@ -35,8 +35,8 @@ FCOBuildDTOTargetData* UCOBuildDTO::ToTargetData()
 	TargetData->MaxWidth = MaxWidth;
 	TargetData->MinLength = MinLength;
 	TargetData->MaxLength = MaxLength;
-	TargetData->MinFlours = MinFlours;
-	TargetData->MaxFlours = MaxFlours;
+	TargetData->MinFloors = MinFloors;
+	TargetData->MaxFloors = MaxFloors;
 
-	return TargetData;
+	return FGameplayAbilityTargetDataHandle(TargetData);
 }

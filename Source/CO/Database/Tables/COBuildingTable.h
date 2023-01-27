@@ -14,22 +14,18 @@ struct CO_API FCOBuildingTable : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	FString GetName() 
-	{
-		return UGameplayTagExtension::GetTagSecondElement(Tag);
-	}
-
-	FCOBuildDTOTargetData* ToTargetData() {
-		auto Struct = new FCOBuildDTOTargetData();
-		Struct->Name = GetName();
-		Struct->MinWidth = MinWidth;
-		Struct->MaxWidth = MaxWidth;
-		Struct->MinLength = MinLength;
-		Struct->MaxLength = MaxLength;
-		Struct->MinFlours = MinFlours;
-		Struct->MaxFlours = MaxFlours;
+	FGameplayAbilityTargetDataHandle ToTargetDataHandle() {
+		auto Name = UGameplayTagExtension::GetTagSecondElement(Tag);;
+		auto TargetData = new FCOBuildDTOTargetData();
+		TargetData->Name = Name;
+		TargetData->MinWidth = MinWidth;
+		TargetData->MaxWidth = MaxWidth;
+		TargetData->MinLength = MinLength;
+		TargetData->MaxLength = MaxLength;
+		TargetData->MinFloors = MinFloors;
+		TargetData->MaxFloors = MaxFloors;
 		
-		return Struct;
+		return FGameplayAbilityTargetDataHandle(TargetData);
 	}
 
 public:
@@ -49,10 +45,10 @@ public:
 	int MaxLength;
   
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int MinFlours;
+	int MinFloors;
   
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int MaxFlours;
+	int MaxFloors;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float CostMultiplier;

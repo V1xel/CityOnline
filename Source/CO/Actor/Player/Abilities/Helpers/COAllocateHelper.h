@@ -7,6 +7,7 @@ class UCOStreetCellComponent;
 class UCOSelectionDTO;
 class UCOBuildDTO;
 
+struct FCOSelectionDTOTargetData;
 /**
  * 
  */
@@ -17,17 +18,17 @@ class CO_API UCOAllocateAbilityHelper : public UObject
 
 public:
 	UFUNCTION(BlueprintPure, meta = (bIgnoreSelf = "true", WorldContext = "WorldContextObject"))
-		static UCOSelectionDTO* CalculateSelectionData(const AActor* Target, FVector Start, FVector End);
+		static FGameplayAbilityTargetDataHandle CalculateSelectionData(const AActor* Target, FVector Start, FVector End);
 
 	UFUNCTION(BlueprintPure, meta = (bIgnoreSelf = "true", WorldContext = "WorldContextObject"))
-		static UCOSelectionDTO* CalculateSelectionDataWithCells(const AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells);
+		static FGameplayAbilityTargetDataHandle CalculateSelectionDataWithCells(const AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells);
 
 	UFUNCTION(BlueprintPure)
-	static bool ValidateSelectionData(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO);
+		static bool ValidateSelectionData(FGameplayAbilityTargetDataHandle SelectionDTOHandle, FGameplayAbilityTargetDataHandle BuildDTOHandle);
 private:
 	static bool RaycastWithRectangle(UWorld* World, FVector RectangleStart, FVector RectangleEnd, TArray<FHitResult>& OutHits);
 
 	static TArray<UCOStreetCellComponent*> GetSelectedCells(const AActor* Target, TArray<FHitResult>& HitResults);
 
-	static void CollectSelectionData(UCOSelectionDTO* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
+	static void CollectSelectionData(FCOSelectionDTOTargetData* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
 };

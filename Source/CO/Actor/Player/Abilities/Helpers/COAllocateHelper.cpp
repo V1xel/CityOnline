@@ -34,7 +34,7 @@ TArray<UCOStreetCellComponent*> UCOAllocateAbilityHelper::GetSelectedCells(const
 	return SelectedCells;
 }
 
-void UCOAllocateAbilityHelper::CollectSelectionData(UCOSelectionDTO* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells)
+void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionDTOTargetData* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells)
 {
 	if (SelectedCells.Num() == 0) {
 		return;
@@ -106,11 +106,14 @@ void UCOAllocateAbilityHelper::CollectSelectionData(UCOSelectionDTO* SelectionDT
 	SelectionDTO->HasCorner = HasCorner;
 }
 
-bool UCOAllocateAbilityHelper::ValidateSelectionData(UCOSelectionDTO* SelectionDTO, UCOBuildDTO* BuildDTO)
+bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataHandle SelectionDTOHandle, FGameplayAbilityTargetDataHandle BuildDTOHandle)
 {
-	if (!BuildDTO) {
+	if (!SelectionDTOHandle.IsValid(0) || !BuildDTOHandle.IsValid(0)) {
 		return false;
 	}
+
+	auto SelectionDTO = static_cast<FCOSelectionDTOTargetData*>(SelectionDTOHandle.Get(0));
+	auto BuildDTO = static_cast<FCOBuildDTOTargetData*>(BuildDTOHandle.Get(0));
 
 	bool valid = true;
 	if (!SelectionDTO->HasExtreme) {
@@ -138,30 +141,30 @@ bool UCOAllocateAbilityHelper::ValidateSelectionData(UCOSelectionDTO* SelectionD
 	return valid;
 }
 
-UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionData(const AActor* Target, FVector Start, FVector End)
+FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionData(const AActor* Target, FVector Start, FVector End)
 {
-	auto SelectionDTO = NewObject<UCOSelectionDTO>();
+	auto TargetData = new FCOSelectionDTOTargetData();
 	UWorld* World = Target->GetWorld();
 
 	TArray<FHitResult> OutHits;
 	RaycastWithRectangle(World, Start, End, OutHits);
 	auto Cells = GetSelectedCells(Target, OutHits);
-	CollectSelectionData(SelectionDTO, Cells);
+	CollectSelectionData(TargetData, Cells);
 
-	return SelectionDTO;
+	return FGameplayAbilityTargetDataHandle(TargetData);
 }
 
-UCOSelectionDTO* UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(const AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
+FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(const AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
 {
-	auto SelectionDTO = NewObject<UCOSelectionDTO>();
+	auto TargetData = new FCOSelectionDTOTargetData();
 	UWorld* World = Target->GetWorld();
 
 	TArray<FHitResult> OutHits;
 	RaycastWithRectangle(World, Start, End, OutHits);
 	auto Cells = GetSelectedCells(Target, OutHits);
-	CollectSelectionData(SelectionDTO, Cells);
+	CollectSelectionData(TargetData, Cells);
 	OutSelectedCells = Cells;
 
-	return SelectionDTO;
+	return FGameplayAbilityTargetDataHandle(TargetData);
 }
 

@@ -26,7 +26,7 @@ UCOSelectionDTO* FCOSelectionDTOTargetData::ToDTO()
     return DTO;
 }
 
-FCOSelectionDTOTargetData* UCOSelectionDTO::ToTargetData()
+FGameplayAbilityTargetDataHandle UCOSelectionDTO::ToTargetDataHandle()
 {
 	auto TargetData = new FCOSelectionDTOTargetData();
 	TargetData->Length = Length;
@@ -36,5 +36,5 @@ FCOSelectionDTOTargetData* UCOSelectionDTO::ToTargetData()
 	TargetData->Center = Center;
 	TargetData->Direction = Direction;
 
-	return TargetData;
+	return FGameplayAbilityTargetDataHandle(TargetData);
 }
