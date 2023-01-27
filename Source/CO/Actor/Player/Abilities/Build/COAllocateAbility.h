@@ -47,9 +47,6 @@ public:
 		FGameplayTag ListenCancelAllocateTag;
 
 	UPROPERTY(EditAnywhere)
-		FGameplayTag ListenBuildDTOUpdated;
-
-	UPROPERTY(EditAnywhere)
 		TSubclassOf<UGameplayEffect> AllocateInProgressEffect{};
 
 private:

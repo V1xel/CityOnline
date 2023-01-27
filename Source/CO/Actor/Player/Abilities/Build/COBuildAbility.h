@@ -34,7 +34,8 @@ public:
 
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
 
-	void OnConfigurationUpdated(FGameplayTag Tag, const FGameplayEventData* EventData);
+	void OnConfigurationUpdated(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData);
 
 	void OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData, bool Confirm);
