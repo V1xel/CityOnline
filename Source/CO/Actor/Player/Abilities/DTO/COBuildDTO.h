@@ -39,42 +39,31 @@ class CO_API UCOBuildDTO : public UObject
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FString Name;
+		FString Name;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int MinWidth;
+		int32 MinWidth;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int MaxWidth;
+		int32 MaxWidth;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int MinLength;
+		int32 MinLength;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int MaxLength;
+		int32 MaxLength;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int MinFlours;
+		int32 MinFlours;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int MaxFlours;
+		int32 MaxFlours;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool IsLiving;
+		bool IsLiving;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool IsStore;
+		bool IsStore;
 
-	FCOBuildDTOTargetData* ToTargetData() {
-		auto Struct = new FCOBuildDTOTargetData();
-		Struct->Name = Name;
-		Struct->MinWidth = MinWidth;
-		Struct->MaxWidth = MaxWidth;
-		Struct->MinLength = MinLength;
-		Struct->MaxLength = MaxLength;
-		Struct->MinFlours = MinFlours;
-		Struct->MaxFlours = MaxFlours;
-
-		return Struct;
-	}
+	FCOBuildDTOTargetData* ToTargetData();
 };

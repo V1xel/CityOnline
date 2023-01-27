@@ -20,9 +20,9 @@ struct CO_API FCOSelectionDTOTargetData : public FGameplayAbilityTargetData
 
 	bool HasExtreme;
 
-	FVector_NetQuantize Center;
+	FVector Center;
 
-	FVector_NetQuantize Rotation;
+	FVector Direction;
 
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
@@ -39,18 +39,22 @@ class CO_API UCOSelectionDTO : public UObject
 
 public:
 	UPROPERTY(BlueprintReadOnly)
-	int Length;
+	int32 Length;
 
 	UPROPERTY(BlueprintReadOnly)
-	int Width;
+	int32 Width;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool HasCorner;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool HasExtreme;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FVector Center;
 
-	FVector Rotation;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FVector Direction;
 
-	FCOSelectionDTOTargetData ToTargetData();
+	FCOSelectionDTOTargetData* ToTargetData();
 };

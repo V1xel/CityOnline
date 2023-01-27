@@ -26,3 +26,17 @@ UCOBuildDTO* FCOBuildDTOTargetData::ToDTO()
 
 	return Object;
 }
+
+FCOBuildDTOTargetData* UCOBuildDTO::ToTargetData()
+{
+	auto TargetData = new FCOBuildDTOTargetData();
+	TargetData->Name = Name;
+	TargetData->MinWidth = MinWidth;
+	TargetData->MaxWidth = MaxWidth;
+	TargetData->MinLength = MinLength;
+	TargetData->MaxLength = MaxLength;
+	TargetData->MinFlours = MinFlours;
+	TargetData->MaxFlours = MaxFlours;
+
+	return TargetData;
+}

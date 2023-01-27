@@ -9,6 +9,7 @@
 
 class UCOSelectCellsAbilityTask;
 class UCOSelectionDTO;
+class UCOBuildDTO;
 
 /**
  * 
@@ -30,39 +31,35 @@ public:
 	void AllocationCancel(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* CancelEventData);
-
-	UFUNCTION(BlueprintPure)
-		static UCOBuildDTO* GetEffectContextFromActiveGEHandleTest(UAbilitySystemComponent* AS, FActiveGameplayEffectHandle Handle);
-
 public:
 	UPROPERTY(EditAnywhere)
-	bool DebugAllocation;
+		bool DebugAllocation;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag BroadcastedEventOnAllocationUpdated;
+		FGameplayTag BroadcastedEventOnAllocationUpdated;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag BroadcastedEventOnAllocationFinished;
+		FGameplayTag BroadcastedEventOnAllocationFinished;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag FilterAllocatePermissionTag;
+		FGameplayTag FilterAllocatePermissionTag;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag ListenCancelAllocateTag;
+		FGameplayTag ListenCancelAllocateTag;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag ListenBuildDTOUpdated;
+		FGameplayTag ListenBuildDTOUpdated;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UGameplayEffect> AllocateInProgressEffect{};
+		TSubclassOf<UGameplayEffect> AllocateInProgressEffect{};
 
 private:
 	UPROPERTY()
-	UCOBuildDTO* _BuildDTO;
+		UCOBuildDTO* _BuildDTO;
 	UPROPERTY()
+		const AActor* _Target;
+
 	FVector _AllocateStartLocation;
-	UPROPERTY()
-	const AActor* _Target;
 
 	FDelegateHandle _CancelDelegateHandle;
 

@@ -25,13 +25,12 @@ class CO_API UCOBuildAbility : public UCOGameplayAbilityBase
 
 public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-							const FGameplayAbilityActivationInfo ActivationInfo,
-							const FGameplayEventData* TriggerEventData) override;
+		const FGameplayAbilityActivationInfo ActivationInfo,
+		const FGameplayEventData* TriggerEventData) override;
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
-							bool bWasCancelled) override;
-
+		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
+		bool bWasCancelled) override;
 
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
 
@@ -39,19 +38,19 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData, bool Confirm);
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UCORootAsset* RootAsset;
+		UCORootAsset* RootAsset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<ACOBuildingActor> BuildingActorClass;
+		TSubclassOf<ACOBuildingActor> BuildingActorClass;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UGameplayEffect> EnableCellAllocationEffect{};
+		TSubclassOf<UGameplayEffect> EnableCellAllocationEffect{};
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UGameplayEffect> PendingDeployEffect{};
+		TSubclassOf<UGameplayEffect> PendingDeployEffect{};
 
 	UPROPERTY(EditAnywhere)
-	UDataTable* BuildingsTable {};
+		UDataTable* BuildingsTable {};
 	UPROPERTY(EditAnywhere)
 		FGameplayTag ListenEventOnAllocationFinished;
 
@@ -65,22 +64,22 @@ public:
 		FGameplayTag BroadcastBuildDTOUpdated;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag FilterBuildingTag;
+		FGameplayTag FilterBuildingTag;
 
 private:
+	UPROPERTY()
+		const AActor* _Target;
+
+	UPROPERTY()
+		UCOSelectionDTO* _SelectionDTO;
+
+	UPROPERTY()
+		UCOBuildDTO* _BuildDTO;
+
+	UPROPERTY()
+		ACOBuildingActor* _BuildingPreview;
+
 	FString _BuildingName;
 
-	UPROPERTY()
-	const AActor* _Target;
-
-	UPROPERTY()
-	UCOSelectionDTO* _SelectionDTO;
-
-	UPROPERTY()
-	UCOBuildDTO* _BuildDTO;
-
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
-
-	UPROPERTY()
-	ACOBuildingActor* _BuildingPreview;
 };

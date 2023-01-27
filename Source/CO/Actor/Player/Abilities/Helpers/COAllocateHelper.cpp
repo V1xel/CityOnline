@@ -49,7 +49,7 @@ void UCOAllocateAbilityHelper::CollectSelectionData(UCOSelectionDTO* SelectionDT
 	int ExtremeCount = 0;
 
 	FVector SelectionCenter;
-	FVector SelectionNormal;
+	FVector SelectionAverageNormal;
 	for (auto Cell : SelectedCells)
 	{
 		if(MinimumHorizontal > Cell->Horizontal)
@@ -72,7 +72,7 @@ void UCOAllocateAbilityHelper::CollectSelectionData(UCOSelectionDTO* SelectionDT
 		{
 			ExtremeCount++;
 				
-			SelectionNormal = SelectionNormal - Cell->GetComponentLocation();
+			SelectionAverageNormal = SelectionAverageNormal - Cell->GetComponentLocation();
 			HasExtreme = true;
 		}
 		if (Cell->IsCorner)
@@ -83,23 +83,23 @@ void UCOAllocateAbilityHelper::CollectSelectionData(UCOSelectionDTO* SelectionDT
 		SelectionCenter = SelectionCenter + Cell->GetComponentLocation();
 	}
 
-	const FVector SelectionCenterCorrect = SelectionCenter / SelectedCells.Num();
-	const FVector SelectionNormalSafe = SelectionNormal.GetSafeNormal2D();
-	const FVector SelectionNormalCorrect = (SelectionCenterCorrect - SelectionNormalSafe).GetSafeNormal2D();
+	const FVector SelectionAverageCenter = SelectionCenter / SelectedCells.Num();
+	const FVector SelectionNormalizedNormal = SelectionAverageNormal.GetSafeNormal2D();
+	const FVector SelectionNormalCorrect = (SelectionAverageCenter - SelectionNormalizedNormal).GetSafeNormal2D(); // just inverting normal ? what is the point ?
 
-	FVector FinalFinalNormal;
+	FVector SelectionDirection;
 	if (ExtremeCount == 3) {
-		FinalFinalNormal = -SelectionNormalCorrect;
+		SelectionDirection = -SelectionNormalCorrect;
 	}
 	else {
 		const double dot = FVector::DotProduct(SelectionNormalCorrect, FVector::ForwardVector);
 		const FVector FinalNormal = dot * dot > 0.5 ? FVector::ForwardVector : FVector::RightVector;
 		const double dot2 = FVector::DotProduct(SelectionNormalCorrect, FinalNormal);
-		FinalFinalNormal = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
+		SelectionDirection = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
 	}
 
-	SelectionDTO->Rotation = FinalFinalNormal.ToOrientationRotator();
-	SelectionDTO->Center = SelectionCenterCorrect;
+	SelectionDTO->Direction = SelectionDirection;
+	SelectionDTO->Center = SelectionAverageCenter;
 	SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal + 1;
 	SelectionDTO->Width = MaximumVertical - MinimumVertical + 1;
 	SelectionDTO->HasExtreme = HasExtreme;

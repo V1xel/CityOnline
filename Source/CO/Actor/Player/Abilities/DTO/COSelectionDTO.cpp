@@ -6,8 +6,8 @@ bool FCOSelectionDTOTargetData::NetSerialize(FArchive& Ar, UPackageMap* Map, boo
 	Ar << Width;
 	Ar << HasCorner;
 	Ar << HasExtreme;
-	Center.NetSerialize(Ar, Map, bOutSuccess);
-	Rotation.NetSerialize(Ar, Map, bOutSuccess);
+	Ar << Center;
+	Ar << Direction;
 
     bOutSuccess = true;
     return true;
@@ -15,10 +15,26 @@ bool FCOSelectionDTOTargetData::NetSerialize(FArchive& Ar, UPackageMap* Map, boo
 
 UCOSelectionDTO* FCOSelectionDTOTargetData::ToDTO()
 {
-    return nullptr;
+	auto DTO = NewObject<UCOSelectionDTO>();
+	DTO->Length = Length;
+	DTO->Width = Width;
+	DTO->HasCorner = HasCorner;
+	DTO->HasExtreme = HasExtreme;
+	DTO->Center = Center;
+	DTO->Direction = Direction;
+
+    return DTO;
 }
 
-FCOSelectionDTOTargetData UCOSelectionDTO::ToTargetData()
+FCOSelectionDTOTargetData* UCOSelectionDTO::ToTargetData()
 {
-	return FCOSelectionDTOTargetData();
+	auto TargetData = new FCOSelectionDTOTargetData();
+	TargetData->Length = Length;
+	TargetData->Width = Width;
+	TargetData->HasCorner = HasCorner;
+	TargetData->HasExtreme = HasExtreme;
+	TargetData->Center = Center;
+	TargetData->Direction = Direction;
+
+	return TargetData;
 }
