@@ -11,6 +11,7 @@ void FCOGameplayEffectContext::SetTargetData(FGameplayAbilityTargetDataHandle In
 
 bool FCOGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
+	Super::NetSerialize(Ar, Map, bOutSuccess);
     TargetData.NetSerialize(Ar, Map, bOutSuccess);
     bOutSuccess = true;
     return true;

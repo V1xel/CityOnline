@@ -20,9 +20,13 @@ void UCOGameplayAbilityBase::EndAbility(const FGameplayAbilitySpecHandle Handle,
 
 FGameplayAbilityTargetDataHandle UCOGameplayAbilityBase::GetTargetDataFromActiveEffect(const FGameplayEffectQuery& Query)
 {
-	auto ActorInfo = GetActorInfo();
-	auto AllocatePermissionActiveEffects = ActorInfo.AbilitySystemComponent->GetActiveEffects(Query);
-	FGameplayEffectContextHandle PermissionGrantedEffectContext = ActorInfo.AbilitySystemComponent->GetEffectContextFromActiveGEHandle(AllocatePermissionActiveEffects[0]);
+	return UCOGameplayAbilityBase::GetTargetDataFromAbilitySystemActiveEffect(GetActorInfo().AbilitySystemComponent.Get(), Query);
+}
+
+FGameplayAbilityTargetDataHandle UCOGameplayAbilityBase::GetTargetDataFromAbilitySystemActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectQuery& Query)
+{
+	auto AllocatePermissionActiveEffects = AbilitySystemComponent->GetActiveEffects(Query);
+	FGameplayEffectContextHandle PermissionGrantedEffectContext = AbilitySystemComponent->GetEffectContextFromActiveGEHandle(AllocatePermissionActiveEffects[0]);
 	auto AllocatePermissionEffectContext = static_cast<FCOGameplayEffectContext*>(PermissionGrantedEffectContext.Get());
 
 	return AllocatePermissionEffectContext->TargetData;

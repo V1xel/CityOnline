@@ -27,4 +27,5 @@ protected:
 		bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	FGameplayAbilityTargetDataHandle GetTargetDataFromActiveEffect(const FGameplayEffectQuery& Query);
+	static FGameplayAbilityTargetDataHandle GetTargetDataFromAbilitySystemActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectQuery& Query);
 };

@@ -108,10 +108,6 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionTD* SelectionTD,
 
 bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataHandle SelectionDTOHandle, FGameplayAbilityTargetDataHandle BuildDTOHandle)
 {
-	if (!SelectionDTOHandle.IsValid(0) || !BuildDTOHandle.IsValid(0)) {
-		return false;
-	}
-
 	auto SelectionDTO = static_cast<FCOSelectionTD*>(SelectionDTOHandle.Get(0));
 	auto BuildDTO = static_cast<FCOBuildTD*>(BuildDTOHandle.Get(0));
 

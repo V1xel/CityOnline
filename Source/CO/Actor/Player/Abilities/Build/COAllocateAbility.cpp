@@ -10,6 +10,7 @@
 #include "COBuildAbility.h"
 #include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
 #include <CO/Core/AbilitySystem/COGameplayEffectContext.h>
+#include "COAllocateAbility.h"
 
 void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -25,7 +26,12 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	_AllocateStartLocation = TriggerEventData->TargetData.Get(0)->GetHitResult()->Location;
 	_BuildDTOTargetDataHandle = GetTargetDataFromActiveEffect(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
 
-	_EffectHadles = ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, AllocateInProgressEffect, 0);
+	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
+	EffectContext->TargetData = _BuildDTOTargetDataHandle;
+	EffectContext->AddHitResult(*TriggerEventData->TargetData.Get(0)->GetHitResult());
+
+	_EffectHadles = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, 
+		FGameplayEffectSpecHandle(new FGameplayEffectSpec(AllocateInProgressEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))), TriggerEventData->TargetData);
 }
 
 void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handle,
@@ -33,9 +39,9 @@ void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handl
 	const FGameplayEventData* CancelEventData)
 {
 	auto EndLocation = CancelEventData->TargetData.Get(0)->GetHitResult()->Location;
-	auto BuildDTOTargetData = static_cast<FCOBuildTD*>(_BuildDTOTargetDataHandle.Get(0));
 	auto SelectionDTO = UCOAllocateAbilityHelper::CalculateSelectionData(_Target, _AllocateStartLocation, EndLocation);
-	if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, BuildDTOTargetData)) {
+	if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, _BuildDTOTargetDataHandle))
+	{
 		auto EventData = FGameplayEventData();
 		EventData.Target = _Target;
 		EventData.TargetData.Append(SelectionDTO);
@@ -44,6 +50,12 @@ void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handl
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+}
+
+FGameplayAbilityTargetDataHandle UCOAllocateAbility::GetTargetDataHandleFromActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, FGameplayTag EffectTag)
+{
+	return UCOGameplayAbilityBase::GetTargetDataFromAbilitySystemActiveEffect(AbilitySystemComponent,
+		FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(EffectTag.GetSingleTagContainer()));
 }
 
 void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
