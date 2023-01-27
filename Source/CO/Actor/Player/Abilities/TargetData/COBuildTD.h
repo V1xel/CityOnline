@@ -26,5 +26,25 @@ struct CO_API FCOBuildTD : public FGameplayAbilityTargetData
 
 	int32 MaxFloors;
 
+	virtual FString ToString() const override
+	{
+		return TEXT("FCOBuildTD");
+	}
+
+	virtual UScriptStruct* GetScriptStruct() const override
+	{
+		return StaticStruct();
+	}
+
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+};
+
+template <>
+struct TStructOpsTypeTraits<FCOBuildTD> : public TStructOpsTypeTraitsBase2<FCOBuildTD>
+{
+	enum
+	{
+		WithNetSerializer = true,
+		WithCopy = true // Necessary so that TSharedPtr<FHitResult> Data is copied around
+	};
 };

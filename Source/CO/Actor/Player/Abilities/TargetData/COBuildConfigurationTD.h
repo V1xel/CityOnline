@@ -16,5 +16,25 @@ struct CO_API FCOBuildConfigurationTD : public FGameplayAbilityTargetData
 
 	FName BuildingName;
 
+	virtual FString ToString() const override
+	{
+		return TEXT("FCOBuildConfigurationTD");
+	}
+
+	virtual UScriptStruct* GetScriptStruct() const override
+	{
+		return StaticStruct();
+	}
+
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+};
+
+template <>
+struct TStructOpsTypeTraits<FCOBuildConfigurationTD> : public TStructOpsTypeTraitsBase2<FCOBuildConfigurationTD>
+{
+	enum
+	{
+		WithNetSerializer = true,
+		WithCopy = true // Necessary so that TSharedPtr<FHitResult> Data is copied around
+	};
 };
