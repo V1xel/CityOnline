@@ -33,15 +33,12 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	FGameplayEventTagMulticastDelegate::FDelegate ConfigurationUpdatedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnConfigurationUpdated);
 	_OnConfigurationUpdatedDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnConfigurationUpdated.GetSingleTagContainer(), ConfigurationUpdatedDelegate);
 
+	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
 	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(TriggerEventData->TargetData.Get(0));
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
-	
-	FGameplayEventData EventData;
-	EventData.TargetData.Append(TriggerEventData->TargetData);
-	EventData.TargetData.Append(BuildingSpecialization->ToTargetDataHandle());
-	SendGameplayEvent(BroadcastBuildDTOUpdated, EventData);
+	EffectContext->SetTargetData(BuildingSpecialization->ToTargetDataHandle());
 
-	_AllocationEffectHandle = ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo, EnableCellAllocationEffect.GetDefaultObject(), 0);
+	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))));
 }
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
@@ -67,6 +64,15 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+}
+
+FGameplayAbilityTargetDataHandle UCOBuildAbility::MakeBuildConfigurationTargetDataHandle(FName BuildingName, int32 Floors)
+{
+	auto TargetData = new FCOBuildConfigurationTD();
+	TargetData->BuildingName = BuildingName;
+	TargetData->Floors = Floors;
+
+	return FGameplayAbilityTargetDataHandle(TargetData);
 }
 
 void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,

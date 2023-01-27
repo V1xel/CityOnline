@@ -38,6 +38,9 @@ public:
 
 	void OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData, bool Confirm);
+
+	UFUNCTION(BlueprintPure)
+	static FGameplayAbilityTargetDataHandle MakeBuildConfigurationTargetDataHandle(FName BuildingName, int32 Floors);
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCORootAsset* RootAsset;
@@ -64,9 +67,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		FGameplayTag ListenEventOnBuildCanceled;
-
-	UPROPERTY(EditAnywhere)
-		FGameplayTag BroadcastBuildDTOUpdated;
 
 	UPROPERTY(EditAnywhere)
 		FGameplayTag FilterBuildingTag;

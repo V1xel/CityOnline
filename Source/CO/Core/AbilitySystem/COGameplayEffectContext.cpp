@@ -3,12 +3,15 @@
 
 #include "COGameplayEffectContext.h"
 
-void FCOGameplayEffectContext::AddBuildDTO()
+void FCOGameplayEffectContext::SetTargetData(FGameplayAbilityTargetDataHandle InTargetData)
 {
+    TargetData.Clear();
+    TargetData = InTargetData;
 }
 
 bool FCOGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
+    TargetData.NetSerialize(Ar, Map, bOutSuccess);
     bOutSuccess = true;
     return true;
 }

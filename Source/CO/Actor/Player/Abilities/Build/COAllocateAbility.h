@@ -23,14 +23,13 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
 
-	void UpdateBuildDTO(FGameplayTag Tag, const FGameplayEventData* EventData);
-
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	void AllocationCancel(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* CancelEventData);
+
 public:
 	UPROPERTY(EditAnywhere)
 		bool DebugAllocation;

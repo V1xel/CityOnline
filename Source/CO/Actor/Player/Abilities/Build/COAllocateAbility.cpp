@@ -21,17 +21,11 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	(FGameplayTag Tag, const FGameplayEventData* EventData) { AllocationCancel(Handle, ActorInfo, ActivationInfo, EventData); });
 	_CancelDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenCancelAllocateTag.GetSingleTagContainer(), AllocationCancelDelegate);
 
-	auto BuildDTOUpdatedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOAllocateAbility::UpdateBuildDTO);
-	_UpdateBuildDTODelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenBuildDTOUpdated.GetSingleTagContainer(), BuildDTOUpdatedDelegate);
-
 	_Target = TriggerEventData->Target;
 	_AllocateStartLocation = TriggerEventData->TargetData.Get(0)->GetHitResult()->Location;
-	_EffectHadles = ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, AllocateInProgressEffect, 0);
-}
+	_BuildDTOTargetDataHandle = GetTargetDataFromActiveEffect(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
 
-void UCOAllocateAbility::UpdateBuildDTO(FGameplayTag Tag, const FGameplayEventData* EventData)
-{
-	_BuildDTOTargetDataHandle = EventData->TargetData;
+	_EffectHadles = ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, AllocateInProgressEffect, 0);
 }
 
 void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handle,

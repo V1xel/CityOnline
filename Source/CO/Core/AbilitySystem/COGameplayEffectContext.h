@@ -39,7 +39,7 @@ public:
 		return StaticStruct();
 	}
 
-	void AddBuildDTO();
+	void SetTargetData(FGameplayAbilityTargetDataHandle InTargetData);
 
 	/** Creates a copy of this context, used to duplicate for later modifications */
 	virtual FCOGameplayEffectContext* Duplicate() const override
@@ -56,6 +56,9 @@ public:
 	}
 
 	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess) override;
+
+public:
+	FGameplayAbilityTargetDataHandle TargetData;
 };
 
 template <>
