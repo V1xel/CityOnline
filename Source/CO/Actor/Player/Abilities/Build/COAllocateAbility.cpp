@@ -8,7 +8,7 @@
 #include "AbilitySystemComponent.h"
 #include <AbilitySystemInterface.h>
 #include "COBuildAbility.h"
-#include "CO/Actor/Player/Abilities/DTO/COBuildDTO.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
 #include <CO/Core/AbilitySystem/COGameplayEffectContext.h>
 
 void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -39,7 +39,7 @@ void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handl
 	const FGameplayEventData* CancelEventData)
 {
 	auto EndLocation = CancelEventData->TargetData.Get(0)->GetHitResult()->Location;
-	auto BuildDTOTargetData = static_cast<FCOBuildDTOTargetData*>(_BuildDTOTargetDataHandle.Get(0));
+	auto BuildDTOTargetData = static_cast<FCOBuildTD*>(_BuildDTOTargetDataHandle.Get(0));
 	auto SelectionDTO = UCOAllocateAbilityHelper::CalculateSelectionData(_Target, _AllocateStartLocation, EndLocation);
 	if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, BuildDTOTargetData)) {
 		auto EventData = FGameplayEventData();

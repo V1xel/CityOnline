@@ -9,7 +9,7 @@
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Database/Assets/CORootAsset.h"
 #include "CO/Actor/Building/COBuildingActor.h"
-#include "CO/Actor/Player/Abilities/DTO/COBuildConfigurationDTO.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
 
@@ -33,7 +33,7 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	FGameplayEventTagMulticastDelegate::FDelegate ConfigurationUpdatedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnConfigurationUpdated);
 	_OnConfigurationUpdatedDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnConfigurationUpdated.GetSingleTagContainer(), ConfigurationUpdatedDelegate);
 
-	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationDTOTargetData*>(TriggerEventData->TargetData.Get(0));
+	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(TriggerEventData->TargetData.Get(0));
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
 	
 	FGameplayEventData EventData;

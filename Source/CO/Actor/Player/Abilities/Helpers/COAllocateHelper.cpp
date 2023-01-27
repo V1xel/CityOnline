@@ -2,8 +2,8 @@
 
 
 #include "COAllocateHelper.h"
-#include "CO/Actor/Player/Abilities/DTO/COBuildDTO.h"
-#include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COSelectionTD.h"
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
 
 bool UCOAllocateAbilityHelper::RaycastWithRectangle(UWorld* World, FVector RectangleStart, FVector RectangleEnd,
@@ -34,7 +34,7 @@ TArray<UCOStreetCellComponent*> UCOAllocateAbilityHelper::GetSelectedCells(const
 	return SelectedCells;
 }
 
-void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionDTOTargetData* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells)
+void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionTD* SelectionTD, TArray<UCOStreetCellComponent*>& SelectedCells)
 {
 	if (SelectedCells.Num() == 0) {
 		return;
@@ -98,12 +98,12 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionDTOTargetData* S
 		SelectionDirection = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
 	}
 
-	SelectionDTO->Direction = SelectionDirection;
-	SelectionDTO->Center = SelectionAverageCenter;
-	SelectionDTO->Length = MaximumHorizontal - MinimumHorizontal + 1;
-	SelectionDTO->Width = MaximumVertical - MinimumVertical + 1;
-	SelectionDTO->HasExtreme = HasExtreme;
-	SelectionDTO->HasCorner = HasCorner;
+	SelectionTD->Direction = SelectionDirection;
+	SelectionTD->Center = SelectionAverageCenter;
+	SelectionTD->Length = MaximumHorizontal - MinimumHorizontal + 1;
+	SelectionTD->Width = MaximumVertical - MinimumVertical + 1;
+	SelectionTD->HasExtreme = HasExtreme;
+	SelectionTD->HasCorner = HasCorner;
 }
 
 bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataHandle SelectionDTOHandle, FGameplayAbilityTargetDataHandle BuildDTOHandle)
@@ -112,8 +112,8 @@ bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataH
 		return false;
 	}
 
-	auto SelectionDTO = static_cast<FCOSelectionDTOTargetData*>(SelectionDTOHandle.Get(0));
-	auto BuildDTO = static_cast<FCOBuildDTOTargetData*>(BuildDTOHandle.Get(0));
+	auto SelectionDTO = static_cast<FCOSelectionTD*>(SelectionDTOHandle.Get(0));
+	auto BuildDTO = static_cast<FCOBuildTD*>(BuildDTOHandle.Get(0));
 
 	bool valid = true;
 	if (!SelectionDTO->HasExtreme) {
@@ -143,7 +143,7 @@ bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataH
 
 FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionData(const AActor* Target, FVector Start, FVector End)
 {
-	auto TargetData = new FCOSelectionDTOTargetData();
+	auto TargetData = new FCOSelectionTD();
 	UWorld* World = Target->GetWorld();
 
 	TArray<FHitResult> OutHits;
@@ -156,7 +156,7 @@ FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionDat
 
 FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(const AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
 {
-	auto TargetData = new FCOSelectionDTOTargetData();
+	auto TargetData = new FCOSelectionTD();
 	UWorld* World = Target->GetWorld();
 
 	TArray<FHitResult> OutHits;

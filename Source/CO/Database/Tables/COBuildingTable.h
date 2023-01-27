@@ -3,8 +3,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "CO/Extensions/GameplayTagExtension.h"
-#include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
-#include "CO/Actor/Player/Abilities/DTO/COBuildDTO.h"
+#include "CO/Actor/Player/Abilities/TargetData/COSelectionTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
 #include "GameplayTagContainer.h"
 #include "COBuildingTable.generated.h"
 
@@ -16,7 +16,7 @@ struct CO_API FCOBuildingTable : public FTableRowBase
 public:
 	FGameplayAbilityTargetDataHandle ToTargetDataHandle() {
 		auto Name = UGameplayTagExtension::GetTagSecondElement(Tag);;
-		auto TargetData = new FCOBuildDTOTargetData();
+		auto TargetData = new FCOBuildTD();
 		TargetData->Name = Name;
 		TargetData->MinWidth = MinWidth;
 		TargetData->MaxWidth = MaxWidth;

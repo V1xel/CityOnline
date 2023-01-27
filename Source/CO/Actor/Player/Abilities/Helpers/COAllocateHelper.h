@@ -4,10 +4,8 @@
 #include "COAllocateHelper.generated.h"
 
 class UCOStreetCellComponent;
-class UCOSelectionDTO;
-class UCOBuildDTO;
 
-struct FCOSelectionDTOTargetData;
+struct FCOSelectionTD;
 /**
  * 
  */
@@ -30,5 +28,5 @@ private:
 
 	static TArray<UCOStreetCellComponent*> GetSelectedCells(const AActor* Target, TArray<FHitResult>& HitResults);
 
-	static void CollectSelectionData(FCOSelectionDTOTargetData* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
+	static void CollectSelectionData(FCOSelectionTD* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
 };
