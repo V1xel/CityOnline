@@ -28,7 +28,7 @@ struct CO_API FCOBuildDTOTargetData : public FGameplayAbilityTargetData
 
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
-	UCOBuildDTO* ToObject();
+	UCOBuildDTO* ToDTO();
 };
 
 
@@ -65,7 +65,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool IsStore;
 
-	FCOBuildDTOTargetData* ToStruct() {
+	FCOBuildDTOTargetData* ToTargetData() {
 		auto Struct = new FCOBuildDTOTargetData();
 		Struct->Name = Name;
 		Struct->MinWidth = MinWidth;

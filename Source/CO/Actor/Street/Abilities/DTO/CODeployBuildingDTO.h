@@ -4,10 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Abilities/GameplayAbilityTargetTypes.h"
+#include "CO/Actor/Player/Abilities/DTO/COSelectionDTO.h"
 #include "CODeployBuildingDTO.generated.h"
 
-class UCOSelectionDTO;
-class UCOBuildDTO;
+USTRUCT(BlueprintType)
+struct CO_API FCODeployDTOTargetData : public FGameplayAbilityTargetData
+{
+	GENERATED_USTRUCT_BODY()
+
+	int Floors;
+
+	FString BuildingName;
+
+	FCOSelectionDTOTargetData SelectionDTO;
+
+	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+
+	UCODeployBuildingDTO* ToDTO();
+};
 
 /**
  * 
@@ -23,4 +38,6 @@ public:
 	FString BuildingName;
 
 	UCOSelectionDTO* SelectionDTO;
+
+	FGameplayAbilityTargetData* ToTargetData();
 };

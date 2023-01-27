@@ -22,6 +22,8 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
 
+	void UpdateBuildDTO(FGameplayTag Tag, const FGameplayEventData* EventData);
+
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
@@ -33,8 +35,6 @@ public:
 		static UCOBuildDTO* GetEffectContextFromActiveGEHandleTest(UAbilitySystemComponent* AS, FActiveGameplayEffectHandle Handle);
 
 public:
-	FVector AllocateStartLocation;
-
 	UPROPERTY(EditAnywhere)
 	bool DebugAllocation;
 
@@ -51,13 +51,22 @@ public:
 	FGameplayTag ListenCancelAllocateTag;
 
 	UPROPERTY(EditAnywhere)
+	FGameplayTag ListenBuildDTOUpdated;
+
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> AllocateInProgressEffect{};
 
 private:
 	UPROPERTY()
+	UCOBuildDTO* _BuildDTO;
+	UPROPERTY()
+	FVector _AllocateStartLocation;
+	UPROPERTY()
 	const AActor* _Target;
 
 	FDelegateHandle _CancelDelegateHandle;
+
+	FDelegateHandle _UpdateBuildDTODelegateHandle;
 
 	TArray<FActiveGameplayEffectHandle> _EffectHadles;
 };

@@ -4,7 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "Abilities/GameplayAbilityTargetTypes.h"
 #include "COSelectionDTO.generated.h"
+
+USTRUCT(BlueprintType)
+struct CO_API FCOSelectionDTOTargetData : public FGameplayAbilityTargetData
+{
+	GENERATED_USTRUCT_BODY()
+
+	int32 Length;
+
+	int32 Width;
+
+	bool HasCorner;
+
+	bool HasExtreme;
+
+	FVector_NetQuantize Center;
+
+	FVector_NetQuantize Rotation;
+
+	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+
+	UCOSelectionDTO* ToDTO();
+};
 
 /**
  * 
@@ -21,11 +44,13 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int Width;
 
-	bool HasCorner = false;
+	bool HasCorner;
 
-	bool HasExtreme = false;
+	bool HasExtreme;
 
 	FVector Center;
 
-	FRotator Rotation;
+	FVector Rotation;
+
+	FCOSelectionDTOTargetData ToTargetData();
 };

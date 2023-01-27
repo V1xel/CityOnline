@@ -13,11 +13,6 @@
 #include "CO/Actor/Street/Abilities/DTO/CODeployBuildingDTO.h"
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
 
-bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
-{
-	return true;
-}
-
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
@@ -25,24 +20,28 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	FGameplayEventTagMulticastDelegate::FDelegate BuildConfirmedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
-	(FGameplayTag Tag, const FGameplayEventData* EventData) { _Confirm = true; CancelAbility(Handle, ActorInfo, ActivationInfo, false); });
+	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnAllocateCancelOrConfirm(Handle, ActorInfo, ActivationInfo, EventData, true); });
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnBuildConfirmed.GetSingleTagContainer(), BuildConfirmedDelegate);
 
 	FGameplayEventTagMulticastDelegate::FDelegate BuildCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
-	(FGameplayTag Tag, const FGameplayEventData* EventData) { CancelAbility(Handle, ActorInfo, ActivationInfo, false); });
+	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnAllocateCancelOrConfirm(Handle, ActorInfo, ActivationInfo, EventData, false); });
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnBuildCanceled.GetSingleTagContainer(), BuildCanceledDelegate);
 
 	FGameplayEventTagMulticastDelegate::FDelegate AllocationFinishedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished);
 	ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnAllocationFinished.GetSingleTagContainer(), AllocationFinishedDelegate);
 
-	auto BuildingTag = TriggerEventData->InstigatorTags.Filter(FGameplayTagContainer(FilterBuildingTag)).First();
-	_BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
-	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(FName(_BuildingName), "");
-	auto Context = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
-	Context->AddBuildDTO(BuildingSpecialization->ToDTO());
-	auto EffectContext = FGameplayEffectContextHandle(Context);
 
-	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), EffectContext)));
+	auto BuildingTag = TriggerEventData->InstigatorTags.Filter(FGameplayTagContainer(FilterBuildingTag)).First();
+	auto BuildingName = UGameplayTagExtension::GetTagSecondElement(BuildingTag);
+	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(FName(BuildingName), "");
+
+	FGameplayEventData EventData;
+	EventData.TargetData = FGameplayAbilityTargetDataHandle(BuildingSpecialization->ToTargetData());
+	SendGameplayEvent(BroadcastBuildDTOUpdated, EventData);
+
+
+	_BuildingName = BuildingName;
+	_AllocationEffectHandle = ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo, EnableCellAllocationEffect.GetDefaultObject(), 0);
 }
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
@@ -53,24 +52,16 @@ void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEven
 	_SelectionDTO = Cast<UCOSelectionDTO>(EventData->OptionalObject);
 }
 
-void UCOBuildAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
+void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData, bool Confirm)
 {
-	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
-
-	if (_Confirm && _Target && _SelectionDTO) {
+	if (Confirm) {
 		auto DeployBuilding = NewObject<UCODeployBuildingDTO>();
 		DeployBuilding->SelectionDTO = _SelectionDTO;
 		DeployBuilding->BuildingName = _BuildingName;
-		DeployBuilding->Floors = 4;
-		
-		FGameplayAbilityTargetData_ActorArray* TargetData = new FGameplayAbilityTargetData_ActorArray();
-		TargetData->TargetActorArray.Add(const_cast<AActor*>(_Target));
-		FGameplayAbilityTargetDataHandle TargetDataHandle(TargetData);
+		DeployBuilding->Floors = EventData->EventMagnitude;
 
-		auto EffectContext = FGameplayEffectContextHandle(new FGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get()));
-		EffectContext.AddSourceObject(DeployBuilding);
-		ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(PendingDeployEffect.GetDefaultObject(), EffectContext)), TargetDataHandle);
+		ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, FGameplayAbilityTargetDataHandle(DeployBuilding->ToTargetData()), PendingDeployEffect, 0);
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);

@@ -28,20 +28,15 @@ public:
 							const FGameplayAbilityActivationInfo ActivationInfo,
 							const FGameplayEventData* TriggerEventData) override;
 
-	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags,
-		OUT FGameplayTagContainer* OptionalRelevantTags) const;
-
-
-	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
-	
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 							bool bWasCancelled) override;
 
 
 	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
+
+	void OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData, bool Confirm);
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCORootAsset* RootAsset;
@@ -67,11 +62,12 @@ public:
 		FGameplayTag ListenEventOnBuildCanceled;
 
 	UPROPERTY(EditAnywhere)
+		FGameplayTag BroadcastBuildDTOUpdated;
+
+	UPROPERTY(EditAnywhere)
 	FGameplayTag FilterBuildingTag;
 
 private:
-	bool _Confirm;
-
 	FString _BuildingName;
 
 	UPROPERTY()

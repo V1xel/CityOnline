@@ -19,17 +19,17 @@ public:
 		return UGameplayTagExtension::GetTagSecondElement(Tag);
 	}
 
-	UCOBuildDTO* ToDTO() {
-		auto DTO = NewObject<UCOBuildDTO>();
-		DTO->Name = GetName();
-		DTO->MinWidth = MinWidth;
-		DTO->MaxWidth = MaxWidth;
-		DTO->MinLength = MinLength;
-		DTO->MaxLength = MaxLength;
-		DTO->MinFlours = MinFlours;
-		DTO->MaxFlours = MaxFlours;
+	FCOBuildDTOTargetData* ToTargetData() {
+		auto Struct = new FCOBuildDTOTargetData();
+		Struct->Name = GetName();
+		Struct->MinWidth = MinWidth;
+		Struct->MaxWidth = MaxWidth;
+		Struct->MinLength = MinLength;
+		Struct->MaxLength = MaxLength;
+		Struct->MinFlours = MinFlours;
+		Struct->MaxFlours = MaxFlours;
 		
-		return DTO;
+		return Struct;
 	}
 
 public:

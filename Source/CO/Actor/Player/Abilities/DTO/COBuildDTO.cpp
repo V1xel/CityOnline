@@ -13,7 +13,7 @@ bool FCOBuildDTOTargetData::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& b
     return true;
 }
 
-UCOBuildDTO* FCOBuildDTOTargetData::ToObject()
+UCOBuildDTO* FCOBuildDTOTargetData::ToDTO()
 {
 	auto Object = NewObject<UCOBuildDTO>();
 	Object->Name = Name;
