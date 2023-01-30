@@ -8,6 +8,8 @@
 #include "CORootAsset.generated.h"
 
 class UCOBuildingAsset;
+struct FCOSelectionTD;
+struct FCOBuildTD;
 
 /**
  * 
@@ -18,11 +20,15 @@ class CO_API UCORootAsset : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	virtual void PostLoad() override;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UDataTable* Buildings;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<UCOBuildingAsset*> BuildingsAssets;
 
-	UCOBuildingAsset* FindBestAsset(FGameplayAbilityTargetDataHandle SelectionDTOHandle, FGameplayAbilityTargetDataHandle BuildDTOHandle);
+	UCOBuildingAsset* FindBestAsset(const FCOSelectionTD* SelectionDTO, const FCOBuildTD* BuildDTO);
+
+	static UCORootAsset* Instance;
 };

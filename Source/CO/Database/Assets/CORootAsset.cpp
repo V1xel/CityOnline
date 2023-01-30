@@ -3,15 +3,16 @@
 #include "CO/Actor/Player/Abilities/TargetData/COSelectionTD.h"
 #include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
 
-UCOBuildingAsset* UCORootAsset::FindBestAsset(FGameplayAbilityTargetDataHandle SelectionDTOHandle, FGameplayAbilityTargetDataHandle BuildDTOHandle)
+UCORootAsset* UCORootAsset::Instance = nullptr;
+
+void UCORootAsset::PostLoad()
 {
-	if (!SelectionDTOHandle.IsValid(0) || !BuildDTOHandle.IsValid(0)) {
-		return false;
-	}
+	Super::PostLoad();
+	UCORootAsset::Instance = this;
+}
 
-	auto SelectionDTO = static_cast<FCOSelectionTD*>(SelectionDTOHandle.Get(0));
-	auto BuildDTO = static_cast<FCOBuildTD*>(BuildDTOHandle.Get(0));
-
+UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOSelectionTD* SelectionDTO, const FCOBuildTD* BuildDTO)
+{
 	int matchCount = -1;
 	UCOBuildingAsset* BestAsset = nullptr;
 	for (UCOBuildingAsset* Asset : BuildingsAssets)

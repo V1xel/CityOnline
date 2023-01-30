@@ -7,12 +7,9 @@
 #include "CO/Database/Tables/COBuildingTable.h"
 #include "COBuildAbility.generated.h"
 
-class UCOBuildDTO;
 class UCORootAsset;
-class UCOSelectionDTO;
 class UCOBuildingAsset;
 class ACOBuildingActor;
-class UCOBuildConfigurationDTO;
 class UCOSelectCellsAbilityTask;
 
 /**
@@ -32,7 +29,8 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 		bool bWasCancelled) override;
 
-	void OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData);
+	void OnAllocationFinished(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData);
 
 	void OnConfigurationUpdated(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData);
@@ -42,6 +40,10 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static FGameplayAbilityTargetDataHandle MakeBuildConfigurationTargetDataHandle(FName BuildingName, int32 Floors);
+
+	UFUNCTION(BlueprintPure, meta = (NativeBreakFunc, AdvancedDisplay = 6))
+		static UCOBuildingAsset* BreakCueEffectContextTargetDataAsBuildConfiguration(FGameplayCueParameters Parameters, FVector& Center, FVector& Direction, int32& Floors);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCORootAsset* RootAsset;
@@ -56,7 +58,13 @@ public:
 		TSubclassOf<UGameplayEffect> PendingDeployEffect{};
 
 	UPROPERTY(EditAnywhere)
+		TSubclassOf<UGameplayEffect> BuildInProgressEffect{};
+
+	UPROPERTY(EditAnywhere)
 		UDataTable* BuildingsTable {};
+
+	UPROPERTY(EditAnywhere)
+		FGameplayTag BroadcastDeployEventOnBuildProcessFinished;
 	UPROPERTY(EditAnywhere)
 		FGameplayTag ListenEventOnAllocationFinished;
 
@@ -89,4 +97,6 @@ private:
 	FDelegateHandle _OnBuildCanceledDelegateHandle;
 
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
+
+	TArray<FActiveGameplayEffectHandle> _EffectHadles;
 };

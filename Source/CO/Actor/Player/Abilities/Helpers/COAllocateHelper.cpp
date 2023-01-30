@@ -140,6 +140,7 @@ bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataH
 FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionData(const AActor* Target, FVector Start, FVector End)
 {
 	auto TargetData = new FCOSelectionTD();
+	TargetData->Target = const_cast<AActor*>(Target);
 	UWorld* World = Target->GetWorld();
 
 	TArray<FHitResult> OutHits;
@@ -153,6 +154,7 @@ FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionDat
 FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(const AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
 {
 	auto TargetData = new FCOSelectionTD();
+	TargetData->Target = const_cast<AActor*>(Target);
 	UWorld* World = Target->GetWorld();
 
 	TArray<FHitResult> OutHits;

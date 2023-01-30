@@ -12,6 +12,8 @@ struct CO_API FCOSelectionTD : public FGameplayAbilityTargetData
 {
 	GENERATED_USTRUCT_BODY()
 
+	AActor* Target;
+
 	int32 Length;
 
 	int32 Width;
