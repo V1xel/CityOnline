@@ -36,6 +36,14 @@ struct CO_API FCOSelectionTD : public FGameplayAbilityTargetData
 		return StaticStruct();
 	}
 
+	virtual TArray<TWeakObjectPtr<AActor>> GetActors() const
+	{
+		auto Array = TArray<TWeakObjectPtr<AActor>>();
+		Array.Add(Target);
+
+		return Array;
+	}
+
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 };
 

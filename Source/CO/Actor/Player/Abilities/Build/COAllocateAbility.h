@@ -50,6 +50,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UGameplayEffect> AllocateInProgressEffect{};
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UGameplayEffect> BuildInProgressEffect{};
+
 private:
 	UPROPERTY()
 		const AActor* _Target;

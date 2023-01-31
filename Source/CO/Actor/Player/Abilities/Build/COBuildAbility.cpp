@@ -40,6 +40,7 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
 	EffectContext->SetTargetData(BuildingSpecialization->ToTargetDataHandle());
 
+	_ConfigurationDTOTargetDataHandle = TriggerEventData->TargetData;
 	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))));
 }
 
@@ -50,7 +51,24 @@ void UCOBuildAbility::OnAllocationFinished(const FGameplayAbilitySpecHandle Hand
 	_SelectionDTOTargetDataHandle = EventData->TargetData;
 	_AllocationEffectHandle.Invalidate();
 
-	_EffectHadles = ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, _SelectionDTOTargetDataHandle, BuildInProgressEffect, 0);
+	AddBuildInProgressEffect(Handle, ActorInfo, ActivationInfo);
+}
+
+void UCOBuildAbility::AddBuildInProgressEffect(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
+	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(_ConfigurationDTOTargetDataHandle.Get(0));
+	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
+
+	FGameplayAbilityTargetDataHandle TargetData;
+	TargetData.Append(BuildingSpecialization->ToTargetDataHandle());
+	TargetData.Append(_ConfigurationDTOTargetDataHandle);
+	TargetData.Append(_SelectionDTOTargetDataHandle);
+	EffectContext->SetTargetData(TargetData);
+
+	_BuildInProgressEffectHandle = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, 
+		FGameplayEffectSpecHandle(new FGameplayEffectSpec(BuildInProgressEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))), _SelectionDTOTargetDataHandle);
 }
 
 void UCOBuildAbility::OnConfigurationUpdated(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -58,20 +76,14 @@ void UCOBuildAbility::OnConfigurationUpdated(const FGameplayAbilitySpecHandle Ha
 {
 	_ConfigurationDTOTargetDataHandle = EventData->TargetData;
 
-	if (_AllocationEffectHandle.IsValid()) {
-		auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
-		auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(EventData->TargetData.Get(0));
-		auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
+	auto SelectionTargetData = static_cast<FCOSelectionTD*>(_SelectionDTOTargetDataHandle.Get(0));
+	auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(SelectionTargetData->Target)->GetAbilitySystemComponent();
 
-		FGameplayAbilityTargetDataHandle TargetData;
-		TargetData.Append(BuildingSpecialization->ToTargetDataHandle());
-		TargetData.Append(_SelectionDTOTargetDataHandle);
-		TargetData.Append(_ConfigurationDTOTargetDataHandle);
-		EffectContext->SetTargetData(TargetData);
-
-		GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(_AllocationEffectHandle);
-		_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(BuildInProgressEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))));
+	for (auto EffectHandle : _BuildInProgressEffectHandle)
+	{
+		TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
 	}
+	AddBuildInProgressEffect(Handle, ActorInfo, ActivationInfo);
 }
 
 void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -79,8 +91,8 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle
 {
 	if (Confirm) {
 		FGameplayEventData DeployEventData;
-		DeployEventData.TargetData.Append(_SelectionDTOTargetDataHandle);
 		DeployEventData.TargetData.Append(_ConfigurationDTOTargetDataHandle);
+		DeployEventData.TargetData.Append(_SelectionDTOTargetDataHandle);
 
 		SendGameplayEvent(BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
 	}

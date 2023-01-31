@@ -32,6 +32,9 @@ public:
 	void OnAllocationFinished(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData);
 
+	void AddBuildInProgressEffect(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo);
+
 	void OnConfigurationUpdated(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData);
 
@@ -98,5 +101,5 @@ private:
 
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
 
-	TArray<FActiveGameplayEffectHandle> _EffectHadles;
+	TArray<FActiveGameplayEffectHandle> _BuildInProgressEffectHandle;
 };
