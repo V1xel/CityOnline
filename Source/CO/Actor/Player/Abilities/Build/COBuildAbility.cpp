@@ -111,6 +111,14 @@ UCOBuildingAsset* UCOBuildAbility::BreakCueEffectContextTargetDataAsBuildConfigu
 	return UCORootAsset::Instance->FindBestAsset(SelectionTargetData, BuildTargetData);
 }
 
+void UCOBuildAbility::BreakSelectionTD(FGameplayAbilityTargetDataHandle InSelectionTargetData, int32& Length, int32& Width)
+{
+	auto SelectionTargetData = static_cast<const FCOSelectionTD*>(InSelectionTargetData.Get(0));
+
+	Length = SelectionTargetData->Length;
+	Width = SelectionTargetData->Width;
+}
+
 void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
