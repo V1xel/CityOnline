@@ -113,8 +113,8 @@ UCOBuildingAsset* UCOBuildAbility::BreakCueEffectContextTargetDataAsBuildConfigu
 {
 	auto EffectContext = static_cast<FCOGameplayEffectContext*>(Parameters.EffectContext.Get());
 	auto BuildTargetData = static_cast<const FCOBuildTD*>(EffectContext->TargetData.Get(0));
-	auto SelectionTargetData = static_cast<const FCOSelectionTD*>(EffectContext->TargetData.Get(1));
-	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(EffectContext->TargetData.Get(2));
+	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(EffectContext->TargetData.Get(1));
+	auto SelectionTargetData = static_cast<const FCOSelectionTD*>(EffectContext->TargetData.Get(2));
 
 	Floors = ConfigurationTargetData->Floors;
 	Center = SelectionTargetData->Center;

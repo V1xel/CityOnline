@@ -44,6 +44,9 @@ public:
 		void NavigateOnObject(AActor* object, float zoom);
 
 	UFUNCTION(BlueprintCallable)
+	void NavigateOnPosition(FVector position, float zoom);
+
+	UFUNCTION(BlueprintCallable)
 		void ZoomCamera(float Value);
 
 	UFUNCTION(BlueprintCallable)

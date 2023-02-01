@@ -80,6 +80,13 @@ void ACOPlayerCharacterBase::NavigateOnObject(AActor* object, float zoom)
 	SetActorLocation(NavigatedObjectLocation);
 }
 
+void ACOPlayerCharacterBase::NavigateOnPosition(FVector position, float zoom)
+{
+	DesiredTargetArmLength = zoom;
+	const FVector NavigatedObjectLocation = position;
+	SetActorLocation(NavigatedObjectLocation);
+}
+
 void ACOPlayerCharacterBase::ZoomCamera(float Value)
 {
 	if (Value != 0)
