@@ -6,6 +6,8 @@
 #include "CO/Core/AbilitySystem/COGameplayAbilityBase.h"
 #include "CODeployBuildingAbility.generated.h"
 
+class ACOBuildingActor;
+
 /**
  * 
  */
@@ -24,6 +26,9 @@ protected:
 
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ACOBuildingActor> BuildingActorClass;
+
 	UPROPERTY(EditAnywhere)
-	FGameplayTag FilterDeployBuildingTag;
+	UDataTable* BuildingsTable {};
 };

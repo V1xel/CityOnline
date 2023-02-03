@@ -51,12 +51,6 @@ public:
 	static void BreakSelectionTD(FGameplayAbilityTargetDataHandle InSelectionTargetData, int32& Length, int32& Width);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UCORootAsset* RootAsset;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<ACOBuildingActor> BuildingActorClass;
-
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UGameplayEffect> EnableCellAllocationEffect{};
 

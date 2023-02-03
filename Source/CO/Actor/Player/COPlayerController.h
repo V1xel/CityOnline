@@ -8,6 +8,8 @@
 #include "Abilities/GameplayAbilityTargetActor.h"
 #include "COPlayerController.generated.h"
 
+class UCORootAsset;
+
 UCLASS()
 class CO_API ACOPlayerController : public APlayerController
 {
@@ -16,6 +18,9 @@ class CO_API ACOPlayerController : public APlayerController
 	ACOPlayerController();
 
 public:
+	UPROPERTY(EditAnywhere)
+	UCORootAsset* RootAsset;
+
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void SendServerGameplayEventToPawn(FGameplayTag Tag, FGameplayEventData Payload);
 

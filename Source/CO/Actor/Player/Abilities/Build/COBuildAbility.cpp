@@ -114,6 +114,7 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle
 		FGameplayEventData DeployEventData;
 		DeployEventData.TargetData.Append(_ConfigurationDTOTargetDataHandle);
 		DeployEventData.TargetData.Append(_SelectionDTOTargetDataHandle);
+		DeployEventData.Instigator = ActorInfo->OwnerActor.Get();
 
 		SendGameplayEvent(BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
 
@@ -144,7 +145,10 @@ UCOBuildingAsset* UCOBuildAbility::BreakCueEffectContextTargetDataAsBuildConfigu
 	Center = SelectionTargetData->Center;
 	Direction = SelectionTargetData->Direction;
 
-	return UCORootAsset::Instance->FindBestAsset(SelectionTargetData, BuildTargetData);
+	auto InstigatorController = EffectContext->GetInstigator()->GetInstigatorController();
+	auto RootAsset = Cast<ACOPlayerController>(InstigatorController)->RootAsset;
+
+	return RootAsset->FindBestAsset(SelectionTargetData, BuildTargetData);
 }
 
 void UCOBuildAbility::BreakSelectionTD(FGameplayAbilityTargetDataHandle InSelectionTargetData, int32& Length, int32& Width)

@@ -20,8 +20,6 @@ class CO_API UCORootAsset : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	virtual void PostLoad() override;
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UDataTable* Buildings;
 	
@@ -29,6 +27,4 @@ public:
 	TArray<UCOBuildingAsset*> BuildingsAssets;
 
 	UCOBuildingAsset* FindBestAsset(const FCOSelectionTD* SelectionDTO, const FCOBuildTD* BuildDTO);
-
-	static UCORootAsset* Instance;
 };

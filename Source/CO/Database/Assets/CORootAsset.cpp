@@ -3,14 +3,6 @@
 #include "CO/Actor/Player/Abilities/TargetData/COSelectionTD.h"
 #include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
 
-UCORootAsset* UCORootAsset::Instance = nullptr;
-
-void UCORootAsset::PostLoad()
-{
-	Super::PostLoad();
-	UCORootAsset::Instance = this;
-}
-
 UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOSelectionTD* SelectionDTO, const FCOBuildTD* BuildDTO)
 {
 	int matchCount = -1;

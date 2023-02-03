@@ -7,6 +7,7 @@
 #include "COPlayerCharacter.generated.h"
 
 class UCOBuildDTO;
+class UCORootAsset;
 
 UCLASS()
 class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
