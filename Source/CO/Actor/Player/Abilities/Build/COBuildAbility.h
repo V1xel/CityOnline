@@ -83,6 +83,8 @@ public:
 		FGameplayTag ListenEventOnBuildConfirmed;
 	UPROPERTY(EditAnywhere)
 		FGameplayTag BroadcastDeployEventOnBuildProcessFinished;
+	UPROPERTY(EditAnywhere)
+		FGameplayTag BroadcastSelectActorEventOnBuildCanceled;
 private:
 	UPROPERTY()
 		ACOBuildingActor* _BuildingPreview;

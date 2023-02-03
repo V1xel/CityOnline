@@ -97,6 +97,21 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle
 		SendGameplayEvent(BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
 	}
 
+	if (_SelectionDTOTargetDataHandle.IsValid(0)) {
+		FGameplayEventData SelectEventData;
+		SelectEventData.Target = _SelectionDTOTargetDataHandle.Get(0)->GetActors()[0].Get();
+		SelectEventData.TargetData = _SelectionDTOTargetDataHandle;
+
+		SendGameplayEvent(BroadcastSelectActorEventOnBuildCanceled, SelectEventData);
+
+		auto SelectionTargetData = static_cast<FCOSelectionTD*>(_SelectionDTOTargetDataHandle.Get(0));
+		auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(SelectionTargetData->Target)->GetAbilitySystemComponent();
+		for (auto EffectHandle : _BuildInProgressEffectHandle)
+		{
+			TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
+		}
+	}
+
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
 
