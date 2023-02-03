@@ -31,30 +31,13 @@ public:
 		return AbilitySystemComponent;
 	}
 
-	void OnEffectApplied(AActor* Source, FGameplayEffectSpecHandle SpecHandle, FActiveGameplayEffectHandle ActiveHandle);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void PendingDeployEffectApplied(FGameplayEffectContextHandle EffectContextHandle);
-
-	void PendingDeployEffectApplied_Implementation(FGameplayEffectContextHandle EffectContextHandle)
-	{
-	}
-
 public:
 	UPROPERTY()
 	TArray<UCOStreetCellComponent*> Cells{};
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UAbilitySystemComponent* AbilitySystemComponent {};
-
-	UPROPERTY(EditAnywhere)
-	FGameplayTag ListenBuildingDeployEffectAppliedTag;
-	
 protected:
 	UPROPERTY()
 	USceneComponent* SceneComponent;
-	
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAppliedDelegate, FGameplayEffectContextHandle, EffectContextHandle);
-	UPROPERTY()
-	TMap<FGameplayTag, FOnAppliedDelegate> OnAppliedMap;
 };

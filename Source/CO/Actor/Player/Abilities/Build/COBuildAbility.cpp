@@ -50,6 +50,7 @@ void UCOBuildAbility::OnAllocationFinished(const FGameplayAbilitySpecHandle Hand
 	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(_AllocationEffectHandle);
 	_SelectionDTOTargetDataHandle = EventData->TargetData;
 	_AllocationEffectHandle.Invalidate();
+	SelectionForPreviewBuildingOverridden = true;
 
 	AddBuildInProgressEffect(Handle, ActorInfo, ActivationInfo);
 }
@@ -75,6 +76,8 @@ void UCOBuildAbility::OnConfigurationUpdated(const FGameplayAbilitySpecHandle Ha
 	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData)
 {
 	_ConfigurationDTOTargetDataHandle = EventData->TargetData;
+	if (!SelectionForPreviewBuildingOverridden)
+		return;
 
 	auto SelectionTargetData = static_cast<FCOSelectionTD*>(_SelectionDTOTargetDataHandle.Get(0));
 	auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(SelectionTargetData->Target)->GetAbilitySystemComponent();
@@ -83,23 +86,18 @@ void UCOBuildAbility::OnConfigurationUpdated(const FGameplayAbilitySpecHandle Ha
 	{
 		TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
 	}
+
 	AddBuildInProgressEffect(Handle, ActorInfo, ActivationInfo);
 }
 
 void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData, bool Confirm)
 {
-	if (Confirm) {
-		FGameplayEventData DeployEventData;
-		DeployEventData.TargetData.Append(_ConfigurationDTOTargetDataHandle);
-		DeployEventData.TargetData.Append(_SelectionDTOTargetDataHandle);
-
-		SendGameplayEvent(BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
-	}
-
-	if (_SelectionDTOTargetDataHandle.IsValid(0)) {
+	AActor* Target = nullptr;
+	if (SelectionForPreviewBuildingOverridden) {
 		FGameplayEventData SelectEventData;
-		SelectEventData.Target = _SelectionDTOTargetDataHandle.Get(0)->GetActors()[0].Get();
+		Target = _SelectionDTOTargetDataHandle.Get(0)->GetActors()[0].Get();
+		SelectEventData.Target = Target;
 		SelectEventData.TargetData = _SelectionDTOTargetDataHandle;
 
 		SendGameplayEvent(BroadcastSelectActorEventOnBuildCanceled, SelectEventData);
@@ -110,6 +108,17 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle
 		{
 			TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
 		}
+	}
+
+	if (Confirm && SelectionForPreviewBuildingOverridden) {
+		FGameplayEventData DeployEventData;
+		DeployEventData.TargetData.Append(_ConfigurationDTOTargetDataHandle);
+		DeployEventData.TargetData.Append(_SelectionDTOTargetDataHandle);
+
+		SendGameplayEvent(BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
+
+		auto PlayerCharacter = Cast<ACOPlayerController>(ActorInfo->PlayerController.Get());
+		PlayerCharacter->SendServerGameplayEventToListener(Target, BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);

@@ -8,6 +8,7 @@ void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle 
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Magenta, TEXT("UCODeployBuildingAbility::ActivateAbility!"));
 }
 
 void UCODeployBuildingAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
