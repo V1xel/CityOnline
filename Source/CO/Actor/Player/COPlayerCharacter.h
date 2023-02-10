@@ -6,26 +6,9 @@
 #include "CO/Core/Actor/Player/COPlayerCharacterBase.h"
 #include "COPlayerCharacter.generated.h"
 
-class UCOBuildDTO;
-class UCORootAsset;
-
 UCLASS()
 class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
 {
 	GENERATED_BODY()
-
-public:
-	ACOPlayerCharacter();
-
-	virtual void BeginPlay() override;
-public:
-
-	UPROPERTY(EditAnywhere)
-	FGameplayTag ListenActorSelectedTag;
-
-	UPROPERTY(BlueprintReadOnly)
-	AActor* SelectedActor;
-private:
-	FDelegateHandle _actorSelectedHandle;
 
 };
