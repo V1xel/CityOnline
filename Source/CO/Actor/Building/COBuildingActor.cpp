@@ -13,11 +13,11 @@ UAbilitySystemComponent* ACOBuildingActor::GetAbilitySystemComponent() const
 
 void ACOBuildingActor::ComposeBuilding()
 {
-	for (size_t i = 1; i <= Floors; i++)
+	for (size_t i = 0; i <= Floors; i++)
 	{
 		auto Mesh = Cast<UCOBuildingPartComponent>(AddComponentByClass(BuildingPartComponentClass, false, FTransform::Identity, false));
 		Mesh->SetStaticMesh(BuildingAsset->ExtensionFloor);
-		Mesh->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (i - 1)));
+		Mesh->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * i));
 		Meshes.Add(Mesh);
 	}
 
@@ -27,6 +27,6 @@ void ACOBuildingActor::ComposeBuilding()
 
 	auto Roof = Cast<UCOBuildingPartComponent>(AddComponentByClass(BuildingPartComponentClass, false, FTransform::Identity, false));
 	Roof->SetStaticMesh(BuildingAsset->Roof);
-	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (Floors - 1)));
+	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * Floors));
 	Meshes.Add(Roof);
 }
