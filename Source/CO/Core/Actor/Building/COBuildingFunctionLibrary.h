@@ -17,5 +17,5 @@ class CO_API UCOBuildingFunctionLibrary : public UBlueprintFunctionLibrary
 
 public:
 	UFUNCTION(BlueprintCallable)
-	static void ComposeBuilding(AActor* Owner, int32 Floors, TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass, UCOBuildingAsset* BuildingAsset, TArray<UCOBuildingPartComponent*>& OutParts);
+	static void ComposeBuilding(AActor* Owner, int32 Floors, TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass, UCOBuildingAsset* BuildingAsset, FVector Direction, TArray<UCOBuildingPartComponent*>& OutParts);
 };

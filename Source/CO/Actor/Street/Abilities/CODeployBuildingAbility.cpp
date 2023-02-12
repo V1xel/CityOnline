@@ -23,14 +23,14 @@ void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle 
 	auto BuildTargetDataHandle = BuildingSpecialization->ToTargetDataHandle();
 	auto BuildTargetData = static_cast<const FCOBuildTD*>(BuildTargetDataHandle.Get(0));
 
-	auto Building = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(BuildingRotation, SelectionTD->Center));
+	auto Building = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(SelectionTD->Center));
 	auto InstigatorController = TriggerEventData->Instigator.Get()->GetInstigatorController();
 	auto RootAsset = Cast<ACOPlayerController>(InstigatorController)->RootAsset;
 	auto BuildingAsset = RootAsset->FindBestAsset(SelectionTD, BuildTargetData);
 
-	UCOBuildingFunctionLibrary::ComposeBuilding(Building, ConfigurationTD->Floors, BuildingPartComponentClass, BuildingAsset, Building->Meshes);
+	UCOBuildingFunctionLibrary::ComposeBuilding(Building, ConfigurationTD->Floors, BuildingPartComponentClass, BuildingAsset, SelectionTD->Direction, Building->Meshes);
 	Building->FinishSpawning(FTransform());
-	Building->SetActorLocationAndRotation(SelectionTD->Center, BuildingRotation + BuildingAsset->RotationOffset);
+	Building->SetActorLocation(SelectionTD->Center);
 }
 
 void UCODeployBuildingAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
