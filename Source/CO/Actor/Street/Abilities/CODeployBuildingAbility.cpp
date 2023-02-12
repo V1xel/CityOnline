@@ -10,6 +10,7 @@
 #include "CO/Database/Tables/COBuildingTable.h"
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Actor/Player/COPlayerController.h"
+#include "CO/Core/Actor/Building/COBuildingFunctionLibrary.h"
 
 void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -27,9 +28,7 @@ void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle 
 	auto RootAsset = Cast<ACOPlayerController>(InstigatorController)->RootAsset;
 	auto BuildingAsset = RootAsset->FindBestAsset(SelectionTD, BuildTargetData);
 
-	Building->BuildingAsset = BuildingAsset;
-	Building->Floors = ConfigurationTD->Floors;
-	Building->ComposeBuilding();
+	UCOBuildingFunctionLibrary::ComposeBuilding(Building, ConfigurationTD->Floors, BuildingPartComponentClass, BuildingAsset, Building->Meshes);
 	Building->FinishSpawning(FTransform());
 	Building->SetActorLocationAndRotation(SelectionTD->Center, BuildingRotation + BuildingAsset->RotationOffset);
 }

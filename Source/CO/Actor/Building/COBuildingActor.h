@@ -8,7 +8,6 @@
 #include "GameFramework/Actor.h"
 #include "COBuildingActor.generated.h"
 
-class UCOAbilitySystemComponent;
 class UCOBuildingPartComponent;
 class UCOConstructionDTO;
 class UCOBuildingAsset;
@@ -19,25 +18,18 @@ class CO_API ACOBuildingActor : public AActor, public IAbilitySystemInterface
 	GENERATED_BODY()
 
 public:
-	void ComposeBuilding();
-
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override 
+	{
+		return AbilitySystemComponent;
+	}
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UCOAbilitySystemComponent* AbilitySystemComponent{};
+	UAbilitySystemComponent* AbilitySystemComponent{};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCOBuildingAttributeSet* BuildingAttributeSet{};
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass{};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UCOBuildingAsset* BuildingAsset {};
-
-	int32 Floors;
-protected:
 	UPROPERTY()
 	TArray<UCOBuildingPartComponent*> Meshes{};
 };

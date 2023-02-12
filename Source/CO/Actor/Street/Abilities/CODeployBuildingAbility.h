@@ -7,6 +7,7 @@
 #include "CODeployBuildingAbility.generated.h"
 
 class ACOBuildingActor;
+class UCOBuildingPartComponent;
 
 /**
  * 
@@ -24,10 +25,12 @@ protected:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<ACOBuildingActor> BuildingActorClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass;
 
 	UPROPERTY(EditAnywhere)
 	UDataTable* BuildingsTable {};
