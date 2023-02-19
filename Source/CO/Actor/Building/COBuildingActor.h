@@ -18,18 +18,23 @@ class CO_API ACOBuildingActor : public AActor, public IAbilitySystemInterface
 	GENERATED_BODY()
 
 public:
+	ACOBuildingActor();
+
+	virtual void BeginPlay() override;
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override 
 	{
 		return AbilitySystemComponent;
 	}
 	
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UAbilitySystemComponent* AbilitySystemComponent{};
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+		UAbilitySystemComponent* AbilitySystemComponent {};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCOBuildingAttributeSet* BuildingAttributeSet{};
 
 	UPROPERTY()
 	TArray<UCOBuildingPartComponent*> Meshes{};
+
 };
