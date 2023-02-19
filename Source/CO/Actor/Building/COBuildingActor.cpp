@@ -5,7 +5,6 @@
 
 ACOBuildingActor::ACOBuildingActor()
 {
-	auto test = this;
 	AbilitySystemComponent = CreateDefaultSubobject<UCOAbilitySystemComponent>("AbilitySystem");
 }
 
