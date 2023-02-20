@@ -29,6 +29,13 @@ protected:
 							const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
 							bool bWasCancelled) override;
 public:
+
+	UPROPERTY(EditAnywhere)
+	TMap<FGameplayTag, TSubclassOf<UGameplayEffect>> ActorSelectionMapping;
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTagContainer FilterSelectionTags;
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> ActorSelectedEffect;
 
@@ -36,6 +43,8 @@ public:
 	FGameplayTag BroadcastedEventOnSelect;
 private:
 	TArray<FActiveGameplayEffectHandle> _AppliedEffects;
+
+	FActiveGameplayEffectHandle _AppliedEffect;
 
 	UPROPERTY()
 	const AActor* _Target;

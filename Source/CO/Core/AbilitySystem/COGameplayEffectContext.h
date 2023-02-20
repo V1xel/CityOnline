@@ -57,6 +57,9 @@ public:
 
 	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess) override;
 
+protected:
+	TArray<TWeakObjectPtr<AActor>> CombinedArray{};
+
 public:
 	FGameplayAbilityTargetDataHandle TargetData;
 };

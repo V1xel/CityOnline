@@ -18,4 +18,13 @@ class CO_API UCOAbilitySystemFunctionLibrary : public UBlueprintFunctionLibrary
 public:
 	UFUNCTION(BlueprintCallable)
 	static FGameplayEffectContextHandle GetEffectContextFromActiveGEHandle(UAbilitySystemComponent* AbilitySystem, FActiveGameplayEffectHandle Handle);
+
+	UFUNCTION(BlueprintPure)
+	static TArray<AActor*> GetEffectContextTargetActors(UAbilitySystemComponent* AbilitySystem, FActiveGameplayEffectHandle Effect);
+
+	UFUNCTION(BlueprintPure)
+	static AActor* GetTargetActorFromEffectByTag(UAbilitySystemComponent* AbilitySystem, FGameplayTag Tag);
+
+	UFUNCTION(BlueprintPure)
+	static TArray<AActor*> GetAllActorsFromEffectContext(FGameplayEffectContextHandle EffectHandle);
 };
