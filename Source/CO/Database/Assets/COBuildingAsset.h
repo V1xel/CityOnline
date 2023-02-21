@@ -31,10 +31,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool IsStore;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool HasCorner;
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float FloorHeight = 410;
 	

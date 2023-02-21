@@ -45,7 +45,6 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionTD* SelectionTD,
 	auto MinimumVertical = SelectedCells[0]->Vertical;
 	auto MaximumVertical = SelectedCells[0]->Vertical;
 	bool HasExtreme = false;
-	bool HasCorner = false;
 	int ExtremeCount = 0;
 
 	FVector SelectionCenter;
@@ -75,10 +74,6 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionTD* SelectionTD,
 			SelectionAverageNormal = SelectionAverageNormal - Cell->GetComponentLocation();
 			HasExtreme = true;
 		}
-		if (Cell->IsCorner)
-		{
-			HasCorner = true;
-		}
 		
 		SelectionCenter = SelectionCenter + Cell->GetComponentLocation();
 	}
@@ -103,7 +98,6 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionTD* SelectionTD,
 	SelectionTD->Length = MaximumHorizontal - MinimumHorizontal + 1;
 	SelectionTD->Width = MaximumVertical - MinimumVertical + 1;
 	SelectionTD->HasExtreme = HasExtreme;
-	SelectionTD->HasCorner = HasCorner;
 	SelectionTD->ExtremeCount = ExtremeCount;
 }
 

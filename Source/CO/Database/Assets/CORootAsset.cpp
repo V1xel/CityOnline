@@ -10,15 +10,6 @@ UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOSelectionTD* SelectionDTO
 	for (UCOBuildingAsset* Asset : BuildingsAssets)
 	{
 		int currentCount = 0;
-		if (Asset->HasCorner == SelectionDTO->HasCorner)
-		{
-			currentCount++;
-		}
-	//	if (Asset->IsLiving == BuildDTO->IsLiving ||
-	//		Asset->IsStore == BuildDTO->IsStore)
-	//	{
-	//		currentCount++;
-	//	}
 		if (Asset->Width == SelectionDTO->Width || Asset->Width == SelectionDTO->Length)
 		{
 			currentCount++;
