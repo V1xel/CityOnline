@@ -30,7 +30,7 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	EffectContext->TargetData = _BuildDTOTargetDataHandle;
 	EffectContext->AddHitResult(*TriggerEventData->TargetData.Get(0)->GetHitResult());
 
-	_EffectHadles = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, 
+	_EffectHadles = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo,
 		FGameplayEffectSpecHandle(new FGameplayEffectSpec(AllocateInProgressEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))), TriggerEventData->TargetData);
 }
 
@@ -50,12 +50,6 @@ void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handl
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
-}
-
-FGameplayAbilityTargetDataHandle UCOAllocateAbility::GetTargetDataHandleFromActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, FGameplayTag EffectTag)
-{
-	return UCOGameplayAbilityBase::GetTargetDataFromAbilitySystemActiveEffect(AbilitySystemComponent,
-		FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(EffectTag.GetSingleTagContainer()));
 }
 
 void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,

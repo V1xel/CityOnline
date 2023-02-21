@@ -20,6 +20,9 @@ public:
 	static FGameplayEffectContextHandle GetEffectContextFromActiveGEHandle(UAbilitySystemComponent* AbilitySystem, FActiveGameplayEffectHandle Handle);
 
 	UFUNCTION(BlueprintPure)
+	static FGameplayAbilityTargetDataHandle GetTargetDataHandleFromActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, FGameplayTag EffectTag);
+
+	UFUNCTION(BlueprintPure)
 	static TArray<AActor*> GetEffectContextTargetActors(UAbilitySystemComponent* AbilitySystem, FActiveGameplayEffectHandle Effect);
 
 	UFUNCTION(BlueprintPure)

@@ -17,7 +17,7 @@ class CO_API UCOGameplayAbilityBase : public UGameplayAbility
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;

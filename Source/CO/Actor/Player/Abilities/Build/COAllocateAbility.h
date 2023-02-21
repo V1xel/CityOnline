@@ -29,8 +29,6 @@ public:
 	void AllocationCancel(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* CancelEventData);
-	UFUNCTION(BlueprintPure)
-	static FGameplayAbilityTargetDataHandle GetTargetDataHandleFromActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, FGameplayTag EffectTag);
 public:
 	UPROPERTY(EditAnywhere)
 		bool DebugAllocation;

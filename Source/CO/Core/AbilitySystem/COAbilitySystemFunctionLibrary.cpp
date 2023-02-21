@@ -5,10 +5,17 @@
 #include "COAbilitySystemComponent.h"
 #include "COGameplayEffectContext.h"
 #include <AbilitySystemBlueprintLibrary.h>
+#include "COGameplayAbilityBase.h"
 
 FGameplayEffectContextHandle UCOAbilitySystemFunctionLibrary::GetEffectContextFromActiveGEHandle(UAbilitySystemComponent* AbilitySystem, FActiveGameplayEffectHandle Handle)
 {
 	return AbilitySystem->GetEffectContextFromActiveGEHandle(Handle);
+}
+
+FGameplayAbilityTargetDataHandle UCOAbilitySystemFunctionLibrary::GetTargetDataHandleFromActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, FGameplayTag EffectTag)
+{
+	return UCOGameplayAbilityBase::GetTargetDataFromAbilitySystemActiveEffect(AbilitySystemComponent,
+		FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(EffectTag.GetSingleTagContainer()));
 }
 
 TArray<AActor*> UCOAbilitySystemFunctionLibrary::GetEffectContextTargetActors(UAbilitySystemComponent* AbilitySystem, FActiveGameplayEffectHandle Effect)
