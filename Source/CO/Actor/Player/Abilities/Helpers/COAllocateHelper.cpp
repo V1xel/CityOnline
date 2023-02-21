@@ -104,6 +104,7 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionTD* SelectionTD,
 	SelectionTD->Width = MaximumVertical - MinimumVertical + 1;
 	SelectionTD->HasExtreme = HasExtreme;
 	SelectionTD->HasCorner = HasCorner;
+	SelectionTD->ExtremeCount = ExtremeCount;
 }
 
 bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataHandle SelectionDTOHandle, FGameplayAbilityTargetDataHandle BuildDTOHandle)

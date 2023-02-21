@@ -7,6 +7,7 @@ bool FCOSelectionTD::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSucc
 	Ar << Width;
 	Ar << HasCorner;
 	Ar << HasExtreme;
+	Ar << ExtremeCount;
 	Ar << Center;
 	Ar << Direction;
 

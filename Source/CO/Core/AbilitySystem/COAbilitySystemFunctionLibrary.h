@@ -24,7 +24,4 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static AActor* GetTargetActorFromEffectByTag(UAbilitySystemComponent* AbilitySystem, FGameplayTag Tag);
-
-	UFUNCTION(BlueprintPure)
-	static TArray<AActor*> GetAllActorsFromEffectContext(FGameplayEffectContextHandle EffectHandle);
 };

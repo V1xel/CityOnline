@@ -18,6 +18,8 @@ struct CO_API FCOSelectionTD : public FGameplayAbilityTargetData
 
 	int32 Width;
 
+	int32 ExtremeCount;
+
 	bool HasCorner;
 
 	bool HasExtreme;

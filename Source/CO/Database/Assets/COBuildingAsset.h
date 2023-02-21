@@ -24,6 +24,9 @@ public:
 	int Length;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int ExtremeCount;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool IsLiving;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

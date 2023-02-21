@@ -27,6 +27,10 @@ UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOSelectionTD* SelectionDTO
 		{
 			currentCount++;
 		}
+		if (Asset->ExtremeCount == SelectionDTO->ExtremeCount)
+		{
+			currentCount++;
+		}
 		if (currentCount > matchCount)
 		{
 			matchCount = currentCount;
