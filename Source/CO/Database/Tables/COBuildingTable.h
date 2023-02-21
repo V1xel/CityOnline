@@ -24,6 +24,8 @@ public:
 		TargetData->MaxLength = MaxLength;
 		TargetData->MinFloors = MinFloors;
 		TargetData->MaxFloors = MaxFloors;
+		TargetData->CostMultiplier = CostMultiplier;
+		TargetData->CapacityMultiplier = CapacityMultiplier;
 		
 		return FGameplayAbilityTargetDataHandle(TargetData);
 	}
@@ -54,5 +56,5 @@ public:
 	float CostMultiplier;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float GoodsMultiplier;
+	float CapacityMultiplier;
 };
