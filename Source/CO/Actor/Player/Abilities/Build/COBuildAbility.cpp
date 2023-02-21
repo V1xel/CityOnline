@@ -41,6 +41,7 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	EffectContext->SetTargetData(BuildingSpecialization->ToTargetDataHandle());
 
 	_ConfigurationDTOTargetDataHandle = TriggerEventData->TargetData;
+	_PlayerPerformingBuildEffectHandle = ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo, PlayerPerformingBuildEffect.GetDefaultObject(), 0);
 	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))));
 }
 
@@ -121,6 +122,8 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle
 		auto PlayerCharacter = Cast<ACOPlayerController>(ActorInfo->PlayerController.Get());
 		PlayerCharacter->SendServerGameplayEventToListener(Target, BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
 	}
+
+	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(_PlayerPerformingBuildEffectHandle);
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }

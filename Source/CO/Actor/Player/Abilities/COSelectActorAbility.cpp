@@ -12,7 +12,10 @@
 
 bool UCOSelectActorAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
-	return !TargetTags->HasAny(TargetBlockedTags) && TargetTags->HasAny(TargetRequiredTags) && TargetTags->Filter(FilterSelectionTags).IsValidIndex(0);
+	return !TargetTags->HasAny(TargetBlockedTags) &&
+		TargetTags->HasAny(TargetRequiredTags) &&
+		TargetTags->Filter(FilterSelectionTags).IsValidIndex(0) &&
+		!SourceTags->HasAny(SourceBlockedTags);
 }
 
 void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

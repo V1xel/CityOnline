@@ -61,6 +61,9 @@ public:
 		TSubclassOf<UGameplayEffect> BuildInProgressEffect{};
 
 	UPROPERTY(EditAnywhere)
+		TSubclassOf<UGameplayEffect> PlayerPerformingBuildEffect{};
+
+	UPROPERTY(EditAnywhere)
 		UDataTable* BuildingsTable {};
 
 	UPROPERTY(EditAnywhere)
@@ -94,6 +97,8 @@ private:
 	FDelegateHandle _OnBuildConfirmedDelegateHandle;
 
 	FDelegateHandle _OnBuildCanceledDelegateHandle;
+
+	FActiveGameplayEffectHandle _PlayerPerformingBuildEffectHandle;
 
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
 
