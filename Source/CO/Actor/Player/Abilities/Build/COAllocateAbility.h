@@ -46,6 +46,9 @@ public:
 		FGameplayTag ListenCancelAllocateTag;
 
 	UPROPERTY(EditAnywhere)
+		FGameplayTag StreetSelectedTag;
+
+	UPROPERTY(EditAnywhere)
 		TSubclassOf<UGameplayEffect> AllocateInProgressEffect{};
 
 	UPROPERTY(EditAnywhere)

@@ -12,6 +12,7 @@
 #include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
+#include <AbilitySystemBlueprintLibrary.h>
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -40,8 +41,11 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
 	EffectContext->SetTargetData(BuildingSpecialization->ToTargetDataHandle());
 
+	auto BuildPerformingEffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
+	BuildPerformingEffectContext->SetTargetData(UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(const_cast<AActor*>(TriggerEventData->Target.Get())));
+
 	_ConfigurationDTOTargetDataHandle = TriggerEventData->TargetData;
-	_PlayerPerformingBuildEffectHandle = ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo, PlayerPerformingBuildEffect.GetDefaultObject(), 0);
+	_PlayerPerformingBuildEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(PlayerPerformingBuildEffect.GetDefaultObject(), FGameplayEffectContextHandle(BuildPerformingEffectContext))));
 	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))));
 }
 

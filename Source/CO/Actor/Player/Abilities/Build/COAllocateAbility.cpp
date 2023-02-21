@@ -11,6 +11,7 @@
 #include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
 #include <CO/Core/AbilitySystem/COGameplayEffectContext.h>
 #include "COAllocateAbility.h"
+#include <CO/Core/AbilitySystem/COAbilitySystemFunctionLibrary.h>
 
 void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -27,7 +28,7 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	_BuildDTOTargetDataHandle = GetTargetDataFromActiveEffect(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
 
 	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
-	EffectContext->TargetData = _BuildDTOTargetDataHandle;
+	EffectContext->SetTargetData(_BuildDTOTargetDataHandle);
 	EffectContext->AddHitResult(*TriggerEventData->TargetData.Get(0)->GetHitResult());
 
 	_EffectHadles = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo,
@@ -46,7 +47,11 @@ void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handl
 		EventData.Target = _Target;
 		EventData.TargetData.Append(SelectionDTO);
 
-		SendGameplayEvent(BroadcastedEventOnAllocationFinished, EventData);
+		auto SelectedTarget = UCOAbilitySystemFunctionLibrary::GetTargetActorFromEffectByTag(GetActorInfo().AbilitySystemComponent.Get(), StreetSelectedTag);
+		if (_Target == SelectedTarget)
+		{
+			SendGameplayEvent(BroadcastedEventOnAllocationFinished, EventData);
+		}
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
