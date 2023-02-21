@@ -7,7 +7,7 @@
 
 void UCOBuildingFunctionLibrary::ComposeBuilding(AActor* Owner, int32 Floors, TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass, UCOBuildingAsset* BuildingAsset, FVector Direction, TArray<UCOBuildingPartComponent*>& OutParts)
 {
-	for (size_t i = 0; i <= Floors; i++)
+	for (size_t i = 0; i < Floors - 1; i++)
 	{
 		auto Mesh = Cast<UCOBuildingPartComponent>(Owner->AddComponentByClass(BuildingPartComponentClass, false, FTransform::Identity, false));
 		Mesh->SetStaticMesh(BuildingAsset->ExtensionFloor);
@@ -23,7 +23,7 @@ void UCOBuildingFunctionLibrary::ComposeBuilding(AActor* Owner, int32 Floors, TS
 
 	auto Roof = Cast<UCOBuildingPartComponent>(Owner->AddComponentByClass(BuildingPartComponentClass, false, FTransform::Identity, false));
 	Roof->SetStaticMesh(BuildingAsset->Roof);
-	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * Floors));
+	Roof->SetRelativeLocation(FVector(0, 0, BuildingAsset->FloorHeight * (Floors - 2)));
 	Roof->SetWorldRotation(BuildingAsset->RotationOffset + Direction.ToOrientationRotator());
 	OutParts.Add(Roof);
 }
