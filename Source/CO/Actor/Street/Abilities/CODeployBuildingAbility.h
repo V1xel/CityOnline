@@ -29,9 +29,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<ACOBuildingActor> BuildingActorClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass;
-
 	UPROPERTY(EditAnywhere)
 	UDataTable* BuildingsTable {};
 };

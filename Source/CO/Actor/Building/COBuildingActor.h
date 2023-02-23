@@ -26,8 +26,13 @@ public:
 	{
 		return AbilitySystemComponent;
 	}
+
+	void ComposeBuilding(int32 Floors, UCOBuildingAsset* BuildingAsset, FVector Direction);
 	
 public:
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+		TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAbilitySystemComponent* AbilitySystemComponent {};
 
@@ -35,6 +40,6 @@ public:
 	UCOBuildingAttributeSet* BuildingAttributeSet{};
 
 	UPROPERTY()
-	TArray<UCOBuildingPartComponent*> Meshes{};
+	TArray<UCOBuildingPartComponent*> Meshes;
 
 };
