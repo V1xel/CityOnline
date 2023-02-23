@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CO/Database/Enums/COStreetPrestige.h"
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbilityTargetDataFilter.h"
