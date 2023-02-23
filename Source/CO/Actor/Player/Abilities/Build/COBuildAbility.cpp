@@ -4,6 +4,7 @@
 #include "COBuildAbility.h"
 #include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Actor/Street/COStreetActor.h"
+#include "CO/Actor/Player/COPlayerState.h"
 #include "CO/Extensions/GameplayTagExtension.h"
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Database/Assets/CORootAsset.h"
@@ -72,9 +73,6 @@ void UCOBuildAbility::AddBuildInProgressEffect(const FGameplayAbilitySpecHandle 
 	TargetData.Append(_SelectionDTOTargetDataHandle);
 	EffectContext->SetTargetData(TargetData);
 
-	auto ContextTest = static_cast<FCOGameplayEffectContext*>(GetGrantedByEffectContext().Get());
-	ContextTest->SetTargetData(TargetData);
-
 	_BuildInProgressEffectHandle = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, 
 		FGameplayEffectSpecHandle(new FGameplayEffectSpec(BuildInProgressEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))), _SelectionDTOTargetDataHandle);
 }
@@ -127,8 +125,6 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle
 
 		auto PlayerCharacter = Cast<ACOPlayerController>(ActorInfo->PlayerController.Get());
 		PlayerCharacter->SendServerGameplayEventToListener(Target, BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
-
-		CommitAbilityCost(Handle, ActorInfo, ActivationInfo);
 	}
 
 	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(_PlayerPerformingBuildEffectHandle);
@@ -158,7 +154,6 @@ UCOBuildingAsset* UCOBuildAbility::BreakCueEffectContextTargetDataAsBuildConfigu
 
 	auto InstigatorController = EffectContext->GetInstigator()->GetInstigatorController();
 	auto RootAsset = Cast<ACOPlayerController>(InstigatorController)->RootAsset;
-	FGameplayAbilityTargetDataHandle(Report);
 
 	return RootAsset->FindBestAsset(SelectionTargetData, BuildTargetData);
 }

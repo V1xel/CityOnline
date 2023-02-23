@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CO/Database/Enums/COStreetPrestige.h"
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbilityTargetDataFilter.h"
 #include "GameplayEffectTypes.h"
+#include "Delegates/IDelegateInstance.h"
 #include "COStreetActor.generated.h"
 
 class ACOBuildingActor;

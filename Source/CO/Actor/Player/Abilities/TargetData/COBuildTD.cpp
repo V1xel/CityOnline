@@ -9,8 +9,6 @@ bool FCOBuildTD::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 	Ar << MaxLength;
 	Ar << MinFloors;
 	Ar << MaxFloors;
-	Ar << CostMultiplier;
-	Ar << CapacityMultiplier;
 
 	bOutSuccess = true;
     return true;

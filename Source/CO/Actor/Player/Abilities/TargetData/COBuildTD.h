@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UObject/Object.h"
 #include "Abilities/GameplayAbilityTargetTypes.h"
 #include "COBuildTD.generated.h"
 
@@ -24,10 +25,6 @@ struct CO_API FCOBuildTD : public FGameplayAbilityTargetData
 	int32 MinFloors;
 
 	int32 MaxFloors;
-
-	float CapacityMultiplier;
-
-	float CostMultiplier;
 
 	virtual FString ToString() const override
 	{
