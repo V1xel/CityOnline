@@ -30,7 +30,7 @@ public:
 	void ComposeBuilding(int32 Floors, UCOBuildingAsset* BuildingAsset, FVector Direction);
 	
 public:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 		TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
