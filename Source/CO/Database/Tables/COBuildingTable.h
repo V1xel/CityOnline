@@ -14,7 +14,7 @@ struct CO_API FCOBuildingTable : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	FGameplayAbilityTargetDataHandle ToTargetDataHandle() {
+	FGameplayAbilityTargetDataHandle ToBuildTargetDataHandle() {
 		auto Name = UGameplayTagExtension::GetTagSecondElement(Tag);;
 		auto TargetData = new FCOBuildTD();
 		TargetData->Name = Name;

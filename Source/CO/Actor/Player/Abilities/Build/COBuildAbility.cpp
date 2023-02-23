@@ -39,7 +39,7 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
 	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(TriggerEventData->TargetData.Get(0));
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
-	EffectContext->SetTargetData(BuildingSpecialization->ToTargetDataHandle());
+	EffectContext->SetTargetData(BuildingSpecialization->ToBuildTargetDataHandle());
 
 	auto BuildPerformingEffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
 	BuildPerformingEffectContext->SetTargetData(UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(const_cast<AActor*>(TriggerEventData->Target.Get())));
@@ -68,7 +68,7 @@ void UCOBuildAbility::AddBuildInProgressEffect(const FGameplayAbilitySpecHandle 
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
 
 	FGameplayAbilityTargetDataHandle TargetData;
-	TargetData.Append(BuildingSpecialization->ToTargetDataHandle());
+	TargetData.Append(BuildingSpecialization->ToBuildTargetDataHandle());
 	TargetData.Append(_ConfigurationDTOTargetDataHandle);
 	TargetData.Append(_SelectionDTOTargetDataHandle);
 	EffectContext->SetTargetData(TargetData);
