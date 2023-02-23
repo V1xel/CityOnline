@@ -14,7 +14,6 @@ class ACOBuildingActor;
 class UCOStreetCellComponent;
 class ACOPlayerCharacter;
 
-
 UCLASS()
 class CO_API ACOStreetActor : public AActor, public IAbilitySystemInterface
 {
