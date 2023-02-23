@@ -54,5 +54,5 @@ public:
 	float CostMultiplier;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float GoodsMultiplier;
+	float CapacityMultiplier;
 };
