@@ -8,6 +8,8 @@ bool FCOBuildAllocationTD::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bO
 	Ar << ExtremeCount;
 	Ar << Center;
 	Ar << Direction;
+	Ar << HasOccupiedCells;
+	Ar << Cells;
 
     bOutSuccess = true;
     return true;

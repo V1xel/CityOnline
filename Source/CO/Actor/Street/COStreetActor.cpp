@@ -6,7 +6,8 @@
 #include "Abilities/Async/AbilityAsync_WaitGameplayEffectApplied.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 #include "CO/Actor/Building/COBuildingActor.h"
-
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildAllocationTD.h"
+#include "Components/COStreetCellComponent.h"
 
 ACOStreetActor::ACOStreetActor()
 {
@@ -21,4 +22,34 @@ void ACOStreetActor::BeginPlay()
 	Super::BeginPlay();
 
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+}
+
+void ACOStreetActor::OccupyCells(const FCOBuildAllocationTD* AllocationTD)
+{
+	for (auto Cell : AllocationTD->Cells)
+	{
+		for (auto CellComponent : Cells)
+		{
+			if (Cell.Key == CellComponent->Horizontal && Cell.Value == CellComponent->Vertical) 
+			{
+				CellComponent->SetOccupied(true);
+				break;
+			}
+		}
+	}
+}
+
+void ACOStreetActor::ReleaseCells(const FCOBuildAllocationTD* AllocationTD)
+{
+	for (auto Cell : AllocationTD->Cells)
+	{
+		for (auto CellComponent : Cells)
+		{
+			if (Cell.Key == CellComponent->Horizontal && Cell.Value == CellComponent->Vertical)
+			{
+				CellComponent->SetOccupied(false);
+				break;
+			}
+		}
+	}
 }

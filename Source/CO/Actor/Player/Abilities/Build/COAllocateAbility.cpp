@@ -21,10 +21,10 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 	_CancelDelegateHandle = AddGETagDelegate(ListenCancelAllocateTag, FGEDelegate::CreateUObject(this, &UCOAllocateAbility::AllocationCancel));
 
-	_AllocateActivatedTargetData.Append(TriggerEventData->TargetData);
+	_AllocateActivatedTargetData = TriggerEventData->TargetData;
 
 	auto BuildTargetDataHandle = GetTargetDataFromActiveEffect(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
-	_AllocateActivatedTargetData.Append(BuildTargetDataHandle);
+	_BuildRequirementsTargetData = BuildTargetDataHandle;
 
 	auto SelectionContext = new FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get(), BuildTargetDataHandle);
 	SelectionContext->AddHitResult(*TriggerEventData->TargetData.Get(0)->GetHitResult());
@@ -37,13 +37,13 @@ void UCOAllocateAbility::AllocationCancel(FGameplayTag Tag, const FGameplayEvent
 	auto StartHit = _AllocateActivatedTargetData.Get(0)->GetHitResult();
 	auto EndHit = EventData->TargetData.Get(0)->GetHitResult();
 	auto SelectionDTO = UCOAllocateAbilityHelper::CalculateSelectionData(StartHit->GetActor(), StartHit->Location, EndHit->Location);
-	if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, _AllocateActivatedTargetData.Get(1)) && StartHit->GetActor() == EndHit->GetActor())
+	if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, _BuildRequirementsTargetData) && StartHit->GetActor() == EndHit->GetActor())
 	{
 		auto AllocateEventData = FGameplayEventData();
 		AllocateEventData.TargetData.Append(SelectionDTO);
 
 		SendGameplayEvent(BroadcastedEventOnAllocationFinished, AllocateEventData);
-	} 
+	}
 
 	EndAbilityArgsless();
 }

@@ -11,6 +11,7 @@
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
 #include <CO/Core/AbilitySystem/COGameplayEffectContextHandle.h>
+#include <CO/Core/AbilitySystem/COAbilitySystemFunctionLibrary.h>
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -74,7 +75,7 @@ void UCOBuildAbility::AddBuildPreviewEffect()
 
 void UCOBuildAbility::OnAllocateCancelOrConfirm(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	auto Target = FCOBuildAllocationTD::GetTarget(_SelectionDTOTargetDataHandle);
+	auto Target = UCOAbilitySystemFunctionLibrary::GetTargetActorFromEffectByTag(GetActorInfo().AbilitySystemComponent.Get(), StreetSelectedTag);
 	//Removing target effect to stop previewing the build process
 	GetASC(Target)->RemoveActiveGameplayEffect(_BuildInProgressEffectHandle);
 

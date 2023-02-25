@@ -23,6 +23,10 @@ struct CO_API FCOBuildAllocationTD : public FGameplayAbilityTargetData
 
 	FVector Direction;
 
+	TArray<TTuple<int32, int32>> Cells;
+
+	bool HasOccupiedCells;
+
 	virtual FString ToString() const override
 	{
 		return TEXT("FCOBuildAllocationTD");

@@ -40,6 +40,8 @@ public:
 private:
 	FGameplayAbilityTargetDataHandle _AllocateActivatedTargetData;
 
+	FGameplayAbilityTargetDataHandle _BuildRequirementsTargetData;
+
 	FActiveGameplayEffectHandle _AllocateEffectHandle;
 
 	FDelegateHandle _CancelDelegateHandle;

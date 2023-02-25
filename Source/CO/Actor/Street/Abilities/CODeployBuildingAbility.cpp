@@ -11,13 +11,14 @@
 #include "CO/Database/Tables/COBuildingTable.h"
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Core/Actor/Building/COBuildingFunctionLibrary.h"
+#include <CO/Actor/Street/COStreetActor.h>
 
 void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	auto ConfigurationTD = static_cast<const FCOBuildConfigurationTD*>(TriggerEventData->TargetData.Get(0));
-	auto SelectionTD = static_cast<const FCOBuildAllocationTD*>(TriggerEventData->TargetData.Get(1));
-	auto BuildingRotation = SelectionTD->Direction.ToOrientationRotator();
+	auto AllocationTD = static_cast<const FCOBuildAllocationTD*>(TriggerEventData->TargetData.Get(1));
+	auto BuildingRotation = AllocationTD->Direction.ToOrientationRotator();
 
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTD->BuildingName, "");
 	auto BuildTargetDataHandle = BuildingSpecialization->ToBuildTargetDataHandle();
@@ -25,12 +26,15 @@ void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle 
 
 	auto InstigatorController = TriggerEventData->Instigator.Get()->GetInstigatorController();
 	auto RootAsset = Cast<ACOPlayerController>(InstigatorController)->RootAsset;
-	auto BuildingAsset = RootAsset->FindBestAsset(SelectionTD, BuildTargetData);
+	auto BuildingAsset = RootAsset->FindBestAsset(AllocationTD, BuildTargetData);
 
-	auto Building = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(SelectionTD->Center));
-	Building->ComposeBuilding(ConfigurationTD->Floors, BuildingAsset, SelectionTD->Direction);
+	auto Building = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(AllocationTD->Center));
+	Building->ComposeBuilding(ConfigurationTD->Floors, BuildingAsset, AllocationTD->Direction);
 	Building->FinishSpawning(FTransform());
-	Building->SetActorLocation(SelectionTD->Center);
+	Building->SetActorLocation(AllocationTD->Center);
+
+	auto Street = Cast<ACOStreetActor>(ActorInfo->OwnerActor);
+	Street->OccupyCells(AllocationTD);
 }
 
 void UCODeployBuildingAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

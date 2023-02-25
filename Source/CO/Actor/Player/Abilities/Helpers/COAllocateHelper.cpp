@@ -45,6 +45,7 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 	auto MinimumVertical = SelectedCells[0]->Vertical;
 	auto MaximumVertical = SelectedCells[0]->Vertical;
 	int ExtremeCount = 0;
+	bool HasOccupiedCells = false;
 
 	FVector SelectionCenter;
 	FVector SelectionAverageNormal;
@@ -72,8 +73,13 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 				
 			SelectionAverageNormal = SelectionAverageNormal - Cell->GetComponentLocation();
 		}
+		if (Cell->IsOccupied) 
+		{
+			HasOccupiedCells = true;
+		}
 		
 		SelectionCenter = SelectionCenter + Cell->GetComponentLocation();
+		SelectionTD->Cells.Add(MakeTuple(Cell->Horizontal, Cell->Vertical));
 	}
 
 	const FVector SelectionAverageCenter = SelectionCenter / SelectedCells.Num();
@@ -96,6 +102,7 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 	SelectionTD->Length = MaximumHorizontal - MinimumHorizontal + 1;
 	SelectionTD->Width = MaximumVertical - MinimumVertical + 1;
 	SelectionTD->ExtremeCount = ExtremeCount;
+	SelectionTD->HasOccupiedCells = HasOccupiedCells;
 }
 
 bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataHandle SelectionDTOHandle, FGameplayAbilityTargetDataHandle BuildDTOHandle)
@@ -124,6 +131,9 @@ bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataH
 		{
 			valid = false;
 		}
+	}
+	if (SelectionDTO->HasOccupiedCells) {
+		valid = false;
 	}
 
 	return valid;

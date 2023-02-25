@@ -14,6 +14,8 @@ class ACOBuildingActor;
 class UCOStreetCellComponent;
 class ACOPlayerCharacter;
 
+struct FCOBuildAllocationTD;
+
 UCLASS()
 class CO_API ACOStreetActor : public AActor, public IAbilitySystemInterface
 {
@@ -28,6 +30,10 @@ public:
 	{
 		return AbilitySystemComponent;
 	}
+
+	void OccupyCells(const FCOBuildAllocationTD* AllocationTD);
+
+	void ReleaseCells(const FCOBuildAllocationTD* AllocationTD);
 
 public:
 	UPROPERTY()

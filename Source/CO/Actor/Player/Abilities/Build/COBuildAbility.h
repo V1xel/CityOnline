@@ -49,6 +49,8 @@ public:
 	UDataTable* BuildingsTable;
 
 	UPROPERTY(EditAnywhere)
+	FGameplayTag StreetSelectedTag;
+	UPROPERTY(EditAnywhere)
 	FGameplayTag FilterBuildingTag;
 	UPROPERTY(EditAnywhere)
 	FGameplayTag ListenEventOnAllocationFinished;
