@@ -31,3 +31,8 @@ FGameplayAbilityTargetDataHandle UCOGameplayAbilityBase::GetTargetDataFromAbilit
 
 	return AllocatePermissionEffectContext->TargetData;
 }
+
+FDelegateHandle UCOGameplayAbilityBase::AddGETagDelegate(FGameplayTag Tag, FGEDelegate Delegate)
+{
+	return GetActorInfo().AbilitySystemComponent->AddGameplayEventTagContainerDelegate(Tag.GetSingleTagContainer(), Delegate);
+}

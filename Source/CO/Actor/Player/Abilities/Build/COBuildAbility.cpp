@@ -20,21 +20,21 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	FGameplayEventTagMulticastDelegate::FDelegate BuildConfirmedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
+	FGameplayEventTagMulticastDelegate::FDelegate BuildConfirmedDelegate = FGEDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
 	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnAllocateCancelOrConfirm(Handle, ActorInfo, ActivationInfo, EventData, true); });
-	_OnBuildConfirmedDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnBuildConfirmed.GetSingleTagContainer(), BuildConfirmedDelegate);
+	_OnBuildConfirmedDelegateHandle = AddGETagDelegate(ListenEventOnBuildConfirmed, BuildConfirmedDelegate);
 
-	FGameplayEventTagMulticastDelegate::FDelegate BuildCanceledDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
+	FGameplayEventTagMulticastDelegate::FDelegate BuildCanceledDelegate = FGEDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
 	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnAllocateCancelOrConfirm(Handle, ActorInfo, ActivationInfo, EventData, false); });
-	_OnBuildCanceledDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnBuildCanceled.GetSingleTagContainer(), BuildCanceledDelegate);
+	_OnBuildCanceledDelegateHandle = AddGETagDelegate(ListenEventOnBuildCanceled, BuildCanceledDelegate);
 
-	FGameplayEventTagMulticastDelegate::FDelegate AllocationFinishedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
+	FGameplayEventTagMulticastDelegate::FDelegate AllocationFinishedDelegate = FGEDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
 	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnAllocationFinished(Handle, ActorInfo, ActivationInfo, EventData); });
-	_OnAllocationFinishedDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnAllocationFinished.GetSingleTagContainer(), AllocationFinishedDelegate);
+	_OnAllocationFinishedDelegateHandle = AddGETagDelegate(ListenEventOnAllocationFinished, AllocationFinishedDelegate);
 
-	FGameplayEventTagMulticastDelegate::FDelegate ConfigurationUpdatedDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
+	FGameplayEventTagMulticastDelegate::FDelegate ConfigurationUpdatedDelegate = FGEDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
 	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnConfigurationUpdated(Handle, ActorInfo, ActivationInfo, EventData); });
-	_OnConfigurationUpdatedDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenEventOnConfigurationUpdated.GetSingleTagContainer(), ConfigurationUpdatedDelegate);
+	_OnConfigurationUpdatedDelegateHandle = AddGETagDelegate(ListenEventOnConfigurationUpdated, ConfigurationUpdatedDelegate);
 
 	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
 	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(TriggerEventData->TargetData.Get(0));

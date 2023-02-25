@@ -9,6 +9,8 @@
 class ACOPlayerController;
 class ACOPlayerCharacter;
 
+using FGEDelegate = FGameplayEventTagMulticastDelegate::FDelegate;
+
 /**
  * 
  */
@@ -25,6 +27,8 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility, bool bWasCancelled) override;
+
+	FDelegateHandle AddGETagDelegate(FGameplayTag Tag, FGEDelegate Delegate);
 
 	FGameplayAbilityTargetDataHandle GetTargetDataFromActiveEffect(const FGameplayEffectQuery& Query);
 	static FGameplayAbilityTargetDataHandle GetTargetDataFromAbilitySystemActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectQuery& Query);
