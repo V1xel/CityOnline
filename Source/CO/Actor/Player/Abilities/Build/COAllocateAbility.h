@@ -47,7 +47,7 @@ public:
 		FGameplayTag StreetSelectedTag;
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UGameplayEffect> AllocateInProgressEffect{};
+		TSubclassOf<UGameplayEffect> TargetAllocateInProgressEffect{};
 
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UGameplayEffect> BuildInProgressEffect{};

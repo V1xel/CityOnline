@@ -28,8 +28,8 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 	auto SelectionContext = new FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get(), BuildTargetDataHandle);
 	SelectionContext->AddHitResult(*TriggerEventData->TargetData.Get(0)->GetHitResult());
-
-	_AllocateEffectHandle = ApplyGESpecToTarget(SelectionContext->MakeGESpec(AllocateInProgressEffect), TriggerEventData->TargetData).Last();
+	//Adding target effect to preview the allocation
+	_AllocateEffectHandle = ApplyGESpecToTarget(SelectionContext->MakeGESpec(TargetAllocateInProgressEffect), TriggerEventData->TargetData).Last();
 }
 
 void UCOAllocateAbility::AllocationCancel(FGameplayTag Tag, const FGameplayEventData* EventData)
@@ -57,6 +57,7 @@ void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, con
 	RemoveGETagDelegate(ListenCancelAllocateTag, _UpdateBuildDTODelegateHandle);
 
 	auto TargetAbilitySystem = GetASC(_AllocateActivatedTargetData.Get(0)->GetActors()[0].Get());
+	//Removing target effect to stop previewing the allocation
 	TargetAbilitySystem->RemoveActiveGameplayEffect(_AllocateEffectHandle);
 
 	_AllocateActivatedTargetData.Clear();
