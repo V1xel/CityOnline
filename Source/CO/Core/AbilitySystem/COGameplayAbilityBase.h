@@ -39,6 +39,8 @@ public:
 
 	void RemoveActiveGameplayEffect(FActiveGameplayEffectHandle Handle);
 
+	void RemoveGETagDelegate(const FGameplayTag Tag, FDelegateHandle DelegateHandle);
+
 	void SendServerGEToTarget(AActor* Target, FGameplayTag Tag, FGameplayEventData Payload);
 
 	void EndAbilityArgsless();

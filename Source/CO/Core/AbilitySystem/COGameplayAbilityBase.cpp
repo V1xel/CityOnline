@@ -57,6 +57,11 @@ void UCOGameplayAbilityBase::RemoveActiveGameplayEffect(FActiveGameplayEffectHan
 	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(Handle);
 }
 
+void UCOGameplayAbilityBase::RemoveGETagDelegate(const FGameplayTag Tag, FDelegateHandle DelegateHandle)
+{
+	GetActorInfo().AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(Tag.GetSingleTagContainer(), DelegateHandle);
+}
+
 void UCOGameplayAbilityBase::SendServerGEToTarget(AActor* Target, FGameplayTag Tag, FGameplayEventData Payload)
 {
 	auto PlayerCharacter = Cast<ACOPlayerController>(GetActorInfo().PlayerController.Get());

@@ -90,10 +90,10 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(FGameplayTag Tag, const FGamepla
 void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(ListenEventOnBuildConfirmed.GetSingleTagContainer(), _OnBuildConfirmedDH);
-	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(ListenEventOnBuildCanceled.GetSingleTagContainer(), _OnBuildCanceledDH);
-	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(ListenEventOnAllocationFinished.GetSingleTagContainer(), _OnAllocationFinishedDH);
-	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(ListenEventOnConfigurationUpdated.GetSingleTagContainer(), _OnConfigurationUpdatedDH);
+	RemoveGETagDelegate(ListenEventOnBuildConfirmed, _OnBuildConfirmedDH);
+	RemoveGETagDelegate(ListenEventOnBuildCanceled, _OnBuildCanceledDH);
+	RemoveGETagDelegate(ListenEventOnAllocationFinished, _OnAllocationFinishedDH);
+	RemoveGETagDelegate(ListenEventOnConfigurationUpdated, _OnConfigurationUpdatedDH);
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
