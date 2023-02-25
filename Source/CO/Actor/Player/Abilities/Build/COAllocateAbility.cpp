@@ -54,7 +54,6 @@ void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, con
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 	RemoveGETagDelegate(ListenCancelAllocateTag, _CancelDelegateHandle);
-	RemoveGETagDelegate(ListenCancelAllocateTag, _UpdateBuildDTODelegateHandle);
 
 	auto TargetAbilitySystem = GetASC(_AllocateActivatedTargetData.Get(0)->GetActors()[0].Get());
 	//Removing target effect to stop previewing the allocation

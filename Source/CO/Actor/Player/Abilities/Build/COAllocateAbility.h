@@ -29,35 +29,20 @@ public:
 	void AllocationCancel(FGameplayTag Tag, const FGameplayEventData* EventData);
 public:
 	UPROPERTY(EditAnywhere)
-		bool DebugAllocation;
+	FGameplayTag BroadcastedEventOnAllocationFinished;
 
 	UPROPERTY(EditAnywhere)
-		FGameplayTag BroadcastedEventOnAllocationUpdated;
+	FGameplayTag FilterAllocatePermissionTag;
 
 	UPROPERTY(EditAnywhere)
-		FGameplayTag BroadcastedEventOnAllocationFinished;
+	FGameplayTag ListenCancelAllocateTag;
 
 	UPROPERTY(EditAnywhere)
-		FGameplayTag FilterAllocatePermissionTag;
-
-	UPROPERTY(EditAnywhere)
-		FGameplayTag ListenCancelAllocateTag;
-
-	UPROPERTY(EditAnywhere)
-		FGameplayTag StreetSelectedTag;
-
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<UGameplayEffect> TargetAllocateInProgressEffect{};
-
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<UGameplayEffect> BuildInProgressEffect{};
-
+	TSubclassOf<UGameplayEffect> TargetAllocateInProgressEffect{};
 private:
 	FGameplayAbilityTargetDataHandle _AllocateActivatedTargetData;
 
-	FDelegateHandle _CancelDelegateHandle;
-
-	FDelegateHandle _UpdateBuildDTODelegateHandle;
-
 	FActiveGameplayEffectHandle _AllocateEffectHandle;
+
+	FDelegateHandle _CancelDelegateHandle;
 };
