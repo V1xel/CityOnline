@@ -60,10 +60,10 @@ protected:
 		UCameraComponent* Camera;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-		UCOAbilitySystemComponent* AbilitySystemComponent {};
+		UCOAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-		UCOPlayerAttributeSet* AttributeSetBase {};
+		const UCOPlayerAttributeSet* AttributeSetBase;
 
 private:
 	bool EnableCameraRotation;

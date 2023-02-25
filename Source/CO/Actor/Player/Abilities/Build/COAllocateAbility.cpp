@@ -17,8 +17,6 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
 	_CancelDelegateHandle = AddGETagDelegate(ListenCancelAllocateTag, FGEDelegate::CreateUObject(this, &UCOAllocateAbility::AllocationCancel));
 
 	_AllocateActivatedTargetData = TriggerEventData->TargetData;

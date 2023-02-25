@@ -16,8 +16,4 @@ class CO_API UCOBuildCostCalculation : public UGameplayEffectExecutionCalculatio
 
 public:
 	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const;
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UDataTable* BuildingsTable {};
 };

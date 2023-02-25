@@ -17,8 +17,6 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
 	_OnBuildConfirmedDH = AddGETagDelegate(ListenEventOnBuildConfirmed, FGEDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocateCancelOrConfirm));
 	_OnBuildCanceledDH = AddGETagDelegate(ListenEventOnBuildCanceled, FGEDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocateCancelOrConfirm));
 	_OnAllocationFinishedDH = AddGETagDelegate(ListenEventOnAllocationFinished, FGEDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished));
@@ -29,8 +27,8 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	//Adding player effect to track build ability is in progress, block other abilities
 	_PlayerPerformingBuildEffectHandle = ApplyGESpecToOwner(BuildPerformingEffectContext.MakeGESpec(PlayerPerformingBuildEffect));
 
-	auto BuildingTableData = BuildingsTable->FindRow<FCOBuildingTable>(FCOBuildConfigurationTD::GetBuildingName(TriggerEventData->TargetData), "");
-	auto EffectContext = FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get(), BuildingTableData->ToBuildTargetDataHandle());
+	_BuildRequirementsDataHandle = BuildingsTable->FindRow<FCOBuildingTable>(FCOBuildConfigurationTD::GetBuildingName(TriggerEventData->TargetData), "")->ToBuildTargetDataHandle();
+	auto EffectContext = FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get(), _BuildRequirementsDataHandle);
 	//Adding player effect to allow allocating the cells for building placing
 	_AllocationEffectHandle = ApplyGESpecToOwner(EffectContext.MakeGESpec(PlayerAllocatePermissionEffect));
 
@@ -60,15 +58,16 @@ void UCOBuildAbility::OnConfigurationUpdated(FGameplayTag Tag, const FGameplayEv
 
 void UCOBuildAbility::AddBuildPreviewEffect()
 {
-	auto BuildingTableData = BuildingsTable->FindRow<FCOBuildingTable>(FCOBuildConfigurationTD::GetBuildingName(_ConfigurationDTOTargetDataHandle), "");
+	_BuildRequirementsDataHandle = BuildingsTable->FindRow<FCOBuildingTable>(FCOBuildConfigurationTD::GetBuildingName(_ConfigurationDTOTargetDataHandle), "")->ToBuildTargetDataHandle();
 
 	FGameplayAbilityTargetDataHandle TargetData;
-	TargetData.Append(BuildingTableData->ToBuildTargetDataHandle());
+	TargetData.Append(_BuildRequirementsDataHandle);
 	TargetData.Append(_ConfigurationDTOTargetDataHandle);
 	TargetData.Append(_SelectionDTOTargetDataHandle);
 
 	auto EffectContext = FCOGameplayEffectContextHandle(GetActorInfo().OwnerActor.Get());
 	EffectContext.SetTargetData(TargetData);
+
 	//Adding target effect to preview the build process
 	_BuildInProgressEffectHandle = ApplyGESpecToTarget(EffectContext.MakeGESpec(TargetBuildPreviewEffect), _SelectionDTOTargetDataHandle).Last();
 }
@@ -76,19 +75,24 @@ void UCOBuildAbility::AddBuildPreviewEffect()
 void UCOBuildAbility::OnAllocateCancelOrConfirm(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
 	auto Target = UCOAbilitySystemFunctionLibrary::GetTargetActorFromEffectByTag(GetActorInfo().AbilitySystemComponent.Get(), StreetSelectedTag);
-	//Removing target effect to stop previewing the build process
-	GetASC(Target)->RemoveActiveGameplayEffect(_BuildInProgressEffectHandle);
 
 	if (Tag.MatchesTag(ListenEventOnBuildConfirmed)) 
 	{
 		FGameplayEventData DeployEventData;
 		DeployEventData.TargetData.Append(_ConfigurationDTOTargetDataHandle);
 		DeployEventData.TargetData.Append(_SelectionDTOTargetDataHandle);
+		DeployEventData.TargetData.Append(_BuildRequirementsDataHandle);
 		DeployEventData.Instigator = GetActorInfo().OwnerActor.Get();
 
-		//Sending event to Target, to request the deploy of building
-		SendServerGEToTarget(Target, BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
+		if (CommitAbilityArgsless()) 
+		{
+			//Sending event to Target, to request the deploy of building
+			SendServerGEToTarget(Target, BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
+		}
 	}
+
+	//Removing target effect to stop previewing the build process
+	GetASC(Target)->RemoveActiveGameplayEffect(_BuildInProgressEffectHandle);
 
 	//Removing palyer effect to indicate build is no more in progress
 	RemoveActiveGameplayEffect(_PlayerPerformingBuildEffectHandle);

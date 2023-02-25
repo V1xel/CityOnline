@@ -21,14 +21,6 @@ class CO_API UCOGameplayAbilityBase : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayAbilityActivationInfo ActivationInfo,
-		const FGameplayEventData* TriggerEventData) override;
-
-	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle,
-		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-		bool bReplicateEndAbility, bool bWasCancelled) override;
-
 	/// <summary>
 	/// Subscribes on events that are broadcasted to ability owner
 	/// </summary>
@@ -48,6 +40,8 @@ public:
 	void RemoveGETagDelegate(const FGameplayTag Tag, FDelegateHandle DelegateHandle);
 
 	void SendServerGEToTarget(AActor* Target, FGameplayTag Tag, FGameplayEventData Payload);
+
+	bool CommitAbilityArgsless();
 
 	void EndAbilityArgsless();
 

@@ -22,6 +22,7 @@ struct CO_API FCOGameplayEffectContextHandle : public FGameplayEffectContextHand
 	virtual ~FCOGameplayEffectContextHandle()
 	{
 	}
+
 	/** Constructs from an existing context, should be allocated by new */
 	explicit FCOGameplayEffectContextHandle(AActor* Instigator) : FGameplayEffectContextHandle(new FCOGameplayEffectContext(Instigator))
 	{

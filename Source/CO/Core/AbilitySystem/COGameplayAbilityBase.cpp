@@ -6,18 +6,6 @@
 #include "CO/Actor/Player/COPlayerController.h"
 #include "COGameplayEffectContext.h"
 
-void UCOGameplayAbilityBase::ActivateAbility(FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
-{
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-}
-
-void UCOGameplayAbilityBase::EndAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	bool bReplicateEndAbility, bool bWasCancelled)
-{
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-}
-
 FGameplayAbilityTargetDataHandle UCOGameplayAbilityBase::GetTargetDataFromActiveEffect(const FGameplayEffectQuery& Query)
 {
 	return UCOGameplayAbilityBase::GetTargetDataFromAbilitySystemActiveEffect(GetActorInfo().AbilitySystemComponent.Get(), Query);
@@ -66,6 +54,11 @@ void UCOGameplayAbilityBase::SendServerGEToTarget(AActor* Target, FGameplayTag T
 {
 	auto PlayerCharacter = Cast<ACOPlayerController>(GetActorInfo().PlayerController.Get());
 	PlayerCharacter->SendServerGameplayEventToListener(Target, Tag, Payload);
+}
+
+bool UCOGameplayAbilityBase::CommitAbilityArgsless()
+{
+	return CommitAbility(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo());
 }
 
 void UCOGameplayAbilityBase::EndAbilityArgsless()

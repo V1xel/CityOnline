@@ -18,7 +18,11 @@ public:
 	GENERATE_ATTRIBUTE_ACCESSORS(UCOPlayerAttributeSet, Money);
 
 protected:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Money)
 		FGameplayAttributeData Money;
-	
+
+	UFUNCTION()
+	virtual void OnRep_Money(const FGameplayAttributeData& OldMoney);
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 };

@@ -25,6 +25,10 @@ struct CO_API FCOBuildRequirementsTD : public FGameplayAbilityTargetData
 
 	int32 MaxFloors;
 
+	float CostMultiplier;
+
+	float CapacityMultiplier;
+
 	virtual FString ToString() const override
 	{
 		return TEXT("FCOBuildRequirementsTD");

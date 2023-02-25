@@ -24,6 +24,8 @@ public:
 		TargetData->MaxLength = MaxLength;
 		TargetData->MinFloors = MinFloors;
 		TargetData->MaxFloors = MaxFloors;
+		TargetData->CostMultiplier = CostMultiplier;
+		TargetData->CapacityMultiplier = CapacityMultiplier;
 		
 		return FGameplayAbilityTargetDataHandle(TargetData);
 	}

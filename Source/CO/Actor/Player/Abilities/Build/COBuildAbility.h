@@ -64,10 +64,12 @@ public:
 	FGameplayTag BroadcastDeployEventOnBuildProcessFinished;
 	UPROPERTY(EditAnywhere)
 	FGameplayTag BroadcastSelectActorEventOnBuildCanceled;
-private:
+public:
 	FGameplayAbilityTargetDataHandle _SelectionDTOTargetDataHandle;
 
 	FGameplayAbilityTargetDataHandle _ConfigurationDTOTargetDataHandle;
+
+	FGameplayAbilityTargetDataHandle _BuildRequirementsDataHandle;
 
 	FDelegateHandle _OnAllocationFinishedDH;
 

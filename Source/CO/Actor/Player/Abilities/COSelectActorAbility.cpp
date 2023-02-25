@@ -20,8 +20,6 @@ void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
     const FGameplayAbilityActivationInfo ActivationInfo,
     const FGameplayEventData* TriggerEventData)
 {
-    Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
     auto SelectionContextHandle = FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get());
     SelectionContextHandle.SetTargetData(TriggerEventData->TargetData);
   
