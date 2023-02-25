@@ -6,6 +6,12 @@
 #include "COGameplayEffectContext.h"
 #include <AbilitySystemBlueprintLibrary.h>
 #include "COGameplayAbilityBase.h"
+#include "CO/Database/Assets/COBuildingAsset.h"
+#include "CO/Database/Assets/CORootAsset.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COSelectionTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
+#include "CO/Actor/Player/COPlayerController.h"
 
 FGameplayEffectContextHandle UCOAbilitySystemFunctionLibrary::GetEffectContextFromActiveGEHandle(UAbilitySystemComponent* AbilitySystem, FActiveGameplayEffectHandle Handle)
 {
@@ -37,4 +43,38 @@ AActor* UCOAbilitySystemFunctionLibrary::GetTargetActorFromEffectByTag(UAbilityS
 		return nullptr;
 
 	return Targets[0];
+}
+
+UCOBuildingAsset* UCOAbilitySystemFunctionLibrary::BreakCueEffectContextTargetDataAsBuildConfiguration(FGameplayCueParameters Parameters, FVector& Center, FVector& Direction, int32& Floors)
+{
+	auto EffectContext = static_cast<FCOGameplayEffectContext*>(Parameters.EffectContext.Get());
+	auto BuildTargetData = static_cast<const FCOBuildTD*>(EffectContext->TargetData.Get(0));
+	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(EffectContext->TargetData.Get(1));
+	auto SelectionTargetData = static_cast<const FCOSelectionTD*>(EffectContext->TargetData.Get(2));
+
+	Floors = ConfigurationTargetData->Floors;
+	Center = SelectionTargetData->Center;
+	Direction = SelectionTargetData->Direction;
+
+	auto InstigatorController = EffectContext->GetInstigator()->GetInstigatorController();
+	auto RootAsset = Cast<ACOPlayerController>(InstigatorController)->RootAsset;
+
+	return RootAsset->FindBestAsset(SelectionTargetData, BuildTargetData);
+}
+
+FGameplayAbilityTargetDataHandle UCOAbilitySystemFunctionLibrary::MakeBuildConfigurationTargetDataHandle(FName BuildingName, int32 Floors)
+{
+	auto TargetData = new FCOBuildConfigurationTD();
+	TargetData->BuildingName = BuildingName;
+	TargetData->Floors = Floors;
+
+	return FGameplayAbilityTargetDataHandle(TargetData);
+}
+
+void UCOAbilitySystemFunctionLibrary::BreakSelectionTD(FGameplayAbilityTargetDataHandle InSelectionTargetData, int32& Length, int32& Width)
+{
+	auto SelectionTargetData = static_cast<const FCOSelectionTD*>(InSelectionTargetData.Get(0));
+
+	Length = SelectionTargetData->Length;
+	Width = SelectionTargetData->Width;
 }

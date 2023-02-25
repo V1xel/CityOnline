@@ -2,17 +2,13 @@
 
 
 #include "COBuildAbility.h"
+#include "AbilitySystemInterface.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "CO/Actor/Player/COPlayerController.h"
-#include "CO/Actor/Street/COStreetActor.h"
-#include "CO/Actor/Player/COPlayerState.h"
-#include "CO/Extensions/GameplayTagExtension.h"
-#include "CO/Database/Assets/COBuildingAsset.h"
-#include "CO/Database/Assets/CORootAsset.h"
-#include "CO/Actor/Building/COBuildingActor.h"
 #include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
-#include <AbilitySystemBlueprintLibrary.h>
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -110,40 +106,6 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(FGameplayTag Tag, const FGamepla
 
 	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(_PlayerPerformingBuildEffectHandle);
 	TerminateAbility();
-}
-
-FGameplayAbilityTargetDataHandle UCOBuildAbility::MakeBuildConfigurationTargetDataHandle(FName BuildingName, int32 Floors)
-{
-	auto TargetData = new FCOBuildConfigurationTD();
-	TargetData->BuildingName = BuildingName;
-	TargetData->Floors = Floors;
-
-	return FGameplayAbilityTargetDataHandle(TargetData);
-}
-
-UCOBuildingAsset* UCOBuildAbility::BreakCueEffectContextTargetDataAsBuildConfiguration(FGameplayCueParameters Parameters, FVector& Center, FVector& Direction, int32& Floors)
-{
-	auto EffectContext = static_cast<FCOGameplayEffectContext*>(Parameters.EffectContext.Get());
-	auto BuildTargetData = static_cast<const FCOBuildTD*>(EffectContext->TargetData.Get(0));
-	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(EffectContext->TargetData.Get(1));
-	auto SelectionTargetData = static_cast<const FCOSelectionTD*>(EffectContext->TargetData.Get(2));
-
-	Floors = ConfigurationTargetData->Floors;
-	Center = SelectionTargetData->Center;
-	Direction = SelectionTargetData->Direction;
-
-	auto InstigatorController = EffectContext->GetInstigator()->GetInstigatorController();
-	auto RootAsset = Cast<ACOPlayerController>(InstigatorController)->RootAsset;
-
-	return RootAsset->FindBestAsset(SelectionTargetData, BuildTargetData);
-}
-
-void UCOBuildAbility::BreakSelectionTD(FGameplayAbilityTargetDataHandle InSelectionTargetData, int32& Length, int32& Width)
-{
-	auto SelectionTargetData = static_cast<const FCOSelectionTD*>(InSelectionTargetData.Get(0));
-
-	Length = SelectionTargetData->Length;
-	Width = SelectionTargetData->Width;
 }
 
 void UCOBuildAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
