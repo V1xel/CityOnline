@@ -5,8 +5,6 @@ bool FCOBuildAllocationTD::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bO
 	Ar << Target;
 	Ar << Length;
 	Ar << Width;
-	Ar << HasCorner;
-	Ar << HasExtreme;
 	Ar << ExtremeCount;
 	Ar << Center;
 	Ar << Direction;

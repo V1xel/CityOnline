@@ -19,10 +19,6 @@ struct CO_API FCOBuildAllocationTD : public FGameplayAbilityTargetData
 
 	int32 ExtremeCount;
 
-	bool HasCorner;
-
-	bool HasExtreme;
-
 	FVector Center;
 
 	FVector Direction;

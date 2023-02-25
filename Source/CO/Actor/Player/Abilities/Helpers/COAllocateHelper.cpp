@@ -44,7 +44,6 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 	auto MaximumHorizontal = SelectedCells[0]->Horizontal;
 	auto MinimumVertical = SelectedCells[0]->Vertical;
 	auto MaximumVertical = SelectedCells[0]->Vertical;
-	bool HasExtreme = false;
 	int ExtremeCount = 0;
 
 	FVector SelectionCenter;
@@ -72,7 +71,6 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 			ExtremeCount++;
 				
 			SelectionAverageNormal = SelectionAverageNormal - Cell->GetComponentLocation();
-			HasExtreme = true;
 		}
 		
 		SelectionCenter = SelectionCenter + Cell->GetComponentLocation();
@@ -97,7 +95,6 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 	SelectionTD->Center = SelectionAverageCenter;
 	SelectionTD->Length = MaximumHorizontal - MinimumHorizontal + 1;
 	SelectionTD->Width = MaximumVertical - MinimumVertical + 1;
-	SelectionTD->HasExtreme = HasExtreme;
 	SelectionTD->ExtremeCount = ExtremeCount;
 }
 
@@ -107,7 +104,7 @@ bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataH
 	auto BuildDTO = static_cast<FCOBuildRequirementsTD*>(BuildDTOHandle.Get(0));
 
 	bool valid = true;
-	if (!SelectionDTO->HasExtreme) {
+	if (SelectionDTO->ExtremeCount == 0) {
 		valid = false;
 	}
 	if (SelectionDTO->Length > BuildDTO->MaxLength ||
