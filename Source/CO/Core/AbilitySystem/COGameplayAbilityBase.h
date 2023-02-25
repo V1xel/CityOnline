@@ -35,6 +35,12 @@ public:
 
 	TArray<FActiveGameplayEffectHandle> ApplyGESpecToTarget(const FGameplayEffectSpecHandle SpecHandle, const FGameplayAbilityTargetDataHandle& TargetData);
 
+	UAbilitySystemComponent* GetASC(AActor* Actor);
+
+	void RemoveActiveGameplayEffect(FActiveGameplayEffectHandle Handle);
+
+	void SendServerGEToTarget(AActor* Target, FGameplayTag Tag, FGameplayEventData Payload);
+
 	void EndAbilityArgsless();
 
 	FGameplayAbilityTargetDataHandle GetTargetDataFromActiveEffect(const FGameplayEffectQuery& Query);

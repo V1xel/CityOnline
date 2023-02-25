@@ -86,5 +86,5 @@ private:
 
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
 
-	TArray<FActiveGameplayEffectHandle> _BuildInProgressEffectHandle;
+	FActiveGameplayEffectHandle _BuildInProgressEffectHandle;
 };

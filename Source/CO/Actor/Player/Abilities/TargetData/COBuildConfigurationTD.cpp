@@ -11,3 +11,8 @@ bool FCOBuildConfigurationTD::NetSerialize(FArchive& Ar, UPackageMap* Map, bool&
 	bOutSuccess = true;
 	return true;
 }
+
+FName FCOBuildConfigurationTD::GetBuildingName(FGameplayAbilityTargetDataHandle Handle)
+{
+	return static_cast<FCOBuildConfigurationTD*>(Handle.Get(0))->BuildingName;
+}

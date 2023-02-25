@@ -47,6 +47,22 @@ TArray<FActiveGameplayEffectHandle> UCOGameplayAbilityBase::ApplyGESpecToTarget(
 	return ApplyGameplayEffectSpecToTarget(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), SpecHandle, TargetData);
 }
 
+UAbilitySystemComponent* UCOGameplayAbilityBase::GetASC(AActor* Actor)
+{
+	return Cast<IAbilitySystemInterface>(Actor)->GetAbilitySystemComponent();
+}
+
+void UCOGameplayAbilityBase::RemoveActiveGameplayEffect(FActiveGameplayEffectHandle Handle)
+{
+	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(Handle);
+}
+
+void UCOGameplayAbilityBase::SendServerGEToTarget(AActor* Target, FGameplayTag Tag, FGameplayEventData Payload)
+{
+	auto PlayerCharacter = Cast<ACOPlayerController>(GetActorInfo().PlayerController.Get());
+	PlayerCharacter->SendServerGameplayEventToListener(Target, Tag, Payload);
+}
+
 void UCOGameplayAbilityBase::EndAbilityArgsless()
 {
 	EndAbility(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), false, false);

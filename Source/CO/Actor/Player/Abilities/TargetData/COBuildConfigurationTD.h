@@ -27,6 +27,8 @@ struct CO_API FCOBuildConfigurationTD : public FGameplayAbilityTargetData
 	}
 
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+
+	static FName GetBuildingName(FGameplayAbilityTargetDataHandle Handle);
 };
 
 template <>

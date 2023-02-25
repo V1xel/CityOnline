@@ -14,3 +14,8 @@ bool FCOSelectionTD::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSucc
     bOutSuccess = true;
     return true;
 }
+
+AActor* FCOSelectionTD::GetTarget(FGameplayAbilityTargetDataHandle Handle)
+{
+	return static_cast<FCOSelectionTD*>(Handle.Get(0))->Target;
+}

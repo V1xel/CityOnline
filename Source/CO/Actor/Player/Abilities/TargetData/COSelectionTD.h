@@ -47,6 +47,8 @@ struct CO_API FCOSelectionTD : public FGameplayAbilityTargetData
 	}
 
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+
+	static AActor* GetTarget(FGameplayAbilityTargetDataHandle Handle);
 };
 
 template <>
