@@ -8,6 +8,7 @@
 
 class ACOPlayerController;
 class ACOPlayerCharacter;
+struct FGameplayEffectSpecHandle;
 
 using FGEDelegate = FGameplayEventTagMulticastDelegate::FDelegate;
 
@@ -29,6 +30,12 @@ public:
 		bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	FDelegateHandle AddGETagDelegate(FGameplayTag Tag, FGEDelegate Delegate);
+
+	FActiveGameplayEffectHandle ApplyGESpecToOwner(const FGameplayEffectSpecHandle SpecHandle);
+
+	TArray<FActiveGameplayEffectHandle> ApplyGESpecToTarget(const FGameplayEffectSpecHandle SpecHandle, const FGameplayAbilityTargetDataHandle& TargetData);
+
+	void TerminateAbility();
 
 	FGameplayAbilityTargetDataHandle GetTargetDataFromActiveEffect(const FGameplayEffectQuery& Query);
 	static FGameplayAbilityTargetDataHandle GetTargetDataFromAbilitySystemActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectQuery& Query);

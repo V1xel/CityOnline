@@ -36,3 +36,18 @@ FDelegateHandle UCOGameplayAbilityBase::AddGETagDelegate(FGameplayTag Tag, FGEDe
 {
 	return GetActorInfo().AbilitySystemComponent->AddGameplayEventTagContainerDelegate(Tag.GetSingleTagContainer(), Delegate);
 }
+
+FActiveGameplayEffectHandle UCOGameplayAbilityBase::ApplyGESpecToOwner(const FGameplayEffectSpecHandle SpecHandle)
+{
+	return ApplyGameplayEffectSpecToOwner(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), SpecHandle);
+}
+
+TArray<FActiveGameplayEffectHandle> UCOGameplayAbilityBase::ApplyGESpecToTarget(const FGameplayEffectSpecHandle SpecHandle, const FGameplayAbilityTargetDataHandle& TargetData)
+{
+	return ApplyGameplayEffectSpecToTarget(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), SpecHandle, TargetData);
+}
+
+void UCOGameplayAbilityBase::TerminateAbility()
+{
+	EndAbility(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), false, false);
+}

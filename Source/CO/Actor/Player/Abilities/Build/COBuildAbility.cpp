@@ -20,21 +20,10 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	FGameplayEventTagMulticastDelegate::FDelegate BuildConfirmedDelegate = FGEDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
-	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnAllocateCancelOrConfirm(Handle, ActorInfo, ActivationInfo, EventData, true); });
-	_OnBuildConfirmedDelegateHandle = AddGETagDelegate(ListenEventOnBuildConfirmed, BuildConfirmedDelegate);
-
-	FGameplayEventTagMulticastDelegate::FDelegate BuildCanceledDelegate = FGEDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
-	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnAllocateCancelOrConfirm(Handle, ActorInfo, ActivationInfo, EventData, false); });
-	_OnBuildCanceledDelegateHandle = AddGETagDelegate(ListenEventOnBuildCanceled, BuildCanceledDelegate);
-
-	FGameplayEventTagMulticastDelegate::FDelegate AllocationFinishedDelegate = FGEDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
-	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnAllocationFinished(Handle, ActorInfo, ActivationInfo, EventData); });
-	_OnAllocationFinishedDelegateHandle = AddGETagDelegate(ListenEventOnAllocationFinished, AllocationFinishedDelegate);
-
-	FGameplayEventTagMulticastDelegate::FDelegate ConfigurationUpdatedDelegate = FGEDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
-	(FGameplayTag Tag, const FGameplayEventData* EventData) { OnConfigurationUpdated(Handle, ActorInfo, ActivationInfo, EventData); });
-	_OnConfigurationUpdatedDelegateHandle = AddGETagDelegate(ListenEventOnConfigurationUpdated, ConfigurationUpdatedDelegate);
+	_OnBuildConfirmedDelegateHandle = AddGETagDelegate(ListenEventOnBuildConfirmed, FGEDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocateCancelOrConfirm));
+	_OnBuildCanceledDelegateHandle = AddGETagDelegate(ListenEventOnBuildCanceled, FGEDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocateCancelOrConfirm));
+	_OnAllocationFinishedDelegateHandle = AddGETagDelegate(ListenEventOnAllocationFinished, FGEDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished));
+	_OnConfigurationUpdatedDelegateHandle = AddGETagDelegate(ListenEventOnConfigurationUpdated, FGEDelegate::CreateUObject(this, &UCOBuildAbility::OnConfigurationUpdated));
 
 	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
 	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(TriggerEventData->TargetData.Get(0));
@@ -45,40 +34,21 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	BuildPerformingEffectContext->SetTargetData(UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(const_cast<AActor*>(TriggerEventData->Target.Get())));
 
 	_ConfigurationDTOTargetDataHandle = TriggerEventData->TargetData;
-	_PlayerPerformingBuildEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(PlayerPerformingBuildEffect.GetDefaultObject(), FGameplayEffectContextHandle(BuildPerformingEffectContext))));
-	_AllocationEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))));
+	_PlayerPerformingBuildEffectHandle = ApplyGESpecToOwner(FGameplayEffectSpecHandle(new FGameplayEffectSpec(PlayerPerformingBuildEffect.GetDefaultObject(), FGameplayEffectContextHandle(BuildPerformingEffectContext))));
+	_AllocationEffectHandle = ApplyGESpecToOwner(FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))));
 }
 
-void UCOBuildAbility::OnAllocationFinished(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData)
+void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
 	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(_AllocationEffectHandle);
 	_SelectionDTOTargetDataHandle = EventData->TargetData;
 	_AllocationEffectHandle.Invalidate();
 	SelectionForPreviewBuildingOverridden = true;
 
-	AddBuildInProgressEffect(Handle, ActorInfo, ActivationInfo);
+	AddBuildInProgressEffect();
 }
 
-void UCOBuildAbility::AddBuildInProgressEffect(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo)
-{
-	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
-	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(_ConfigurationDTOTargetDataHandle.Get(0));
-	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
-
-	FGameplayAbilityTargetDataHandle TargetData;
-	TargetData.Append(BuildingSpecialization->ToBuildTargetDataHandle());
-	TargetData.Append(_ConfigurationDTOTargetDataHandle);
-	TargetData.Append(_SelectionDTOTargetDataHandle);
-	EffectContext->SetTargetData(TargetData);
-
-	_BuildInProgressEffectHandle = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, 
-		FGameplayEffectSpecHandle(new FGameplayEffectSpec(BuildInProgressEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))), _SelectionDTOTargetDataHandle);
-}
-
-void UCOBuildAbility::OnConfigurationUpdated(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData)
+void UCOBuildAbility::OnConfigurationUpdated(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
 	_ConfigurationDTOTargetDataHandle = EventData->TargetData;
 	if (!SelectionForPreviewBuildingOverridden)
@@ -92,11 +62,26 @@ void UCOBuildAbility::OnConfigurationUpdated(const FGameplayAbilitySpecHandle Ha
 		TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
 	}
 
-	AddBuildInProgressEffect(Handle, ActorInfo, ActivationInfo);
+	AddBuildInProgressEffect();
 }
 
-void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* EventData, bool Confirm)
+void UCOBuildAbility::AddBuildInProgressEffect()
+{
+	auto EffectContext = new FCOGameplayEffectContext(GetActorInfo().OwnerActor.Get());
+	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(_ConfigurationDTOTargetDataHandle.Get(0));
+	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
+
+	FGameplayAbilityTargetDataHandle TargetData;
+	TargetData.Append(BuildingSpecialization->ToBuildTargetDataHandle());
+	TargetData.Append(_ConfigurationDTOTargetDataHandle);
+	TargetData.Append(_SelectionDTOTargetDataHandle);
+	EffectContext->SetTargetData(TargetData);
+
+	_BuildInProgressEffectHandle = ApplyGESpecToTarget(
+		FGameplayEffectSpecHandle(new FGameplayEffectSpec(BuildInProgressEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))), _SelectionDTOTargetDataHandle);
+}
+
+void UCOBuildAbility::OnAllocateCancelOrConfirm(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
 	AActor* Target = nullptr;
 	if (SelectionForPreviewBuildingOverridden) {
@@ -115,21 +100,21 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(const FGameplayAbilitySpecHandle
 		}
 	}
 
-	if (Confirm && SelectionForPreviewBuildingOverridden) {
+	if (SelectionForPreviewBuildingOverridden) { // && Confirm
 		FGameplayEventData DeployEventData;
 		DeployEventData.TargetData.Append(_ConfigurationDTOTargetDataHandle);
 		DeployEventData.TargetData.Append(_SelectionDTOTargetDataHandle);
-		DeployEventData.Instigator = ActorInfo->OwnerActor.Get();
+		DeployEventData.Instigator = GetActorInfo().OwnerActor.Get();
 
 		SendGameplayEvent(BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
 
-		auto PlayerCharacter = Cast<ACOPlayerController>(ActorInfo->PlayerController.Get());
+		auto PlayerCharacter = Cast<ACOPlayerController>(GetActorInfo().PlayerController.Get());
 		PlayerCharacter->SendServerGameplayEventToListener(Target, BroadcastDeployEventOnBuildProcessFinished, DeployEventData);
 	}
 
 	GetActorInfo().AbilitySystemComponent->RemoveActiveGameplayEffect(_PlayerPerformingBuildEffectHandle);
 
-	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+	TerminateAbility();
 }
 
 FGameplayAbilityTargetDataHandle UCOBuildAbility::MakeBuildConfigurationTargetDataHandle(FName BuildingName, int32 Floors)

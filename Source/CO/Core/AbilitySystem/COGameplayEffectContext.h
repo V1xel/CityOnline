@@ -25,6 +25,11 @@ public:
 	{
 	}
 
+	FCOGameplayEffectContext(AActor* InInstigator)
+		: FGameplayEffectContext(InInstigator, InInstigator)
+	{
+	}
+
 	virtual ~FCOGameplayEffectContext()
 	{
 	}
