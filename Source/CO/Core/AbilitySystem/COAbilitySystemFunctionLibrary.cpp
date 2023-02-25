@@ -9,8 +9,8 @@
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Database/Assets/CORootAsset.h"
 #include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COSelectionTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildRequirementsTD.h"
 #include "CO/Actor/Player/COPlayerController.h"
 
 FGameplayEffectContextHandle UCOAbilitySystemFunctionLibrary::GetEffectContextFromActiveGEHandle(UAbilitySystemComponent* AbilitySystem, FActiveGameplayEffectHandle Handle)
@@ -48,9 +48,9 @@ AActor* UCOAbilitySystemFunctionLibrary::GetTargetActorFromEffectByTag(UAbilityS
 UCOBuildingAsset* UCOAbilitySystemFunctionLibrary::BreakCueEffectContextTargetDataAsBuildConfiguration(FGameplayCueParameters Parameters, FVector& Center, FVector& Direction, int32& Floors)
 {
 	auto EffectContext = static_cast<FCOGameplayEffectContext*>(Parameters.EffectContext.Get());
-	auto BuildTargetData = static_cast<const FCOBuildTD*>(EffectContext->TargetData.Get(0));
+	auto BuildTargetData = static_cast<const FCOBuildRequirementsTD*>(EffectContext->TargetData.Get(0));
 	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(EffectContext->TargetData.Get(1));
-	auto SelectionTargetData = static_cast<const FCOSelectionTD*>(EffectContext->TargetData.Get(2));
+	auto SelectionTargetData = static_cast<const FCOBuildAllocationTD*>(EffectContext->TargetData.Get(2));
 
 	Floors = ConfigurationTargetData->Floors;
 	Center = SelectionTargetData->Center;
@@ -73,7 +73,7 @@ FGameplayAbilityTargetDataHandle UCOAbilitySystemFunctionLibrary::MakeBuildConfi
 
 void UCOAbilitySystemFunctionLibrary::BreakSelectionTD(FGameplayAbilityTargetDataHandle InSelectionTargetData, int32& Length, int32& Width)
 {
-	auto SelectionTargetData = static_cast<const FCOSelectionTD*>(InSelectionTargetData.Get(0));
+	auto SelectionTargetData = static_cast<const FCOBuildAllocationTD*>(InSelectionTargetData.Get(0));
 
 	Length = SelectionTargetData->Length;
 	Width = SelectionTargetData->Width;

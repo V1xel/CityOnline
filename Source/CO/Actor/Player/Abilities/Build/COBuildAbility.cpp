@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "CO/Actor/Player/COPlayerController.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
 #include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
@@ -49,7 +50,7 @@ void UCOBuildAbility::OnConfigurationUpdated(FGameplayTag Tag, const FGameplayEv
 {
 	_ConfigurationDTOTargetDataHandle = EventData->TargetData;
 
-	auto TargetASC = GetASC(FCOSelectionTD::GetTarget(_SelectionDTOTargetDataHandle));
+	auto TargetASC = GetASC(FCOBuildAllocationTD::GetTarget(_SelectionDTOTargetDataHandle));
 	//Removing target effect to stop previewing the old build configuration
 	TargetASC->RemoveActiveGameplayEffect(_BuildInProgressEffectHandle);
 
@@ -73,7 +74,7 @@ void UCOBuildAbility::AddBuildPreviewEffect()
 
 void UCOBuildAbility::OnAllocateCancelOrConfirm(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	auto Target = FCOSelectionTD::GetTarget(_SelectionDTOTargetDataHandle);
+	auto Target = FCOBuildAllocationTD::GetTarget(_SelectionDTOTargetDataHandle);
 	//Removing target effect to stop previewing the build process
 	GetASC(Target)->RemoveActiveGameplayEffect(_BuildInProgressEffectHandle);
 

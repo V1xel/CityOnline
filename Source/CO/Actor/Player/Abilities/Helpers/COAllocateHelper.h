@@ -5,7 +5,7 @@
 
 class UCOStreetCellComponent;
 
-struct FCOSelectionTD;
+struct FCOBuildAllocationTD;
 /**
  * 
  */
@@ -28,5 +28,5 @@ private:
 
 	static TArray<UCOStreetCellComponent*> GetSelectedCells(const AActor* Target, TArray<FHitResult>& HitResults);
 
-	static void CollectSelectionData(FCOSelectionTD* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
+	static void CollectSelectionData(FCOBuildAllocationTD* SelectionDTO, TArray<UCOStreetCellComponent*>& SelectedCells);
 };

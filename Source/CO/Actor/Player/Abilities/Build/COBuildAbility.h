@@ -39,33 +39,29 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UGameplayEffect> TargetBuildPreviewEffect{};
+	TSubclassOf<UGameplayEffect> TargetBuildPreviewEffect;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> PlayerAllocatePermissionEffect;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> PlayerPerformingBuildEffect;
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UGameplayEffect> PlayerAllocatePermissionEffect{};
+	UDataTable* BuildingsTable;
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UGameplayEffect> PlayerPerformingBuildEffect{};
-
+	FGameplayTag FilterBuildingTag;
 	UPROPERTY(EditAnywhere)
-		UDataTable* BuildingsTable {};
-
+	FGameplayTag ListenEventOnAllocationFinished;
 	UPROPERTY(EditAnywhere)
-		FGameplayTag FilterBuildingTag;
+	FGameplayTag ListenEventOnConfigurationUpdated;
 	UPROPERTY(EditAnywhere)
-		FGameplayTag ListenEventOnAllocationFinished;
-
+	FGameplayTag ListenEventOnBuildCanceled;
 	UPROPERTY(EditAnywhere)
-		FGameplayTag ListenEventOnConfigurationUpdated;
+	FGameplayTag ListenEventOnBuildConfirmed;
 	UPROPERTY(EditAnywhere)
-		FGameplayTag ListenEventOnBuildCanceled;
-
+	FGameplayTag BroadcastDeployEventOnBuildProcessFinished;
 	UPROPERTY(EditAnywhere)
-		FGameplayTag ListenEventOnBuildConfirmed;
-	UPROPERTY(EditAnywhere)
-		FGameplayTag BroadcastDeployEventOnBuildProcessFinished;
-	UPROPERTY(EditAnywhere)
-		FGameplayTag BroadcastSelectActorEventOnBuildCanceled;
+	FGameplayTag BroadcastSelectActorEventOnBuildCanceled;
 private:
 	FGameplayAbilityTargetDataHandle _SelectionDTOTargetDataHandle;
 

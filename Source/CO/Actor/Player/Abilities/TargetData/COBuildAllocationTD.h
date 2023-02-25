@@ -3,12 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
 #include "Abilities/GameplayAbilityTargetTypes.h"
-#include "COSelectionTD.generated.h"
+#include "COBuildAllocationTD.generated.h"
 
 USTRUCT(BlueprintType)
-struct CO_API FCOSelectionTD : public FGameplayAbilityTargetData
+struct CO_API FCOBuildAllocationTD : public FGameplayAbilityTargetData
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -30,7 +29,7 @@ struct CO_API FCOSelectionTD : public FGameplayAbilityTargetData
 
 	virtual FString ToString() const override
 	{
-		return TEXT("FCOSelectionTD");
+		return TEXT("FCOBuildAllocationTD");
 	}
 
 	virtual UScriptStruct* GetScriptStruct() const override
@@ -52,7 +51,7 @@ struct CO_API FCOSelectionTD : public FGameplayAbilityTargetData
 };
 
 template <>
-struct TStructOpsTypeTraits<FCOSelectionTD> : public TStructOpsTypeTraitsBase2<FCOSelectionTD>
+struct TStructOpsTypeTraits<FCOBuildAllocationTD> : public TStructOpsTypeTraitsBase2<FCOBuildAllocationTD>
 {
 	enum
 	{

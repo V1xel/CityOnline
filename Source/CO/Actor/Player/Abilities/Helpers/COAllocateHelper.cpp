@@ -2,8 +2,8 @@
 
 
 #include "COAllocateHelper.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COSelectionTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildRequirementsTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
 
 bool UCOAllocateAbilityHelper::RaycastWithRectangle(UWorld* World, FVector RectangleStart, FVector RectangleEnd,
@@ -34,7 +34,7 @@ TArray<UCOStreetCellComponent*> UCOAllocateAbilityHelper::GetSelectedCells(const
 	return SelectedCells;
 }
 
-void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionTD* SelectionTD, TArray<UCOStreetCellComponent*>& SelectedCells)
+void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* SelectionTD, TArray<UCOStreetCellComponent*>& SelectedCells)
 {
 	if (SelectedCells.Num() == 0) {
 		return;
@@ -103,8 +103,8 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOSelectionTD* SelectionTD,
 
 bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataHandle SelectionDTOHandle, FGameplayAbilityTargetDataHandle BuildDTOHandle)
 {
-	auto SelectionDTO = static_cast<FCOSelectionTD*>(SelectionDTOHandle.Get(0));
-	auto BuildDTO = static_cast<FCOBuildTD*>(BuildDTOHandle.Get(0));
+	auto SelectionDTO = static_cast<FCOBuildAllocationTD*>(SelectionDTOHandle.Get(0));
+	auto BuildDTO = static_cast<FCOBuildRequirementsTD*>(BuildDTOHandle.Get(0));
 
 	bool valid = true;
 	if (!SelectionDTO->HasExtreme) {
@@ -134,7 +134,7 @@ bool UCOAllocateAbilityHelper::ValidateSelectionData(FGameplayAbilityTargetDataH
 
 FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionData(const AActor* Target, FVector Start, FVector End)
 {
-	auto TargetData = new FCOSelectionTD();
+	auto TargetData = new FCOBuildAllocationTD();
 	TargetData->Target = const_cast<AActor*>(Target);
 	UWorld* World = Target->GetWorld();
 
@@ -148,7 +148,7 @@ FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionDat
 
 FGameplayAbilityTargetDataHandle UCOAllocateAbilityHelper::CalculateSelectionDataWithCells(const AActor* Target, FVector Start, FVector End, TArray<UCOStreetCellComponent*>& OutSelectedCells)
 {
-	auto TargetData = new FCOSelectionTD();
+	auto TargetData = new FCOBuildAllocationTD();
 	TargetData->Target = const_cast<AActor*>(Target);
 	UWorld* World = Target->GetWorld();
 

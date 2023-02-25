@@ -1,6 +1,6 @@
-#include "COBuildTD.h"
+#include "COBuildRequirementsTD.h"
 
-bool FCOBuildTD::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
+bool FCOBuildRequirementsTD::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
 	Ar << Name;
 	Ar << MinWidth;

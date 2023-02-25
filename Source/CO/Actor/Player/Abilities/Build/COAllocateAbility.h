@@ -30,15 +30,13 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 	FGameplayTag BroadcastedEventOnAllocationFinished;
-
 	UPROPERTY(EditAnywhere)
 	FGameplayTag FilterAllocatePermissionTag;
-
 	UPROPERTY(EditAnywhere)
 	FGameplayTag ListenCancelAllocateTag;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UGameplayEffect> TargetAllocateInProgressEffect{};
+	TSubclassOf<UGameplayEffect> TargetAllocateInProgressEffect;
 private:
 	FGameplayAbilityTargetDataHandle _AllocateActivatedTargetData;
 

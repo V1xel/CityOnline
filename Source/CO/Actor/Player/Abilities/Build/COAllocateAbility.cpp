@@ -6,7 +6,7 @@
 #include "AbilitySystemInterface.h"
 #include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildRequirementsTD.h"
 #include "CO/Core/AbilitySystem/COAbilityTaskBase.h"
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemFunctionLibrary.h"
@@ -39,10 +39,10 @@ void UCOAllocateAbility::AllocationCancel(FGameplayTag Tag, const FGameplayEvent
 	auto SelectionDTO = UCOAllocateAbilityHelper::CalculateSelectionData(StartHit->GetActor(), StartHit->Location, EndHit->Location);
 	if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, _AllocateActivatedTargetData.Get(1)) && StartHit->GetActor() == EndHit->GetActor())
 	{
-		auto EventData = FGameplayEventData();
-		EventData.TargetData.Append(SelectionDTO);
+		auto AllocateEventData = FGameplayEventData();
+		AllocateEventData.TargetData.Append(SelectionDTO);
 
-		SendGameplayEvent(BroadcastedEventOnAllocationFinished, EventData);
+		SendGameplayEvent(BroadcastedEventOnAllocationFinished, AllocateEventData);
 	} 
 
 	EndAbilityArgsless();

@@ -8,8 +8,8 @@
 #include "CORootAsset.generated.h"
 
 class UCOBuildingAsset;
-struct FCOSelectionTD;
-struct FCOBuildTD;
+struct FCOBuildAllocationTD;
+struct FCOBuildRequirementsTD;
 
 /**
  * 
@@ -26,5 +26,5 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<UCOBuildingAsset*> BuildingsAssets;
 
-	UCOBuildingAsset* FindBestAsset(const FCOSelectionTD* SelectionDTO, const FCOBuildTD* BuildDTO);
+	UCOBuildingAsset* FindBestAsset(const FCOBuildAllocationTD* SelectionDTO, const FCOBuildRequirementsTD* BuildDTO);
 };

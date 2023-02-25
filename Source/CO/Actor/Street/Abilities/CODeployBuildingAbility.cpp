@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "CO/Database/Assets/CORootAsset.h"
 #include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COSelectionTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
 #include "CO/Database/Tables/COBuildingTable.h"
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Actor/Player/COPlayerController.h"
@@ -16,12 +16,12 @@ void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle 
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	auto ConfigurationTD = static_cast<const FCOBuildConfigurationTD*>(TriggerEventData->TargetData.Get(0));
-	auto SelectionTD = static_cast<const FCOSelectionTD*>(TriggerEventData->TargetData.Get(1));
+	auto SelectionTD = static_cast<const FCOBuildAllocationTD*>(TriggerEventData->TargetData.Get(1));
 	auto BuildingRotation = SelectionTD->Direction.ToOrientationRotator();
 
 	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTD->BuildingName, "");
 	auto BuildTargetDataHandle = BuildingSpecialization->ToBuildTargetDataHandle();
-	auto BuildTargetData = static_cast<const FCOBuildTD*>(BuildTargetDataHandle.Get(0));
+	auto BuildTargetData = static_cast<const FCOBuildRequirementsTD*>(BuildTargetDataHandle.Get(0));
 
 	auto InstigatorController = TriggerEventData->Instigator.Get()->GetInstigatorController();
 	auto RootAsset = Cast<ACOPlayerController>(InstigatorController)->RootAsset;

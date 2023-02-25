@@ -1,9 +1,9 @@
 #include "CORootAsset.h"
 #include "COBuildingAsset.h"
-#include "CO/Actor/Player/Abilities/TargetData/COSelectionTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
+#include "CO/Actor/Player/Abilities/TargetData/COBuildRequirementsTD.h"
 
-UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOSelectionTD* SelectionDTO, const FCOBuildTD* BuildDTO)
+UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOBuildAllocationTD* SelectionDTO, const FCOBuildRequirementsTD* BuildDTO)
 {
 	int matchCount = -1;
 	UCOBuildingAsset* BestAsset = nullptr;
