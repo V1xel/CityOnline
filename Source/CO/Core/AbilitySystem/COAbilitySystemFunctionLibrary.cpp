@@ -8,9 +8,9 @@
 #include "COGameplayAbilityBase.h"
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Database/Assets/CORootAsset.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildRequirementsTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildConfigurationTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildAllocationTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildRequirementsTD.h"
 #include "CO/Actor/Player/COPlayerController.h"
 
 FGameplayEffectContextHandle UCOAbilitySystemFunctionLibrary::GetEffectContextFromActiveGEHandle(UAbilitySystemComponent* AbilitySystem, FActiveGameplayEffectHandle Handle)

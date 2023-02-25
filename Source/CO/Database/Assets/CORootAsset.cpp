@@ -1,7 +1,7 @@
 #include "CORootAsset.h"
 #include "COBuildingAsset.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildRequirementsTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildAllocationTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildRequirementsTD.h"
 
 UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOBuildAllocationTD* SelectionDTO, const FCOBuildRequirementsTD* BuildDTO)
 {

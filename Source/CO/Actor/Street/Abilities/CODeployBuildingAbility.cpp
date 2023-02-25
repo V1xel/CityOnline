@@ -1,15 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "CO/Actor/Street/Abilities/CODeployBuildingAbility.h"
-#include "CO/Actor/Building/COBuildingActor.h"
+#include "CODeployBuildingAbility.h"
 #include "AbilitySystemComponent.h"
+#include "CO/Actor/Building/COBuildingActor.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildConfigurationTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildRequirementsTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildAllocationTD.h"
+#include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Database/Assets/CORootAsset.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
 #include "CO/Database/Tables/COBuildingTable.h"
 #include "CO/Database/Assets/COBuildingAsset.h"
-#include "CO/Actor/Player/COPlayerController.h"
 #include "CO/Core/Actor/Building/COBuildingFunctionLibrary.h"
 
 void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)

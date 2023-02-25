@@ -5,9 +5,9 @@
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "TargetData/COBuildAllocationTD.h"
+#include "TargetData/COBuildConfigurationTD.h"
 #include "CO/Actor/Player/COPlayerController.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
 #include <CO/Core/AbilitySystem/COGameplayEffectContextHandle.h>

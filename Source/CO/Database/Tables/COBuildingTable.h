@@ -3,8 +3,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "CO/Extensions/GameplayTagExtension.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildRequirementsTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildAllocationTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildRequirementsTD.h"
 #include "GameplayTagContainer.h"
 #include "COBuildingTable.generated.h"
 

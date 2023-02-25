@@ -2,8 +2,8 @@
 
 
 #include "COAllocateHelper.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildRequirementsTD.h"
-#include "CO/Actor/Player/Abilities/TargetData/COBuildAllocationTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildRequirementsTD.h"
+#include "CO/Actor/Player/Abilities/Build/TargetData/COBuildAllocationTD.h"
 #include "CO/Actor/Street/Components/COStreetCellComponent.h"
 
 bool UCOAllocateAbilityHelper::RaycastWithRectangle(UWorld* World, FVector RectangleStart, FVector RectangleEnd,
