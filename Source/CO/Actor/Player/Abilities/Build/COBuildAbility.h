@@ -35,17 +35,14 @@ public:
 
 	void OnAllocateCancelOrConfirm(FGameplayTag Tag, const FGameplayEventData* EventData);
 
-	void AddBuildInProgressEffect();
+	void AddBuildPreviewEffect();
 
 public:
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UGameplayEffect> EnableCellAllocationEffect{};
+		TSubclassOf<UGameplayEffect> TargetBuildPreviewEffect{};
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UGameplayEffect> PendingDeployEffect{};
-
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<UGameplayEffect> BuildInProgressEffect{};
+		TSubclassOf<UGameplayEffect> PlayerAllocatePermissionEffect{};
 
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UGameplayEffect> PlayerPerformingBuildEffect{};

@@ -31,21 +31,20 @@ protected:
 public:
 
 	UPROPERTY(EditAnywhere)
-	TMap<FGameplayTag, TSubclassOf<UGameplayEffect>> ActorSelectionMapping;
+	TMap<FGameplayTag, TSubclassOf<UGameplayEffect>> TargetTypeToPlayerSelectedActorOfTypeEffectMapping;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTagContainer FilterSelectionTags;
+	FGameplayTagContainer FilterActorTypeTags;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UGameplayEffect> ActorSelectedEffect;
+	TSubclassOf<UGameplayEffect> TargetActorSelectedEffect;
 
 	UPROPERTY(EditAnywhere)
 	FGameplayTag BroadcastedEventOnSelect;
 private:
-	TArray<FActiveGameplayEffectHandle> _AppliedEffects;
+	FActiveGameplayEffectHandle _PlayerEffect;
 
-	FActiveGameplayEffectHandle _AppliedEffect;
+	FActiveGameplayEffectHandle _TargetEffect;
 
-	UPROPERTY()
-	const AActor* _Target;
+	FGameplayAbilityTargetDataHandle _TargetDataHandle;
 };

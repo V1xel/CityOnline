@@ -29,6 +29,12 @@ public:
 		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility, bool bWasCancelled) override;
 
+	/// <summary>
+	/// Subscribes on events that are broadcasted to ability owner
+	/// </summary>
+	/// <param name="Tag">Event name</param>
+	/// <param name="Delegate">Action that is invoked on event</param>
+	/// <returns></returns>
 	FDelegateHandle AddGETagDelegate(FGameplayTag Tag, FGEDelegate Delegate);
 
 	FActiveGameplayEffectHandle ApplyGESpecToOwner(const FGameplayEffectSpecHandle SpecHandle);

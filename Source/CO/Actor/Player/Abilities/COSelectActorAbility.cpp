@@ -1,60 +1,56 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "COSelectActorAbility.h"
-
-#include "CO/Actor/Player/COPlayerCharacter.h"
-#include "CO/Actor/Player/COPlayerController.h"
-#include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 #include "GameplayTagContainer.h"
-#include "Templates/SharedPointer.h"
-#include <CO/Core/AbilitySystem/COGameplayEffectContext.h>
+#include "AbilitySystemInterface.h"
+#include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
+#include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
+#include "CO/Core/AbilitySystem/COGameplayEffectContextHandle.h"
 
 bool UCOSelectActorAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
-	return !TargetTags->HasAny(TargetBlockedTags) &&
-		TargetTags->HasAny(TargetRequiredTags) &&
-		TargetTags->Filter(FilterSelectionTags).IsValidIndex(0) &&
-		!SourceTags->HasAny(SourceBlockedTags);
+    return !TargetTags->HasAny(TargetBlockedTags) &&        // Target is not blocked for selection
+        TargetTags->HasAny(TargetRequiredTags) &&          // Target has type that is required for selection
+        TargetTags->Filter(FilterActorTypeTags).IsValidIndex(0) &&  // Target has type that is added to Mapping
+        !SourceTags->HasAny(SourceBlockedTags);            // Player does not have tags that block selection
 }
 
 void UCOSelectActorAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo,
-	const FGameplayEventData* TriggerEventData)
+    const FGameplayAbilityActorInfo* ActorInfo,
+    const FGameplayAbilityActivationInfo ActivationInfo,
+    const FGameplayEventData* TriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+    Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	auto FilteredTags = TriggerEventData->TargetTags.Filter(FilterSelectionTags);
-	auto PawnEffect = ActorSelectionMapping.Find(FilteredTags.GetByIndex(0));
+    auto SelectionContextHandle = FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get());
+    SelectionContextHandle.SetTargetData(TriggerEventData->TargetData);
+  
+    auto TargetActorType = TriggerEventData->TargetTags.Filter(FilterActorTypeTags).First();
+    auto PlayerSelectedActorEffect = TargetTypeToPlayerSelectedActorOfTypeEffectMapping.Find(TargetActorType);
+    //Adding player effect to be able to track player selection
+    _PlayerEffect = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, SelectionContextHandle.MakeGESpec(*PlayerSelectedActorEffect));
 
-	auto Context = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
-	Context->SetTargetData(TriggerEventData->TargetData);
-	auto EffectSpec = new FGameplayEffectSpec(PawnEffect->GetDefaultObject(), FGameplayEffectContextHandle(Context));
+    //Adding target effect for each target in TargetData for selection visualization
+    _TargetEffect = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, SelectionContextHandle.MakeGESpec(TargetActorSelectedEffect), TriggerEventData->TargetData).Last();
 
-	_Target = TriggerEventData->Target.Get();
-	_AppliedEffect = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, FGameplayEffectSpecHandle(EffectSpec));
-	_AppliedEffects = ApplyGameplayEffectToTarget(Handle, ActorInfo, ActivationInfo, TriggerEventData->TargetData, ActorSelectedEffect, 0);
-}
-
-void UCOSelectActorAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
-{
-	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
-
-	for (auto Effect : _AppliedEffects)
-	{
-		auto SelectedActorAbilityInterface = Cast<IAbilitySystemInterface>(_Target);
-		SelectedActorAbilityInterface->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Effect);
-	}
-
-	ActorInfo->AbilitySystemComponent.Get()->RemoveActiveGameplayEffect(_AppliedEffect);
-
-	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+    //Storing target to remove effects later
+    _TargetDataHandle = TriggerEventData->TargetData;
 }
 
 void UCOSelectActorAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	bool bReplicateEndAbility, bool bWasCancelled)
+    const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+    bool bReplicateEndAbility, bool bWasCancelled)
 {
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+    Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+    //Removing player effect
+    RemoveActiveGameplayEffect(_PlayerEffect);
+ 
+    auto SelectedActorAbilityInterface = GetASC(_TargetDataHandle.Get(0)->GetActors()[0].Get());
+    //Removing target effects
+    SelectedActorAbilityInterface->RemoveActiveGameplayEffect(_TargetEffect);
+
+    _PlayerEffect.Invalidate();
+    _TargetEffect.Invalidate();
+    _TargetDataHandle.Clear();
 }
