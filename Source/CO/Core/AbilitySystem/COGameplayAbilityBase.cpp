@@ -47,7 +47,7 @@ TArray<FActiveGameplayEffectHandle> UCOGameplayAbilityBase::ApplyGESpecToTarget(
 	return ApplyGameplayEffectSpecToTarget(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), SpecHandle, TargetData);
 }
 
-void UCOGameplayAbilityBase::TerminateAbility()
+void UCOGameplayAbilityBase::EndAbilityArgsless()
 {
 	EndAbility(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), false, false);
 }

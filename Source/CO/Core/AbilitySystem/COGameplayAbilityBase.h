@@ -35,7 +35,7 @@ public:
 
 	TArray<FActiveGameplayEffectHandle> ApplyGESpecToTarget(const FGameplayEffectSpecHandle SpecHandle, const FGameplayAbilityTargetDataHandle& TargetData);
 
-	void TerminateAbility();
+	void EndAbilityArgsless();
 
 	FGameplayAbilityTargetDataHandle GetTargetDataFromActiveEffect(const FGameplayEffectQuery& Query);
 	static FGameplayAbilityTargetDataHandle GetTargetDataFromAbilitySystemActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectQuery& Query);

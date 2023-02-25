@@ -70,20 +70,17 @@ public:
 	UPROPERTY(EditAnywhere)
 		FGameplayTag BroadcastSelectActorEventOnBuildCanceled;
 private:
-	UPROPERTY()
-		ACOBuildingActor* _BuildingPreview;
-
 	FGameplayAbilityTargetDataHandle _SelectionDTOTargetDataHandle;
 
 	FGameplayAbilityTargetDataHandle _ConfigurationDTOTargetDataHandle;
 
-	FDelegateHandle _OnAllocationFinishedDelegateHandle;
+	FDelegateHandle _OnAllocationFinishedDH;
 
-	FDelegateHandle _OnConfigurationUpdatedDelegateHandle;
+	FDelegateHandle _OnConfigurationUpdatedDH;
 
-	FDelegateHandle _OnBuildConfirmedDelegateHandle;
+	FDelegateHandle _OnBuildConfirmedDH;
 
-	FDelegateHandle _OnBuildCanceledDelegateHandle;
+	FDelegateHandle _OnBuildCanceledDH;
 
 	FActiveGameplayEffectHandle _PlayerPerformingBuildEffectHandle;
 
