@@ -26,9 +26,7 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
-	void AllocationCancel(const FGameplayAbilitySpecHandle Handle,
-		const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-		const FGameplayEventData* CancelEventData);
+	void AllocationCancel(FGameplayTag Tag, const FGameplayEventData* EventData);
 public:
 	UPROPERTY(EditAnywhere)
 		bool DebugAllocation;
@@ -55,16 +53,11 @@ public:
 		TSubclassOf<UGameplayEffect> BuildInProgressEffect{};
 
 private:
-	UPROPERTY()
-		const AActor* _Target;
-
-	FGameplayAbilityTargetDataHandle _BuildDTOTargetDataHandle;
-
-	FVector _AllocateStartLocation;
+	FGameplayAbilityTargetDataHandle _AllocateActivatedTargetData;
 
 	FDelegateHandle _CancelDelegateHandle;
 
 	FDelegateHandle _UpdateBuildDTODelegateHandle;
 
-	TArray<FActiveGameplayEffectHandle> _EffectHadles;
+	FActiveGameplayEffectHandle _AllocateEffectHandle;
 };

@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "COAllocateAbility.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
 #include "CO/Actor/Player/Abilities/Build/COAllocateAbility.h"
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
-#include "CO/Core/AbilitySystem/COAbilityTaskBase.h"
-#include "CO/Extensions/GameplayTagExtension.h"
-#include "AbilitySystemComponent.h"
-#include <AbilitySystemInterface.h>
-#include "COBuildAbility.h"
 #include "CO/Actor/Player/Abilities/TargetData/COBuildTD.h"
-#include <CO/Core/AbilitySystem/COGameplayEffectContext.h>
-#include "COAllocateAbility.h"
-#include <CO/Core/AbilitySystem/COAbilitySystemFunctionLibrary.h>
+#include "CO/Core/AbilitySystem/COAbilityTaskBase.h"
+#include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
+#include "CO/Core/AbilitySystem/COAbilitySystemFunctionLibrary.h"
+#include "CO/Core/AbilitySystem/COGameplayEffectContextHandle.h"
+#include "CO/Extensions/GameplayTagExtension.h"
 
 void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -19,56 +19,45 @@ void UCOAllocateAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	auto AllocationCancelDelegate = FGameplayEventTagMulticastDelegate::FDelegate::CreateLambda([this, Handle, ActorInfo, ActivationInfo]
-	(FGameplayTag Tag, const FGameplayEventData* EventData) { AllocationCancel(Handle, ActorInfo, ActivationInfo, EventData); });
-	_CancelDelegateHandle = ActorInfo->AbilitySystemComponent->AddGameplayEventTagContainerDelegate(ListenCancelAllocateTag.GetSingleTagContainer(), AllocationCancelDelegate);
+	_CancelDelegateHandle = AddGETagDelegate(ListenCancelAllocateTag, FGEDelegate::CreateUObject(this, &UCOAllocateAbility::AllocationCancel));
 
-	_Target = TriggerEventData->Target;
-	_AllocateStartLocation = TriggerEventData->TargetData.Get(0)->GetHitResult()->Location;
-	_BuildDTOTargetDataHandle = GetTargetDataFromActiveEffect(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
+	_AllocateActivatedTargetData.Append(TriggerEventData->TargetData);
 
-	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get(), ActorInfo->OwnerActor.Get());
-	EffectContext->SetTargetData(_BuildDTOTargetDataHandle);
-	EffectContext->AddHitResult(*TriggerEventData->TargetData.Get(0)->GetHitResult());
+	auto BuildTargetDataHandle = GetTargetDataFromActiveEffect(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FilterAllocatePermissionTag.GetSingleTagContainer()));
+	_AllocateActivatedTargetData.Append(BuildTargetDataHandle);
 
-	_EffectHadles = ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo,
-		FGameplayEffectSpecHandle(new FGameplayEffectSpec(AllocateInProgressEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))), TriggerEventData->TargetData);
+	auto SelectionContext = new FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get(), BuildTargetDataHandle);
+	SelectionContext->AddHitResult(*TriggerEventData->TargetData.Get(0)->GetHitResult());
+
+	_AllocateEffectHandle = ApplyGESpecToTarget(SelectionContext->MakeGESpec(AllocateInProgressEffect), TriggerEventData->TargetData).Last();
 }
 
-void UCOAllocateAbility::AllocationCancel(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	const FGameplayEventData* CancelEventData)
+void UCOAllocateAbility::AllocationCancel(FGameplayTag Tag, const FGameplayEventData* EventData)
 {
-	auto EndLocation = CancelEventData->TargetData.Get(0)->GetHitResult()->Location;
-	auto SelectionDTO = UCOAllocateAbilityHelper::CalculateSelectionData(_Target, _AllocateStartLocation, EndLocation);
-	if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, _BuildDTOTargetDataHandle))
+	auto StartHit = _AllocateActivatedTargetData.Get(0)->GetHitResult();
+	auto EndHit = EventData->TargetData.Get(0)->GetHitResult();
+	auto SelectionDTO = UCOAllocateAbilityHelper::CalculateSelectionData(StartHit->GetActor(), StartHit->Location, EndHit->Location);
+	if (UCOAllocateAbilityHelper::ValidateSelectionData(SelectionDTO, _AllocateActivatedTargetData.Get(1)) && StartHit->GetActor() == EndHit->GetActor())
 	{
 		auto EventData = FGameplayEventData();
-		EventData.Target = _Target;
 		EventData.TargetData.Append(SelectionDTO);
 
-		auto SelectedTarget = UCOAbilitySystemFunctionLibrary::GetTargetActorFromEffectByTag(GetActorInfo().AbilitySystemComponent.Get(), StreetSelectedTag);
-		if (_Target == SelectedTarget)
-		{
-			SendGameplayEvent(BroadcastedEventOnAllocationFinished, EventData);
-		}
-	}
+		SendGameplayEvent(BroadcastedEventOnAllocationFinished, EventData);
+	} 
 
-	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+	EndAbilityArgsless();
 }
 
 void UCOAllocateAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	_BuildDTOTargetDataHandle.Clear();
-
-	auto TargetAbilitySystem = Cast<IAbilitySystemInterface>(_Target)->GetAbilitySystemComponent();
-	for (auto EffectHandle : _EffectHadles)
-	{
-		TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
-	}
-
-	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(ListenCancelAllocateTag.GetSingleTagContainer(), _CancelDelegateHandle);
-	ActorInfo->AbilitySystemComponent->RemoveGameplayEventTagContainerDelegate(ListenCancelAllocateTag.GetSingleTagContainer(), _UpdateBuildDTODelegateHandle);
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	RemoveGETagDelegate(ListenCancelAllocateTag, _CancelDelegateHandle);
+	RemoveGETagDelegate(ListenCancelAllocateTag, _UpdateBuildDTODelegateHandle);
+
+	auto TargetAbilitySystem = GetASC(_AllocateActivatedTargetData.Get(0)->GetActors()[0].Get());
+	TargetAbilitySystem->RemoveActiveGameplayEffect(_AllocateEffectHandle);
+
+	_AllocateActivatedTargetData.Clear();
 }
