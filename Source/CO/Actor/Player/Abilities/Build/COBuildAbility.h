@@ -99,6 +99,4 @@ private:
 	FActiveGameplayEffectHandle _AllocationEffectHandle;
 
 	TArray<FActiveGameplayEffectHandle> _BuildInProgressEffectHandle;
-
-	bool SelectionForPreviewBuildingOverridden;
 };
