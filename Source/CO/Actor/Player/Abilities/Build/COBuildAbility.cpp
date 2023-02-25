@@ -95,7 +95,8 @@ void UCOBuildAbility::OnAllocateCancelOrConfirm(FGameplayTag Tag, const FGamepla
 		TargetAbilitySystem->RemoveActiveGameplayEffect(EffectHandle);
 	}
 
-	if (true) { // && Confirm
+	if (Tag.MatchesTag(ListenEventOnBuildConfirmed)) 
+	{
 		FGameplayEventData DeployEventData;
 		DeployEventData.TargetData.Append(_ConfigurationDTOTargetDataHandle);
 		DeployEventData.TargetData.Append(_SelectionDTOTargetDataHandle);
