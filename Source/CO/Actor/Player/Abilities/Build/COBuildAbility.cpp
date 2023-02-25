@@ -9,6 +9,7 @@
 #include "CO/Actor/Player/Abilities/TargetData/COBuildConfigurationTD.h"
 #include "CO/Actor/Player/Abilities/Helpers/COAllocateHelper.h"
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
+#include <CO/Core/AbilitySystem/COGameplayEffectContextHandle.h>
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -21,17 +22,19 @@ void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	_OnAllocationFinishedDH = AddGETagDelegate(ListenEventOnAllocationFinished, FGEDelegate::CreateUObject(this, &UCOBuildAbility::OnAllocationFinished));
 	_OnConfigurationUpdatedDH = AddGETagDelegate(ListenEventOnConfigurationUpdated, FGEDelegate::CreateUObject(this, &UCOBuildAbility::OnConfigurationUpdated));
 
-	auto EffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get());
 	auto ConfigurationTargetData = static_cast<const FCOBuildConfigurationTD*>(TriggerEventData->TargetData.Get(0));
-	auto BuildingSpecialization = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
-	EffectContext->SetTargetData(BuildingSpecialization->ToBuildTargetDataHandle());
+	auto BuildingTableData = BuildingsTable->FindRow<FCOBuildingTable>(ConfigurationTargetData->BuildingName, "");
 
-	auto BuildPerformingEffectContext = new FCOGameplayEffectContext(ActorInfo->OwnerActor.Get());
-	BuildPerformingEffectContext->SetTargetData(UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(const_cast<AActor*>(TriggerEventData->Target.Get())));
+	auto EffectContext = FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get());
+	EffectContext.SetTargetData(BuildingTableData->ToBuildTargetDataHandle());
+
+	auto BuildPerformingEffectContext = FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get());
+	BuildPerformingEffectContext.SetTargetData(UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(const_cast<AActor*>(TriggerEventData->Target.Get())));
 
 	_ConfigurationDTOTargetDataHandle = TriggerEventData->TargetData;
-	_PlayerPerformingBuildEffectHandle = ApplyGESpecToOwner(FGameplayEffectSpecHandle(new FGameplayEffectSpec(PlayerPerformingBuildEffect.GetDefaultObject(), FGameplayEffectContextHandle(BuildPerformingEffectContext))));
-	_AllocationEffectHandle = ApplyGESpecToOwner(FGameplayEffectSpecHandle(new FGameplayEffectSpec(EnableCellAllocationEffect.GetDefaultObject(), FGameplayEffectContextHandle(EffectContext))));
+
+	_PlayerPerformingBuildEffectHandle = ApplyGESpecToOwner(BuildPerformingEffectContext.MakeGESpec(PlayerPerformingBuildEffect));
+	_AllocationEffectHandle = ApplyGESpecToOwner(EffectContext.MakeGESpec(EnableCellAllocationEffect));
 }
 
 void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEventData* EventData)
