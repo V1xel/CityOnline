@@ -15,11 +15,15 @@
 void UCOBuildCostCalculation::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
 	auto Spec = ExecutionParams.GetOwningSpec();
+
 	auto EffectContext = Spec.GetEffectContext();
 	auto Ability = Cast<UCOBuildAbility>(EffectContext.GetAbility());
 	FGameplayTagContainer TagContainer;
+	if (!EffectContext.IsValid() || !Ability) {
+		return;
+	}
 	Ability->TargetBuildPreviewEffect.GetDefaultObject()->GetOwnedGameplayTags(TagContainer);
-	auto Target = UCOAbilitySystemFunctionLibrary::GetTargetActorFromEffectByTag(ExecutionParams.GetSourceAbilitySystemComponent(), Ability->StreetSelectedTag);
+	auto Target = UCOAbilitySystemFunctionLibrary::GetTargetActorFromEffectByTag(ExecutionParams.GetTargetAbilitySystemComponent(), Ability->StreetSelectedTag);
 	auto TargetASC = Cast<IAbilitySystemInterface>(Target)->GetAbilitySystemComponent();
 
 	auto Effect = TargetASC->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(TagContainer)).Last();

@@ -21,6 +21,10 @@ class CO_API UCOBuildAbility : public UCOGameplayAbilityBase
 	GENERATED_BODY()
 
 public:
+	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const override;
+
+	virtual bool CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, FGameplayTagContainer* OptionalRelevantTags) const override;
+
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
@@ -44,10 +48,10 @@ public:
 	TSubclassOf<UGameplayEffect> PlayerAllocatePermissionEffect;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> PlayerPerformingBuildEffect;
-
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> PlayerInsufficientFundsEffect;
 	UPROPERTY(EditAnywhere)
 	UDataTable* BuildingsTable;
-
 	UPROPERTY(EditAnywhere)
 	FGameplayTag StreetSelectedTag;
 	UPROPERTY(EditAnywhere)
@@ -64,7 +68,7 @@ public:
 	FGameplayTag BroadcastDeployEventOnBuildProcessFinished;
 	UPROPERTY(EditAnywhere)
 	FGameplayTag BroadcastSelectActorEventOnBuildCanceled;
-public:
+private:
 	FGameplayAbilityTargetDataHandle _SelectionDTOTargetDataHandle;
 
 	FGameplayAbilityTargetDataHandle _ConfigurationDTOTargetDataHandle;
@@ -78,6 +82,8 @@ public:
 	FDelegateHandle _OnBuildConfirmedDH;
 
 	FDelegateHandle _OnBuildCanceledDH;
+
+	FActiveGameplayEffectHandle _InsufficientFundsEffectHandle;
 
 	FActiveGameplayEffectHandle _PlayerPerformingBuildEffectHandle;
 

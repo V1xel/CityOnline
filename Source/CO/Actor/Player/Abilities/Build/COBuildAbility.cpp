@@ -12,6 +12,38 @@
 #include "CO/Core/AbilitySystem/COGameplayEffectContext.h"
 #include <CO/Core/AbilitySystem/COGameplayEffectContextHandle.h>
 #include <CO/Core/AbilitySystem/COAbilitySystemFunctionLibrary.h>
+#include "GameplayEffectExecutionCalculation.h"
+#include "AbilitySystemGlobals.h"
+#include "CO/Actor/Player/Attributes/COPlayerAttributeSet.h"
+
+bool UCOBuildAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
+{
+	return true;
+}
+
+bool UCOBuildAbility::CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, FGameplayTagContainer* OptionalRelevantTags) const
+{
+	auto baseCheck = Super::CheckCost(Handle, ActorInfo, OptionalRelevantTags);
+	if (!baseCheck)
+		return false;
+
+	UGameplayEffect* CostGE = GetCostGameplayEffect();
+
+	auto ASC = ActorInfo->AbilitySystemComponent.Get();
+	auto Spec = FGameplayEffectSpec(CostGE, MakeEffectContext(Handle, ActorInfo));
+
+	auto CostCalculator = CostGE->Executions.Last().CalculationClass.GetDefaultObject();
+	auto CalculationInput = FGameplayEffectCustomExecutionParameters(Spec, TArray<FGameplayEffectExecutionScopedModifierInfo>(), ASC, FGameplayTagContainer(), FPredictionKey());
+	auto CalculationOutput = FGameplayEffectCustomExecutionOutput();
+
+	CostCalculator->Execute(CalculationInput, CalculationOutput);
+
+	auto Modifiers = CalculationOutput.GetOutputModifiers();
+	auto CalculatedModifier = Modifiers.Last();
+	auto Value = ASC->GetNumericAttribute(UCOPlayerAttributeSet::GetMoneyAttribute());
+
+	return Value + CalculatedModifier.Magnitude > 0;
+}
 
 void UCOBuildAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -43,6 +75,10 @@ void UCOBuildAbility::OnAllocationFinished(FGameplayTag Tag, const FGameplayEven
 	_AllocationEffectHandle.Invalidate();
 
 	AddBuildPreviewEffect();
+
+	if (!CheckCostArgsless()) {
+		_InsufficientFundsEffectHandle = ApplyGEToOwner(PlayerInsufficientFundsEffect);
+	}
 }
 
 void UCOBuildAbility::OnConfigurationUpdated(FGameplayTag Tag, const FGameplayEventData* EventData)
@@ -54,6 +90,13 @@ void UCOBuildAbility::OnConfigurationUpdated(FGameplayTag Tag, const FGameplayEv
 	TargetASC->RemoveActiveGameplayEffect(_BuildInProgressEffectHandle);
 
 	AddBuildPreviewEffect();
+
+	if (!CheckCostArgsless()) {
+		_InsufficientFundsEffectHandle = ApplyGEToOwner(PlayerInsufficientFundsEffect);
+	}
+	else {
+		RemoveActiveGameplayEffect(_InsufficientFundsEffectHandle);
+	}
 }
 
 void UCOBuildAbility::AddBuildPreviewEffect()

@@ -25,6 +25,11 @@ FDelegateHandle UCOGameplayAbilityBase::AddGETagDelegate(FGameplayTag Tag, FGEDe
 	return GetActorInfo().AbilitySystemComponent->AddGameplayEventTagContainerDelegate(Tag.GetSingleTagContainer(), Delegate);
 }
 
+FActiveGameplayEffectHandle UCOGameplayAbilityBase::ApplyGEToOwner(TSubclassOf<UGameplayEffect> Effect)
+{
+	return ApplyGameplayEffectToOwner(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), Effect.GetDefaultObject(), 0);
+}
+
 FActiveGameplayEffectHandle UCOGameplayAbilityBase::ApplyGESpecToOwner(const FGameplayEffectSpecHandle SpecHandle)
 {
 	return ApplyGameplayEffectSpecToOwner(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), SpecHandle);
@@ -54,6 +59,11 @@ void UCOGameplayAbilityBase::SendServerGEToTarget(AActor* Target, FGameplayTag T
 {
 	auto PlayerCharacter = Cast<ACOPlayerController>(GetActorInfo().PlayerController.Get());
 	PlayerCharacter->SendServerGameplayEventToListener(Target, Tag, Payload);
+}
+
+bool UCOGameplayAbilityBase::CheckCostArgsless()
+{
+	return CheckCost(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo());
 }
 
 bool UCOGameplayAbilityBase::CommitAbilityArgsless()

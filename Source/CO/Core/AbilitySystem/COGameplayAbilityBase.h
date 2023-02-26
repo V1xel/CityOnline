@@ -29,6 +29,8 @@ public:
 	/// <returns></returns>
 	FDelegateHandle AddGETagDelegate(FGameplayTag Tag, FGEDelegate Delegate);
 
+	FActiveGameplayEffectHandle ApplyGEToOwner(TSubclassOf<UGameplayEffect> Effect);
+
 	FActiveGameplayEffectHandle ApplyGESpecToOwner(const FGameplayEffectSpecHandle SpecHandle);
 
 	TArray<FActiveGameplayEffectHandle> ApplyGESpecToTarget(const FGameplayEffectSpecHandle SpecHandle, const FGameplayAbilityTargetDataHandle& TargetData);
@@ -40,6 +42,8 @@ public:
 	void RemoveGETagDelegate(const FGameplayTag Tag, FDelegateHandle DelegateHandle);
 
 	void SendServerGEToTarget(AActor* Target, FGameplayTag Tag, FGameplayEventData Payload);
+
+	bool CheckCostArgsless();
 
 	bool CommitAbilityArgsless();
 

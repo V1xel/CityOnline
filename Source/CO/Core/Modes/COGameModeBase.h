@@ -16,4 +16,8 @@ class CO_API ACOGameModeBase : public AGameModeBase
 
 protected:
 	ACOGameModeBase();
+
+public: 
+	//UPROPERTY(EditAnywhere, NoClear, BlueprintReadOnly, Category = Classes)
+	//TSubclassOf<APlayerState> PlayerStateClass;
 };
