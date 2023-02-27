@@ -11,4 +11,13 @@ class CO_API ACOPlayerCharacter : public ACOPlayerCharacterBase
 {
 	GENERATED_BODY()
 
+protected:
+	virtual void BeginPlay() override;
+
+	void MoneyChanged(const FOnAttributeChangeData& Data);
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTag PlayerStateUpdated;
+
+	FDelegateHandle MoneyChangedDelegateHandle;
 };
