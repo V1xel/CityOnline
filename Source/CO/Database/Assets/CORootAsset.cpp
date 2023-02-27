@@ -10,18 +10,14 @@ UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOBuildAllocationTD* Select
 	for (UCOBuildingAsset* Asset : BuildingsAssets)
 	{
 		int currentCount = 0;
-		if (Asset->Width == SelectionDTO->Width || Asset->Width == SelectionDTO->Length)
-		{
+        if ((Asset->Width == SelectionDTO->Width && Asset->Length == SelectionDTO->Length) ||
+            (Asset->Width == SelectionDTO->Length && Asset->Length == SelectionDTO->Width)) {
+			currentCount += 2;
+        }
+
+        if (Asset->ExtremeCount == SelectionDTO->ExtremeCount) {
 			currentCount++;
-		}
-		if (Asset->Length == SelectionDTO->Length || Asset->Length == SelectionDTO->Width)
-		{
-			currentCount++;
-		}
-		if (Asset->ExtremeCount == SelectionDTO->ExtremeCount)
-		{
-			currentCount++;
-		}
+        }
 		if (currentCount > matchCount)
 		{
 			matchCount = currentCount;
@@ -32,3 +28,28 @@ UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOBuildAllocationTD* Select
 	return BestAsset;
 
 }
+
+
+
+//if (Asset->Width == SelectionDTO->Width || Asset->Width == SelectionDTO->Length)
+//{
+//	currentCount++;
+//}
+//if (Asset->Length == SelectionDTO->Length || Asset->Length == SelectionDTO->Width)
+//{
+//	currentCount++;
+//}
+//if (Asset->Length == Asset->Width && Asset->Width == SelectionDTO->Length && SelectionDTO->Length == SelectionDTO->Width)
+//{
+//	currentCount++;
+//}
+//
+//if (Asset->ExtremeCount == SelectionDTO->ExtremeCount)
+//{
+//	currentCount++;
+//}
+//if (currentCount > matchCount)
+//{
+//	matchCount = currentCount;
+//	BestAsset = Asset;
+//}

@@ -27,11 +27,6 @@ public:
 	int ExtremeCount;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool IsLiving;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool IsStore;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float FloorHeight = 410;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

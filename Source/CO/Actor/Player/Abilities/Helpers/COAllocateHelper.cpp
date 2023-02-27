@@ -87,7 +87,7 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 	const FVector SelectionNormalCorrect = (SelectionAverageCenter - SelectionNormalizedNormal).GetSafeNormal2D(); // just inverting normal ? what is the point ?
 
 	FVector SelectionDirection;
-	if (ExtremeCount == 3) {
+	if (ExtremeCount == 3 && SelectedCells.Num() == 4) { //if (ExtremeCount == (SelectedCells.Num() - 1)) {
 		SelectionDirection = -SelectionNormalCorrect;
 	}
 	else {
