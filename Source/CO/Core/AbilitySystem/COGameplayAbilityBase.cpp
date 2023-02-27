@@ -14,6 +14,9 @@ FGameplayAbilityTargetDataHandle UCOGameplayAbilityBase::GetTargetDataFromActive
 FGameplayAbilityTargetDataHandle UCOGameplayAbilityBase::GetTargetDataFromAbilitySystemActiveEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectQuery& Query)
 {
 	auto AllocatePermissionActiveEffects = AbilitySystemComponent->GetActiveEffects(Query);
+	if (AllocatePermissionActiveEffects.Num() == 0)
+		return FGameplayAbilityTargetDataHandle();
+
 	FGameplayEffectContextHandle PermissionGrantedEffectContext = AbilitySystemComponent->GetEffectContextFromActiveGEHandle(AllocatePermissionActiveEffects[0]);
 	auto AllocatePermissionEffectContext = static_cast<FCOGameplayEffectContext*>(PermissionGrantedEffectContext.Get());
 

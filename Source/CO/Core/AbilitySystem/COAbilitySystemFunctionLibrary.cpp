@@ -45,6 +45,51 @@ AActor* UCOAbilitySystemFunctionLibrary::GetTargetActorFromEffectByTag(UAbilityS
 	return Targets[0];
 }
 
+void UCOAbilitySystemFunctionLibrary::BreakBuildRequirementsTargetData(FGameplayAbilityTargetDataHandle Handle, int32 HandleIndex, FString& Name, int32& MinWidth, int32& MaxWidth, int32& MinLength, int32& MaxLength, int32& MinFloors, int32& MaxFloors, float& CostMultiplier, float& CapacityMultiplier)
+{
+	if (Handle.IsValid(HandleIndex)) 
+	{
+		auto BuildRequirementsTD = static_cast<FCOBuildRequirementsTD*>(Handle.Get(HandleIndex));
+
+		Name = BuildRequirementsTD->Name;
+		MinWidth = BuildRequirementsTD->MinWidth;
+		MaxWidth = BuildRequirementsTD->MaxWidth;
+		MinLength = BuildRequirementsTD->MinLength;
+		MaxLength = BuildRequirementsTD->MaxLength;
+		MinFloors = BuildRequirementsTD->MinFloors;
+		MaxFloors = BuildRequirementsTD->MaxFloors;
+		CostMultiplier = BuildRequirementsTD->CostMultiplier;
+		CapacityMultiplier = BuildRequirementsTD->CapacityMultiplier;
+	}
+}
+
+void UCOAbilitySystemFunctionLibrary::BreakBuildAllocationTargetData(FGameplayAbilityTargetDataHandle Handle, int32 HandleIndex, AActor*& Target, int32& Length, int32& Width, int32& ExtremeCount, FVector& Center, FVector& Direction, bool& HasOccupiedCells)
+{
+	if (Handle.IsValid(HandleIndex)) 
+	{
+		auto BuildRequirementsTD = static_cast<FCOBuildAllocationTD*>(Handle.Get(HandleIndex));
+
+		Target = BuildRequirementsTD->Target;
+		Length = BuildRequirementsTD->Length;
+		Width = BuildRequirementsTD->Width;
+		ExtremeCount = BuildRequirementsTD->ExtremeCount;
+		Center = BuildRequirementsTD->Center;
+		Direction = BuildRequirementsTD->Direction;
+		HasOccupiedCells = BuildRequirementsTD->HasOccupiedCells;
+	}
+}
+
+void UCOAbilitySystemFunctionLibrary::BreakBuildConfigurationTD(FGameplayAbilityTargetDataHandle Handle, int32 HandleIndex, int32& Floors, FName& BuildingName)
+{
+	if (Handle.IsValid(HandleIndex))
+	{
+		auto BuildRequirementsTD = static_cast<FCOBuildConfigurationTD*>(Handle.Get(HandleIndex));
+
+		Floors = BuildRequirementsTD->Floors;
+		BuildingName = BuildRequirementsTD->BuildingName;
+	}
+}
+
 UCOBuildingAsset* UCOAbilitySystemFunctionLibrary::BreakCueEffectContextTargetDataAsBuildConfiguration(FGameplayCueParameters Parameters, FVector& Center, FVector& Direction, int32& Floors)
 {
 	auto EffectContext = static_cast<FCOGameplayEffectContext*>(Parameters.EffectContext.Get());

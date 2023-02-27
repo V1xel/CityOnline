@@ -28,6 +28,15 @@ public:
 	UFUNCTION(BlueprintPure)
 	static AActor* GetTargetActorFromEffectByTag(UAbilitySystemComponent* AbilitySystem, FGameplayTag Tag);
 
+	UFUNCTION(BlueprintPure, meta = (NativeBreakFunc, AdvancedDisplay = 6))
+	static void BreakBuildRequirementsTargetData(FGameplayAbilityTargetDataHandle Handle, int32 HandleIndex, FString& Name, int32& MinWidth, int32& MaxWidth, int32& MinLength, int32& MaxLength, int32& MinFloors, int32& MaxFloors, float& CostMultiplier, float& CapacityMultiplier);
+
+	UFUNCTION(BlueprintPure, meta = (NativeBreakFunc, AdvancedDisplay = 6))
+	static void BreakBuildAllocationTargetData(FGameplayAbilityTargetDataHandle Handle, int32 HandleIndex, AActor*& Target, int32& Length, int32& Width, int32& ExtremeCount, FVector& Center, FVector& Direction, bool& HasOccupiedCells);
+	
+	UFUNCTION(BlueprintPure, meta = (NativeBreakFunc, AdvancedDisplay = 6))
+	static void BreakBuildConfigurationTD(FGameplayAbilityTargetDataHandle Handle, int32 HandleIndex, int32& Floors, FName& BuildingName);
+
 	UFUNCTION(BlueprintPure)
 	static FGameplayAbilityTargetDataHandle MakeBuildConfigurationTargetDataHandle(FName BuildingName, int32 Floors);
 
