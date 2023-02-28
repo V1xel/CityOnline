@@ -21,7 +21,7 @@ UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOBuildAllocationTD* Select
 			currentCount++;
 			ExtremeBest = true;
 		}
-		else if (!ExtremeBest && BestAsset != nullptr  && BestAsset->ExtremeCount < Asset->ExtremeCount) {
+		else if (!ExtremeBest && BestAsset != nullptr && BestAsset->ExtremeCount < Asset->ExtremeCount) {
 			currentCount++;
 		}
 
@@ -33,30 +33,4 @@ UCOBuildingAsset* UCORootAsset::FindBestAsset(const FCOBuildAllocationTD* Select
 	}
 
 	return BestAsset;
-
 }
-
-
-
-//if (Asset->Width == SelectionDTO->Width || Asset->Width == SelectionDTO->Length)
-//{
-//	currentCount++;
-//}
-//if (Asset->Length == SelectionDTO->Length || Asset->Length == SelectionDTO->Width)
-//{
-//	currentCount++;
-//}
-//if (Asset->Length == Asset->Width && Asset->Width == SelectionDTO->Length && SelectionDTO->Length == SelectionDTO->Width)
-//{
-//	currentCount++;
-//}
-//
-//if (Asset->ExtremeCount == SelectionDTO->ExtremeCount)
-//{
-//	currentCount++;
-//}
-//if (currentCount > matchCount)
-//{
-//	matchCount = currentCount;
-//	BestAsset = Asset;
-//}
