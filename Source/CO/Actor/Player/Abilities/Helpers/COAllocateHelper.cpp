@@ -48,7 +48,7 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 	bool HasOccupiedCells = false;
 
 	FVector SelectionCenter;
-	FVector SelectionAverageNormal;
+	FVector SelectionAverageExtremePosition;
 	for (auto Cell : SelectedCells)
 	{
 		if(MinimumHorizontal > Cell->Horizontal)
@@ -70,8 +70,8 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 		if (Cell->IsExtreme)
 		{
 			ExtremeCount++;
-				
-			SelectionAverageNormal = SelectionAverageNormal - Cell->GetComponentLocation();
+			
+			SelectionAverageExtremePosition = SelectionAverageExtremePosition + Cell->GetComponentLocation();
 		}
 		if (Cell->IsOccupied) 
 		{
@@ -82,19 +82,24 @@ void UCOAllocateAbilityHelper::CollectSelectionData(FCOBuildAllocationTD* Select
 		SelectionTD->Cells.Add(MakeTuple(Cell->Horizontal, Cell->Vertical));
 	}
 
+	auto TargetLocation = SelectionTD->Target->GetActorLocation();
+
+	const FVector ExtremeCenter = SelectionAverageExtremePosition / ExtremeCount;
 	const FVector SelectionAverageCenter = SelectionCenter / SelectedCells.Num();
-	const FVector SelectionNormalizedNormal = SelectionAverageNormal.GetSafeNormal2D();
-	const FVector SelectionNormalCorrect = (SelectionAverageCenter - SelectionNormalizedNormal).GetSafeNormal2D(); // just inverting normal ? what is the point ?
+	const FVector SelectionNormal = (TargetLocation - SelectionAverageCenter).GetSafeNormal2D();
+
+	auto TargetForward = SelectionTD->Target->GetActorForwardVector();
+	auto TargetRight = SelectionTD->Target->GetActorRightVector();
 
 	FVector SelectionDirection;
-	if (ExtremeCount == 3 && SelectedCells.Num() == 4) { //if (ExtremeCount == (SelectedCells.Num() - 1)) {
-		SelectionDirection = -SelectionNormalCorrect;
+	if (ExtremeCount == 3 && SelectedCells.Num() == 4) {
+		SelectionDirection = SelectionNormal;
 	}
 	else {
-		const double dot = FVector::DotProduct(SelectionNormalCorrect, FVector::ForwardVector);
-		const FVector FinalNormal = dot * dot > 0.5 ? FVector::ForwardVector : FVector::RightVector;
-		const double dot2 = FVector::DotProduct(SelectionNormalCorrect, FinalNormal);
-		SelectionDirection = dot2 < 0 ? FVector(FinalNormal) : FVector(FinalNormal * -1);
+		const double SelectionNormalOrtogonalToForward = FVector::DotProduct(SelectionNormal, TargetForward);
+		const FVector ConstraintedNormal = SelectionNormalOrtogonalToForward * SelectionNormalOrtogonalToForward > 0.5 ? TargetForward : TargetRight;
+		const double SelectionNormalOrtogonalToConstraintedNormal = FVector::DotProduct(SelectionNormal, ConstraintedNormal);
+		SelectionDirection = SelectionNormalOrtogonalToConstraintedNormal < 0 ? FVector(ConstraintedNormal * -1) : FVector(ConstraintedNormal);
 	}
 
 	SelectionTD->Direction = SelectionDirection;
