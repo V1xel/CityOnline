@@ -18,9 +18,9 @@ protected:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	bool IsMoving;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	bool IsRunning;
 };

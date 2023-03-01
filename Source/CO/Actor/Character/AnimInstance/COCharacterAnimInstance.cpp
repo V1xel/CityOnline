@@ -2,6 +2,7 @@
 
 
 #include "COCharacterAnimInstance.h"
+#include <Net/UnrealNetwork.h>
 
 void UCOCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
