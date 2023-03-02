@@ -7,6 +7,8 @@
 #include "GameFramework/Character.h"
 #include "COCitizenCharacter.generated.h"
 
+class ACOBuildingActor;
+
 UCLASS()
 class CO_API ACOCitizenCharacter : public ACharacter
 {
@@ -21,9 +23,22 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void AddBuildingVisited(ACOBuildingActor* Building);
+
+	UFUNCTION(BlueprintCallable)
+	void ClearVisitedBuildings();
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckBuildingVisited(ACOBuildingActor* Building);
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+	TSet<ACOBuildingActor*> VisitedBuildings;
 };

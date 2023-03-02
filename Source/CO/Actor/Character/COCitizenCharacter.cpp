@@ -2,7 +2,7 @@
 
 
 #include "COCitizenCharacter.h"
-
+#include "CO/Actor/Building/COBuildingActor.h"
 
 // Sets default values
 ACOCitizenCharacter::ACOCitizenCharacter()
@@ -16,6 +16,21 @@ void ACOCitizenCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ACOCitizenCharacter::AddBuildingVisited(ACOBuildingActor* Building)
+{
+	VisitedBuildings.Add(Building);
+}
+
+void ACOCitizenCharacter::ClearVisitedBuildings()
+{
+	VisitedBuildings.Empty();
+}
+
+bool ACOCitizenCharacter::CheckBuildingVisited(ACOBuildingActor* Building)
+{
+	return VisitedBuildings.Contains(Building);
 }
 
 // Called every frame
