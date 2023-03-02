@@ -29,6 +29,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<ACOBuildingActor> BuildingActorClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UGameplayEffect> BuildingActorInitialEffectClass;
+
 	UPROPERTY(EditAnywhere)
 	UDataTable* BuildingsTable {};
 };

@@ -12,6 +12,8 @@
 #include "CO/Database/Assets/COBuildingAsset.h"
 #include "CO/Core/Actor/Building/COBuildingFunctionLibrary.h"
 #include <CO/Actor/Street/COStreetActor.h>
+#include <AbilitySystemBlueprintLibrary.h>
+#include <CO/Core/AbilitySystem/COGameplayEffectContextHandle.h>
 
 void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -26,15 +28,23 @@ void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle 
 
 	auto InstigatorController = TriggerEventData->Instigator.Get()->GetInstigatorController();
 	auto RootAsset = Cast<ACOPlayerController>(InstigatorController)->RootAsset;
+
 	auto BuildingAsset = RootAsset->FindBestAsset(AllocationTD, BuildTargetData);
+
+	auto Street = Cast<ACOStreetActor>(ActorInfo->OwnerActor);
+	Street->OccupyCells(AllocationTD);
 
 	auto Building = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(AllocationTD->Center));
 	Building->ComposeBuilding(ConfigurationTD->Floors, BuildingAsset, AllocationTD->Direction);
 	Building->FinishSpawning(FTransform());
 	Building->SetActorLocation(AllocationTD->Center);
 
-	auto Street = Cast<ACOStreetActor>(ActorInfo->OwnerActor);
-	Street->OccupyCells(AllocationTD);
+	auto InitialEffectContext = FCOGameplayEffectContextHandle(ActorInfo->OwnerActor.Get());
+
+	auto BuildingActorInitialEffect = NewObject<UGameplayEffect>(Building, "BuildingActorInitial", RF_NoFlags, BuildingActorInitialEffectClass.GetDefaultObject());
+	BuildingActorInitialEffect->InheritableOwnedTagsContainer.AddTag(BuildTargetData->Type);
+
+	ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, InitialEffectContext.MakeGESpec(BuildingActorInitialEffect), UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(Building));
 }
 
 void UCODeployBuildingAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

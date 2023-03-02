@@ -2,6 +2,7 @@
 
 bool FCOBuildRequirementsTD::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
+	Type.NetSerialize(Ar, Map, bOutSuccess);
 	Ar << Name;
 	Ar << MinWidth;
 	Ar << MaxWidth;

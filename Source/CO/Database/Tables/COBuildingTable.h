@@ -17,6 +17,7 @@ public:
 	FGameplayAbilityTargetDataHandle ToBuildTargetDataHandle() {
 		auto Name = UGameplayTagExtension::GetTagSecondElement(Tag);;
 		auto TargetData = new FCOBuildRequirementsTD();
+		TargetData->Type = Type;
 		TargetData->Name = Name;
 		TargetData->MinWidth = MinWidth;
 		TargetData->MaxWidth = MaxWidth;
@@ -33,6 +34,9 @@ public:
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FGameplayTag Tag;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FGameplayTag Type;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int MinWidth;

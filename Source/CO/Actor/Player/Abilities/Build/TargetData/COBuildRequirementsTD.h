@@ -11,6 +11,8 @@ struct CO_API FCOBuildRequirementsTD : public FGameplayAbilityTargetData
 {
 	GENERATED_USTRUCT_BODY()
 
+	FGameplayTag Type;
+
 	FString Name;
 
 	int32 MinWidth;

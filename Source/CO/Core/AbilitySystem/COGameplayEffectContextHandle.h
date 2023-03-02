@@ -36,5 +36,7 @@ struct CO_API FCOGameplayEffectContextHandle : public FGameplayEffectContextHand
 
 	FGameplayEffectSpecHandle MakeGESpec(TSubclassOf<UGameplayEffect> Effect);
 
+	FGameplayEffectSpecHandle MakeGESpec(UGameplayEffect* Effect);
+
 	void SetTargetData(FGameplayAbilityTargetDataHandle Handle);
 };

@@ -9,6 +9,11 @@ FGameplayEffectSpecHandle FCOGameplayEffectContextHandle::MakeGESpec(TSubclassOf
 	return FGameplayEffectSpecHandle(new FGameplayEffectSpec(Effect.GetDefaultObject(), *this));
 }
 
+FGameplayEffectSpecHandle FCOGameplayEffectContextHandle::MakeGESpec(UGameplayEffect* Effect)
+{
+	return FGameplayEffectSpecHandle(new FGameplayEffectSpec(Effect, *this));
+}
+
 void FCOGameplayEffectContextHandle::SetTargetData(FGameplayAbilityTargetDataHandle Handle)
 {
 	auto Context = static_cast<FCOGameplayEffectContext*>(Get());
