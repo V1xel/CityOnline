@@ -37,6 +37,9 @@ public:
 	virtual bool HasAnyMatchingGameplayTags(const FGameplayTagContainer& TagContainer) const override;
 
 	void ComposeBuilding(int32 Floors, UCOBuildingAsset* BuildingAsset, FVector Direction);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	float GetProvisionUnitCost();
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
