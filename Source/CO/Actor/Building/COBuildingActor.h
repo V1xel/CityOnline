@@ -40,7 +40,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetProvisionUnitCost();
-	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 		TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass;
