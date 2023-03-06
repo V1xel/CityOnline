@@ -33,6 +33,28 @@ bool ACOCitizenCharacter::CheckBuildingVisited(ACOBuildingActor* Building)
 	return VisitedBuildings.Contains(Building);
 }
 
+ACOBuildingActor* ACOCitizenCharacter::GetCheapestShop()
+{
+	ACOBuildingActor* Target = nullptr;
+	float lowestCost = 0;
+	for (auto Building : VisitedBuildings)
+	{
+		if (lowestCost > Building->GetProvisionUnitCost())
+		{
+			lowestCost = Building->GetProvisionUnitCost();
+			Target = Building;
+			continue;
+		}
+		if (!Target)
+		{
+			lowestCost = Building->GetProvisionUnitCost();
+			Target = Building;
+		}
+	}
+
+	return Target;
+}
+
 // Called every frame
 void ACOCitizenCharacter::Tick(float DeltaTime)
 {

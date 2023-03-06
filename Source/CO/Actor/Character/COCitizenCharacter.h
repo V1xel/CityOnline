@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool CheckBuildingVisited(ACOBuildingActor* Building);
 
+	UFUNCTION(BlueprintCallable)
+	ACOBuildingActor* GetCheapestShop();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
