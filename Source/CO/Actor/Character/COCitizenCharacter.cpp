@@ -65,4 +65,11 @@ void ACOCitizenCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 {
 }
 
+void ACOCitizenCharacter::RegenerateShoppingList()
+{
+	ShoppingList.Reset();
+	ShoppingList.AddTag(FGameplayTag::RequestGameplayTag("ProvisionType.Food"));
+	ShoppingList.AddTag(FGameplayTag::RequestGameplayTag("ProvisionType.SelfDevelopment"));
+}
+
 

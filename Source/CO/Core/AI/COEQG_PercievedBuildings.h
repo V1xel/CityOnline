@@ -5,6 +5,7 @@
 #include "DataProviders/AIDataProvider.h"
 #include "EnvironmentQuery/EnvQueryGenerator.h"
 #include "Perception/AISense.h"
+#include <GameplayTags.h>
 #include "COEQG_PercievedBuildings.generated.h"
 
 class ACOBuildingActor;

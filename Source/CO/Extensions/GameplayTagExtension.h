@@ -28,4 +28,7 @@ public:
 	static bool MatchesTagExact(FGameplayTag Tag, FString Element);
 
 	static FGameplayTagContainer CreateContainer(FString Tag);
+
+	UFUNCTION(BlueprintPure)
+	static FGameplayTagContainer CreateContainer(FName Tag);
 };

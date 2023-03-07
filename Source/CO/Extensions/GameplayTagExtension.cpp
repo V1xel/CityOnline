@@ -45,3 +45,8 @@ FGameplayTagContainer UGameplayTagExtension::CreateContainer(FString Tag)
 {
 	return FGameplayTag::RequestGameplayTag(FName(Tag)).GetSingleTagContainer();
 }
+
+FGameplayTagContainer UGameplayTagExtension::CreateContainer(FName Tag)
+{
+	return FGameplayTag::RequestGameplayTag(Tag).GetSingleTagContainer();
+}

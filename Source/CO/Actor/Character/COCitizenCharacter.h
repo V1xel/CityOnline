@@ -41,7 +41,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void RegenerateShoppingList();
 public:
 	UPROPERTY(BlueprintReadOnly)
 	TSet<ACOBuildingActor*> VisitedBuildings;
+
+	UPROPERTY(BlueprintReadWrite)
+	FGameplayTagContainer ShoppingList;
 };
