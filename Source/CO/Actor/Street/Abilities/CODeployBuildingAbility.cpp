@@ -36,6 +36,7 @@ void UCODeployBuildingAbility::ActivateAbility(const FGameplayAbilitySpecHandle 
 
 	auto Building = GetWorld()->SpawnActorDeferred<ACOBuildingActor>(BuildingActorClass, FTransform(AllocationTD->Center));
 	Building->ComposeBuilding(ConfigurationTD->Floors, BuildingAsset, AllocationTD->Direction);
+	Building->UnitCost = ConfigurationTD->Floors * AllocationTD->Cells.Num() * BuildTargetData->CostMultiplier;
 	Building->FinishSpawning(FTransform());
 	Building->SetActorLocation(AllocationTD->Center);
 

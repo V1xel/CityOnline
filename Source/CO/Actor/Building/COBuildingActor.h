@@ -50,6 +50,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCOBuildingAttributeSet* BuildingAttributeSet{};
 
+	UPROPERTY(VisibleAnywhere)
+	float UnitCost;
+
 	UPROPERTY()
 	TArray<UCOBuildingPartComponent*> Meshes;
 

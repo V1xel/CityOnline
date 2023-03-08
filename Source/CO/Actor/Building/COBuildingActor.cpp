@@ -43,5 +43,5 @@ void ACOBuildingActor::ComposeBuilding(int32 Floors, UCOBuildingAsset* BuildingA
 
 float ACOBuildingActor::GetProvisionUnitCost()
 {
-	return 1.f;
+	return UnitCost;
 }
