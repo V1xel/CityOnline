@@ -12,6 +12,8 @@
 class UCOBuildingPartComponent;
 class UCOConstructionDTO;
 class UCOBuildingAsset;
+class UNavArea;
+class UCONavModifierComponent;
 
 UCLASS(Abstract, Blueprintable)
 class CO_API ACOBuildingActor : public AActor, public IAbilitySystemInterface, public IGameplayTagAssetInterface
@@ -28,6 +30,9 @@ public:
 		return AbilitySystemComponent;
 	}
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Navigation)
+		TSubclassOf<UNavArea> AreaClass;
+
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 
 	virtual bool HasMatchingGameplayTag(FGameplayTag TagToCheck) const override;
@@ -43,6 +48,9 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 		TSubclassOf<UCOBuildingPartComponent> BuildingPartComponentClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		UCONavModifierComponent* NavModifierComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAbilitySystemComponent* AbilitySystemComponent {};

@@ -1,6 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "COBuildingActor.h"
+#include "CO/Core/AI/CONavModifierComponent.h"
 #include "CO/Core/AbilitySystem/COAbilitySystemComponent.h"
 #include <CO/Core/Actor/Building/COBuildingFunctionLibrary.h>
 
@@ -39,6 +40,12 @@ bool ACOBuildingActor::HasAnyMatchingGameplayTags(const FGameplayTagContainer& T
 void ACOBuildingActor::ComposeBuilding(int32 Floors, UCOBuildingAsset* BuildingAsset, FVector Direction)
 {
 	UCOBuildingFunctionLibrary::ComposeBuilding(this, Floors, BuildingPartComponentClass, BuildingAsset, Direction, Meshes);
+
+	NavModifierComponent = Cast<UCONavModifierComponent>(AddComponentByClass(UCONavModifierComponent::StaticClass(), false, FTransform::Identity, true));
+	NavModifierComponent->AreaClass = AreaClass;
+	NavModifierComponent->NavExtent = FVector(100, 100, 100);
+	NavModifierComponent->CalcAndCacheBounds();
+	FinishAddComponent(NavModifierComponent, false, FTransform());
 }
 
 float ACOBuildingActor::GetProvisionUnitCost()
